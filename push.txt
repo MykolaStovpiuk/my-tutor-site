@@ -1,0 +1,4 @@
+cd C:\Users\djeri\my-tutor-site
+git add .
+git commit -m "describe your change here"
+git push
