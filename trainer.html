@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Тренажер слів — Микола Ступюк</title>
+<meta name="description" content="Персональний тренажер словника: додавай нові слова та фрази і повторюй їх за системою інтервального повторення.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,500&family=Karla:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#FBF1E4;
+    --paper-soft:#F3E6D3;
+    --ink:#2B3630;
+    --teal:#2F6660;
+    --teal-deep:#1E4642;
+    --marigold:#E9A23B;
+    --coral:#E2603F;
+    --line: rgba(43,54,48,0.14);
+    --good:#3f8a5e;
+    --bad:#c9503a;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Karla', sans-serif;
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3{font-family:'Fraunces', serif; margin:0; font-weight:600; letter-spacing:-0.01em;}
+  a{color:inherit;}
+  button, input{font-family:inherit;}
+  .wrap{max-width:760px; margin:0 auto; padding:0 24px;}
+  .eyebrow{
+    font-family:'Space Mono', monospace;
+    font-size:0.78rem;
+    color:var(--teal-deep);
+    display:inline-flex; align-items:center; gap:10px;
+    margin-bottom:14px;
+  }
+  .eyebrow::before{content:""; width:22px; height:1px; background:var(--coral); display:inline-block;}
+  a:focus-visible, button:focus-visible, input:focus-visible{outline:3px solid var(--teal); outline-offset:2px;}
+  @media (prefers-reduced-motion: reduce){*{animation:none !important; transition:none !important;}}
+
+  nav{
+    position:sticky; top:0; z-index:50;
+    background:rgba(251,241,228,0.9);
+    backdrop-filter:blur(6px);
+    border-bottom:1px solid var(--line);
+  }
+  nav .wrap{display:flex; align-items:center; justify-content:space-between; padding:16px 24px; max-width:900px;}
+  .brand{font-family:'Fraunces', serif; font-size:1.1rem; font-weight:600;}
+  .back-link{font-size:0.9rem; text-decoration:none; opacity:0.75;}
+  .back-link:hover{opacity:1;}
+  .switch-student{
+    background:none; border:1px solid var(--line); border-radius:100px;
+    padding:6px 14px; font-size:0.82rem; cursor:pointer; color:var(--ink);
+  }
+
+  header.top{padding:44px 0 10px; text-align:center;}
+  header.top h1{font-size:clamp(1.9rem, 4vw, 2.5rem);}
+  header.top p{max-width:52ch; margin:12px auto 0; color:#4a534b;}
+
+  main{padding-bottom:80px;}
+
+  /* ---------- PROFILE SCREEN ---------- */
+  .profile-box{
+    max-width:420px; margin:40px auto; background:#fff;
+    border:1px solid var(--line); border-radius:20px; padding:32px 28px;
+    text-align:center;
+  }
+  .profile-box h2{font-size:1.4rem; margin-bottom:8px;}
+  .profile-box p{color:#4a534b; font-size:0.92rem; margin-bottom:22px;}
+  .existing-students{display:flex; flex-wrap:wrap; gap:8px; justify-content:center; margin-bottom:22px;}
+  .student-chip{
+    border:1.5px solid var(--line); background:var(--paper-soft);
+    border-radius:100px; padding:8px 16px; font-size:0.88rem; cursor:pointer;
+  }
+  .student-chip:hover{border-color:var(--teal);}
+  .name-row{display:flex; gap:8px;}
+  .name-row input{
+    flex:1; border:1.5px solid var(--line); border-radius:10px;
+    padding:11px 14px; font-size:0.95rem;
+  }
+  .start-btn{
+    border:none; background:var(--coral); color:var(--paper);
+    padding:11px 20px; border-radius:10px; font-weight:700; cursor:pointer;
+  }
+
+  /* ---------- STATS BAR ---------- */
+  .stats-bar{
+    display:grid; grid-template-columns:repeat(3,1fr); gap:10px;
+    margin:26px 0;
+  }
+  .stat{
+    background:#fff; border:1px solid var(--line); border-radius:14px;
+    padding:16px; text-align:center;
+  }
+  .stat .num{font-family:'Fraunces', serif; font-size:1.6rem; color:var(--teal);}
+  .stat .lbl{font-family:'Space Mono', monospace; font-size:0.7rem; color:#5c6660; margin-top:2px;}
+
+  /* ---------- TABS ---------- */
+  .tabs{display:flex; justify-content:center; gap:8px; margin-bottom:30px; flex-wrap:wrap;}
+  .tab-btn{
+    border:none; background:var(--paper-soft); color:var(--ink); opacity:0.65;
+    padding:10px 18px; border-radius:10px; font-size:0.88rem; font-weight:600; cursor:pointer;
+    font-family:'Space Mono', monospace;
+  }
+  .tab-btn.active{opacity:1; background:var(--marigold);}
+
+  /* ---------- REVIEW ---------- */
+  .review-wrap{display:flex; flex-direction:column; align-items:center; gap:20px;}
+  .progress-text{font-family:'Space Mono', monospace; font-size:0.85rem; color:#5c6660;}
+  .flip-card{width:100%; max-width:420px; height:220px; perspective:1200px; cursor:pointer;}
+  .flip-inner{position:relative; width:100%; height:100%; transition:transform .5s; transform-style:preserve-3d;}
+  .flip-card.flipped .flip-inner{transform:rotateY(180deg);}
+  .flip-face{
+    position:absolute; inset:0; backface-visibility:hidden;
+    border-radius:20px; display:flex; align-items:center; justify-content:center;
+    flex-direction:column; padding:20px; text-align:center;
+    box-shadow:0 10px 26px rgba(43,54,48,0.14);
+  }
+  .flip-front{background:#fff; border:1px solid var(--line);}
+  .flip-back{background:var(--teal); color:var(--paper); transform:rotateY(180deg);}
+  .flip-face .word{font-family:'Fraunces', serif; font-size:1.6rem; font-weight:600;}
+  .flip-face .example{font-size:0.85rem; margin-top:10px; opacity:0.8; font-style:italic;}
+  .flip-face .hint{font-family:'Space Mono', monospace; font-size:0.75rem; opacity:0.6; margin-top:10px;}
+  .review-actions{display:flex; gap:12px;}
+  .hard-btn, .easy-btn{border:none; border-radius:100px; padding:12px 22px; font-weight:700; font-size:0.9rem; cursor:pointer;}
+  .hard-btn{background:var(--bad); color:#fff;}
+  .easy-btn{background:var(--good); color:#fff;}
+  .empty-state{
+    text-align:center; padding:50px 20px; color:#4a534b;
+  }
+  .empty-state .big{font-family:'Fraunces', serif; font-size:1.6rem; color:var(--ink); margin-bottom:10px;}
+
+  /* ---------- ADD FORM ---------- */
+  .add-form{max-width:460px; margin:0 auto; background:#fff; border:1px solid var(--line); border-radius:18px; padding:26px;}
+  .field{margin-bottom:16px;}
+  .field label{display:block; font-size:0.82rem; font-family:'Space Mono', monospace; margin-bottom:6px; color:#4a534b;}
+  .field input, .field textarea{
+    width:100%; border:1.5px solid var(--line); border-radius:10px;
+    padding:11px 14px; font-size:0.95rem; resize:vertical;
+  }
+  .add-submit{
+    width:100%; border:none; background:var(--teal); color:var(--paper);
+    padding:13px; border-radius:10px; font-weight:700; cursor:pointer; font-size:0.95rem;
+  }
+  .added-msg{
+    text-align:center; color:var(--good); font-size:0.88rem; margin-top:12px; font-weight:600;
+    min-height:1.2em;
+  }
+
+  /* ---------- WORD LIST ---------- */
+  .word-table{width:100%; border-collapse:collapse; background:#fff; border-radius:14px; overflow:hidden; border:1px solid var(--line);}
+  .word-table th, .word-table td{padding:12px 14px; text-align:left; font-size:0.88rem; border-bottom:1px solid var(--line);}
+  .word-table th{font-family:'Space Mono', monospace; font-size:0.72rem; color:#5c6660; background:var(--paper-soft);}
+  .word-table tr:last-child td{border-bottom:none;}
+  .box-dots{display:flex; gap:3px;}
+  .box-dot{width:8px; height:8px; border-radius:50%; background:var(--line);}
+  .box-dot.filled{background:var(--marigold);}
+  .del-btn{border:none; background:none; color:var(--bad); cursor:pointer; font-size:0.8rem;}
+  .word-list-empty{text-align:center; color:#4a534b; padding:40px 20px;}
+
+  footer{text-align:center; padding:30px 0 40px; font-size:0.85rem; color:#6b756c;}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <div class="brand">Микола Ступюк<span style="color:var(--coral)">.</span></div>
+    <a class="back-link" href="ua.html">← На головну</a>
+  </div>
+</nav>
+
+<header class="top">
+  <div class="wrap">
+    <span class="eyebrow">/rɪˈvɪʒ.ən/ — повторення</span>
+    <h1>Твій тренажер слів</h1>
+    <p>Додавай слова та фрази, які вивчаєш на заняттях, і повторюй їх, коли настане час.</p>
+  </div>
+</header>
+
+<main class="wrap" id="app"></main>
+
+<footer>
+  Прогрес зберігається у твоєму браузері на цьому пристрої.
+</footer>
+
+<script>
+/* ================= ДАНІ ================= */
+const STUDENTS_KEY = 'vt_students';
+const CURRENT_KEY = 'vt_current_student';
+const INTERVALS = [1, 2, 4, 7, 14, 30]; // дні до наступного повторення на кожному рівні
+const MAX_BOX = INTERVALS.length - 1;
+
+function todayStr(){ return new Date().toISOString().slice(0,10); }
+function addDays(dateStr, days){
+  const d = new Date(dateStr + 'T00:00:00');
+  d.setDate(d.getDate() + days);
+  return d.toISOString().slice(0,10);
+}
+function getStudents(){
+  try{ return JSON.parse(localStorage.getItem(STUDENTS_KEY)) || []; } catch(e){ return []; }
+}
+function saveStudents(list){ localStorage.setItem(STUDENTS_KEY, JSON.stringify(list)); }
+function profileKey(name){ return 'vt_profile_' + name.trim().toLowerCase(); }
+function loadProfile(name){
+  try{ return JSON.parse(localStorage.getItem(profileKey(name))) || { words: [] }; }
+  catch(e){ return { words: [] }; }
+}
+function saveProfile(name, profile){ localStorage.setItem(profileKey(name), JSON.stringify(profile)); }
+
+let currentStudent = localStorage.getItem(CURRENT_KEY) || '';
+let currentTab = 'review';
+
+const app = document.getElementById('app');
+
+function render(){
+  if(!currentStudent){ renderProfileScreen(); return; }
+  renderTrainer();
+}
+
+/* ================= ЕКРАН ВИБОРУ УЧНЯ ================= */
+function renderProfileScreen(){
+  const students = getStudents();
+  app.innerHTML = `
+    <div class="profile-box">
+      <h2>Хто займається?</h2>
+      <p>Обери своє ім'я зі списку або введи нове, якщо це твій перший раз.</p>
+      ${students.length ? `<div class="existing-students" id="chips"></div>` : ''}
+      <div class="name-row">
+        <input type="text" id="nameInput" placeholder="Введи ім'я">
+        <button class="start-btn" id="startBtn">Почати</button>
+      </div>
+    </div>`;
+  if(students.length){
+    const chipsEl = document.getElementById('chips');
+    students.forEach(s => {
+      const chip = document.createElement('button');
+      chip.className = 'student-chip';
+      chip.textContent = s;
+      chip.onclick = () => selectStudent(s);
+      chipsEl.appendChild(chip);
+    });
+  }
+  document.getElementById('startBtn').onclick = () => {
+    const name = document.getElementById('nameInput').value.trim();
+    if(!name) return;
+    if(!students.includes(name)){ students.push(name); saveStudents(students); }
+    selectStudent(name);
+  };
+  document.getElementById('nameInput').addEventListener('keydown', e => {
+    if(e.key === 'Enter') document.getElementById('startBtn').click();
+  });
+}
+
+function selectStudent(name){
+  currentStudent = name;
+  localStorage.setItem(CURRENT_KEY, name);
+  currentTab = 'review';
+  render();
+}
+
+/* ================= ГОЛОВНИЙ ЕКРАН ТРЕНАЖЕРА ================= */
+function renderTrainer(){
+  const profile = loadProfile(currentStudent);
+  const today = todayStr();
+  const dueWords = profile.words.filter(w => w.due <= today);
+  const masteredCount = profile.words.filter(w => w.box >= MAX_BOX).length;
+
+  app.innerHTML = `
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-top:20px;">
+      <h2 style="font-size:1.2rem;">Привіт, ${currentStudent}!</h2>
+      <button class="switch-student" id="switchBtn">Змінити учня</button>
+    </div>
+    <div class="stats-bar">
+      <div class="stat"><div class="num">${profile.words.length}</div><div class="lbl">всього слів</div></div>
+      <div class="stat"><div class="num">${dueWords.length}</div><div class="lbl">на сьогодні</div></div>
+      <div class="stat"><div class="num">${masteredCount}</div><div class="lbl">вивчено</div></div>
+    </div>
+    <div class="tabs">
+      <button class="tab-btn ${currentTab==='review'?'active':''}" data-tab="review">Повторити</button>
+      <button class="tab-btn ${currentTab==='add'?'active':''}" data-tab="add">Додати слово</button>
+      <button class="tab-btn ${currentTab==='list'?'active':''}" data-tab="list">Мій словник</button>
+    </div>
+    <div id="tabContent"></div>`;
+
+  document.getElementById('switchBtn').onclick = () => {
+    currentStudent = '';
+    localStorage.removeItem(CURRENT_KEY);
+    render();
+  };
+  app.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.onclick = () => { currentTab = btn.dataset.tab; render(); };
+  });
+
+  const content = document.getElementById('tabContent');
+  if(currentTab === 'review') renderReview(content, profile, dueWords);
+  else if(currentTab === 'add') renderAddForm(content, profile);
+  else renderWordList(content, profile);
+}
+
+/* ---------- ПОВТОРЕННЯ ---------- */
+function renderReview(container, profile, dueWords){
+  if(dueWords.length === 0){
+    container.innerHTML = `
+      <div class="empty-state">
+        <div class="big">На сьогодні нічого повторювати 🎉</div>
+        <p>${profile.words.length === 0 ? 'Додай перші слова у вкладці «Додати слово».' : 'Повернись, коли настане час наступного повторення.'}</p>
+      </div>`;
+    return;
+  }
+  let idx = 0;
+  const queue = dueWords.slice();
+
+  function show(){
+    if(idx >= queue.length){
+      container.innerHTML = `
+        <div class="empty-state">
+          <div class="big">Готово на сьогодні!</div>
+          <p>Ти повторив(-ла) ${queue.length} ${queue.length===1?'слово':'слів'}.</p>
+        </div>`;
+      return;
+    }
+    const w = queue[idx];
+    container.innerHTML = `
+      <div class="review-wrap">
+        <div class="progress-text">Слово ${idx+1} із ${queue.length}</div>
+        <div class="flip-card" id="flipCard">
+          <div class="flip-inner">
+            <div class="flip-face flip-front">
+              <div class="word">${w.en}</div>
+              <div class="hint">натисни, щоб перевірити</div>
+            </div>
+            <div class="flip-face flip-back">
+              <div class="word">${w.ua}</div>
+              ${w.example ? `<div class="example">${w.example}</div>` : ''}
+            </div>
+          </div>
+        </div>
+        <div class="review-actions">
+          <button class="hard-btn" id="hardBtn">Складно</button>
+          <button class="easy-btn" id="easyBtn">Легко</button>
+        </div>
+      </div>`;
+    const cardEl = document.getElementById('flipCard');
+    cardEl.onclick = () => cardEl.classList.toggle('flipped');
+    document.getElementById('hardBtn').onclick = () => { grade(w, false); idx++; show(); };
+    document.getElementById('easyBtn').onclick = () => { grade(w, true); idx++; show(); };
+  }
+
+  function grade(word, correct){
+    const wordRef = profile.words.find(x => x.id === word.id);
+    if(!wordRef) return;
+    if(correct){
+      wordRef.box = Math.min(wordRef.box + 1, MAX_BOX);
+      wordRef.due = addDays(todayStr(), INTERVALS[wordRef.box]);
+    } else {
+      wordRef.box = 0;
+      wordRef.due = addDays(todayStr(), 1);
+    }
+    saveProfile(currentStudent, profile);
+  }
+
+  show();
+}
+
+/* ---------- ДОДАТИ СЛОВО ---------- */
+function renderAddForm(container, profile){
+  container.innerHTML = `
+    <div class="add-form">
+      <div class="field">
+        <label>Слово або фраза англійською</label>
+        <input type="text" id="enInput" placeholder="e.g. procrastinate">
+      </div>
+      <div class="field">
+        <label>Переклад українською</label>
+        <input type="text" id="uaInput" placeholder="напр. відкладати на потім">
+      </div>
+      <div class="field">
+        <label>Приклад речення (необов'язково)</label>
+        <textarea id="exInput" rows="2" placeholder="I always procrastinate before deadlines."></textarea>
+      </div>
+      <button class="add-submit" id="addSubmit">Додати слово</button>
+      <div class="added-msg" id="addedMsg"></div>
+    </div>`;
+
+  document.getElementById('addSubmit').onclick = () => {
+    const en = document.getElementById('enInput').value.trim();
+    const ua = document.getElementById('uaInput').value.trim();
+    const ex = document.getElementById('exInput').value.trim();
+    const msg = document.getElementById('addedMsg');
+    if(!en || !ua){
+      msg.style.color = 'var(--bad)';
+      msg.textContent = 'Заповни слово і переклад.';
+      return;
+    }
+    profile.words.push({
+      id: Date.now().toString(36) + Math.random().toString(36).slice(2,7),
+      en, ua, example: ex,
+      box: 0,
+      due: todayStr(),
+      added: todayStr()
+    });
+    saveProfile(currentStudent, profile);
+    document.getElementById('enInput').value = '';
+    document.getElementById('uaInput').value = '';
+    document.getElementById('exInput').value = '';
+    msg.style.color = 'var(--good)';
+    msg.textContent = `«${en}» додано — з'явиться в сьогоднішньому повторенні.`;
+  };
+}
+
+/* ---------- МІЙ СЛОВНИК ---------- */
+function renderWordList(container, profile){
+  if(profile.words.length === 0){
+    container.innerHTML = `<div class="word-list-empty">Список поки порожній. Додай перше слово у вкладці «Додати слово».</div>`;
+    return;
+  }
+  const rows = profile.words
+    .slice()
+    .sort((a,b) => a.due.localeCompare(b.due))
+    .map(w => `
+      <tr>
+        <td>${w.en}</td>
+        <td>${w.ua}</td>
+        <td>
+          <div class="box-dots">
+            ${Array.from({length: MAX_BOX+1}).map((_,i) => `<span class="box-dot ${i<=w.box?'filled':''}"></span>`).join('')}
+          </div>
+        </td>
+        <td>${w.due}</td>
+        <td><button class="del-btn" data-id="${w.id}">Видалити</button></td>
+      </tr>`).join('');
+
+  container.innerHTML = `
+    <table class="word-table">
+      <thead><tr><th>Слово</th><th>Переклад</th><th>Рівень</th><th>Наступне повторення</th><th></th></tr></thead>
+      <tbody>${rows}</tbody>
+    </table>`;
+
+  container.querySelectorAll('.del-btn').forEach(btn => {
+    btn.onclick = () => {
+      profile.words = profile.words.filter(w => w.id !== btn.dataset.id);
+      saveProfile(currentStudent, profile);
+      renderWordList(container, profile);
+      render();
+    };
+  });
+}
+
+render();
+</script>
+
+</body>
+</html>
