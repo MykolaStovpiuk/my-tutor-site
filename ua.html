@@ -326,6 +326,32 @@
   .step h3{font-size:1.05rem; margin-bottom:6px;}
   .step p{font-size:0.92rem; color:#4a534b; margin:0;}
 
+  /* platform gallery */
+  .platform-grid{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:18px;
+  }
+  @media (max-width:700px){.platform-grid{grid-template-columns:1fr;}}
+  .platform-shot{
+    background:#fff;
+    border:1px solid var(--line);
+    border-radius:16px;
+    overflow:hidden;
+  }
+  .platform-shot img{
+    display:block;
+    width:100%;
+    height:auto;
+    border-bottom:1px solid var(--line);
+  }
+  .platform-shot .cap{
+    padding:14px 16px;
+    font-size:0.88rem;
+    color:#4a534b;
+  }
+  .platform-intro{max-width:62ch; color:#3d473f; margin-bottom:32px;}
+
   /* testimonials */
   .quotes{
     display:grid;
@@ -382,6 +408,7 @@
       <a href="#about">Про мене</a>
       <a href="#offerings">Заняття</a>
       <a href="#how">Як це працює</a>
+      <a href="#platform">Платформа</a>
       <a href="#contact">Контакти</a>
     </div>
     <div class="nav-right">
@@ -490,6 +517,34 @@
   </div>
 </section>
 
+<section id="platform">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">/ˈplætfɔːrm/ — платформа</span>
+      <h2>Заняття проходять прямо в браузері</h2>
+    </div>
+    <p class="platform-intro">Жодних додаткових програм. Урок відкривається в одній вкладці — з відеодзвінком та інтерактивними завданнями, які ми проходимо разом: граматика, слова та аудіювання, а домашнє завдання зберігається автоматично до наступного разу.</p>
+    <div class="platform-grid">
+      <div class="platform-shot">
+        <img src="platform-call.png" alt="Екран уроку з відеодзвінком">
+        <div class="cap">Відеодзвінок прямо в уроці — жодних окремих застосунків.</div>
+      </div>
+      <div class="platform-shot">
+        <img src="platform-match.png" alt="Завдання: знайти пару фрази та значення">
+        <div class="cap">Інтерактивні завдання, наприклад — знайти пару за значенням.</div>
+      </div>
+      <div class="platform-shot">
+        <img src="platform-listening.png" alt="Завдання на аудіювання з плеєром">
+        <div class="cap">Аудіювання з реальними записами прямо на сторінці.</div>
+      </div>
+      <div class="platform-shot">
+        <img src="platform-adjectives.png" alt="Завдання на граматику та лексику">
+        <div class="cap">Завдання на граматику й лексику з миттєвою перевіркою.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <section id="testimonials">
   <div class="wrap">
     <div class="section-head">
@@ -504,7 +559,7 @@
         <p>«Заняття завжди були актуальними саме для того, що мені було потрібно того тижня.»</p>
       </div>
       <div class="quote">
-        <p>«Склав ЄВІ на бал, потрібний для вступу в університет.»</p>
+        <p>«Склав IELTS на бал, потрібний для вступу в університет.»</p>
       </div>
     </div>
   </div>

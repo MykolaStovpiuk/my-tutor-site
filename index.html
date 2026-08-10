@@ -327,6 +327,32 @@
   .step h3{font-size:1.05rem; margin-bottom:6px;}
   .step p{font-size:0.92rem; color:#4a534b; margin:0;}
 
+  /* platform gallery */
+  .platform-grid{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:18px;
+  }
+  @media (max-width:700px){.platform-grid{grid-template-columns:1fr;}}
+  .platform-shot{
+    background:#fff;
+    border:1px solid var(--line);
+    border-radius:16px;
+    overflow:hidden;
+  }
+  .platform-shot img{
+    display:block;
+    width:100%;
+    height:auto;
+    border-bottom:1px solid var(--line);
+  }
+  .platform-shot .cap{
+    padding:14px 16px;
+    font-size:0.88rem;
+    color:#4a534b;
+  }
+  .platform-intro{max-width:62ch; color:#3d473f; margin-bottom:32px;}
+
   /* testimonials */
   .quotes{
     display:grid;
@@ -383,6 +409,7 @@
       <a href="#about">About</a>
       <a href="#offerings">Lessons</a>
       <a href="#how">How it works</a>
+      <a href="#platform">Platform</a>
       <a href="#contact">Contact</a>
     </div>
     <div class="nav-right">
@@ -491,6 +518,34 @@
   </div>
 </section>
 
+<section id="platform">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">/ˈplætfɔːrm/ — platform</span>
+      <h2>Lessons happen right in your browser</h2>
+    </div>
+    <p class="platform-intro">No extra apps to install. Each lesson opens in one tab with a built-in video call and interactive exercises we work through together — grammar, vocabulary, and listening practice, with your homework saved automatically for next time.</p>
+    <div class="platform-grid">
+      <div class="platform-shot">
+        <img src="platform-call.png" alt="Lesson screen with built-in video call">
+        <div class="cap">Video call built right into the lesson — no separate app needed.</div>
+      </div>
+      <div class="platform-shot">
+        <img src="platform-match.png" alt="Matching phrases with their meanings exercise">
+        <div class="cap">Interactive exercises, like matching phrases with their meanings.</div>
+      </div>
+      <div class="platform-shot">
+        <img src="platform-listening.png" alt="Listening exercise with audio player">
+        <div class="cap">Listening practice with real audio, right on the page.</div>
+      </div>
+      <div class="platform-shot">
+        <img src="platform-adjectives.png" alt="Fill-in-the-blank grammar and vocabulary exercise">
+        <div class="cap">Grammar and vocabulary tasks with instant feedback.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <section id="testimonials">
   <div class="wrap">
     <div class="section-head">
@@ -505,7 +560,7 @@
         <p>"Lessons always felt relevant to what I actually needed that week."</p>
       </div>
       <div class="quote">
-        <p>"Passed my ЄВІ with the score I needed for university."</p>
+        <p>"Passed my IELTS with the score I needed for university."</p>
       </div>
     </div>
   </div>
