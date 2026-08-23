@@ -145,6 +145,56 @@
   }
   .empty-state .big{font-family:'Fraunces', serif; font-size:1.6rem; color:var(--ink); margin-bottom:10px;}
 
+  /* ---------- REVIEW MODE SELECTOR ---------- */
+  .review-modes{display:flex; justify-content:center; gap:6px; margin-bottom:26px; flex-wrap:wrap;}
+  .rmode-btn{
+    border:1.5px solid var(--line); background:#fff; color:var(--ink); opacity:0.7;
+    padding:8px 14px; border-radius:100px; font-size:0.82rem; cursor:pointer;
+  }
+  .rmode-btn.active{opacity:1; border-color:var(--teal); background:var(--paper-soft); font-weight:700;}
+
+  /* ---------- QUIZ ---------- */
+  .quiz-wrap{max-width:440px; margin:0 auto; text-align:center;}
+  .quiz-word{font-family:'Fraunces', serif; font-size:1.7rem; margin-bottom:22px;}
+  .quiz-options{display:grid; gap:10px;}
+  .quiz-option{
+    border:1.5px solid var(--line); background:#fff;
+    padding:13px 16px; border-radius:12px; font-size:0.95rem; cursor:pointer; text-align:left;
+  }
+  .quiz-option.correct{background:var(--good); color:#fff; border-color:var(--good);}
+  .quiz-option.wrong{background:var(--bad); color:#fff; border-color:var(--bad);}
+  .quiz-option:disabled{cursor:default;}
+
+  /* ---------- TYPING ---------- */
+  .type-wrap{max-width:420px; margin:0 auto; text-align:center;}
+  .type-word{font-family:'Fraunces', serif; font-size:1.7rem; margin-bottom:22px;}
+  .type-input{
+    width:100%; border:1.5px solid var(--line); border-radius:12px;
+    padding:13px 16px; font-size:1rem; text-align:center; margin-bottom:14px;
+  }
+  .type-input.correct{border-color:var(--good); background:#eef8f0;}
+  .type-input.wrong{border-color:var(--bad); background:#fdf0ee;}
+  .type-feedback{font-size:0.88rem; min-height:1.4em; margin-bottom:14px;}
+  .type-feedback.correct{color:var(--good); font-weight:700;}
+  .type-feedback.wrong{color:var(--bad); font-weight:700;}
+  .type-submit{
+    border:none; background:var(--teal); color:var(--paper);
+    padding:12px 26px; border-radius:100px; font-weight:700; cursor:pointer; font-size:0.9rem;
+  }
+
+  /* ---------- MATCH ---------- */
+  .match-wrap{max-width:600px; margin:0 auto;}
+  .match-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:10px;}
+  @media (max-width:560px){.match-grid{grid-template-columns:repeat(2,1fr);}}
+  .match-tile{
+    border:1.5px solid var(--line); background:#fff; border-radius:12px;
+    padding:14px 10px; font-size:0.88rem; text-align:center; cursor:pointer;
+    min-height:60px; display:flex; align-items:center; justify-content:center;
+  }
+  .match-tile.selected{border-color:var(--marigold); background:#FFF4E0;}
+  .match-tile.matched{background:var(--good); color:#fff; border-color:var(--good); cursor:default; opacity:0.85;}
+  .match-tile.shake{background:var(--bad); color:#fff; border-color:var(--bad);}
+
   /* ---------- ADD FORM ---------- */
   .add-form{max-width:460px; margin:0 auto; background:#fff; border:1px solid var(--line); border-radius:18px; padding:26px;}
   .field{margin-bottom:16px;}
@@ -240,6 +290,7 @@ function addDays(dateStr, days){
 
 let currentStudent = localStorage.getItem(CURRENT_KEY) || '';
 let currentTab = 'review';
+let reviewMode = 'cards';
 const app = document.getElementById('app');
 
 /* ================= SUPABASE HELPERS ================= */
@@ -375,6 +426,18 @@ async function renderTrainer(){
 }
 
 /* ---------- ПОВТОРЕННЯ ---------- */
+async function gradeWord(word, correct){
+  let box, due;
+  if(correct){
+    box = Math.min(word.box + 1, MAX_BOX);
+    due = addDays(todayStr(), INTERVALS[box]);
+  } else {
+    box = 0;
+    due = addDays(todayStr(), 1);
+  }
+  await updateWord(word.id, { box, due });
+}
+
 function renderReview(container, allWords, dueWords){
   if(dueWords.length === 0){
     container.innerHTML = `
@@ -384,18 +447,51 @@ function renderReview(container, allWords, dueWords){
       </div>`;
     return;
   }
+
+  container.innerHTML = `
+    <div class="review-modes" id="reviewModes">
+      <button class="rmode-btn" data-mode="cards">Картки</button>
+      <button class="rmode-btn" data-mode="quiz">Тест</button>
+      <button class="rmode-btn" data-mode="type">Ввести переклад</button>
+      <button class="rmode-btn" data-mode="match">Знайти пару</button>
+    </div>
+    <div id="reviewArea"></div>`;
+
+  const modesEl = document.getElementById('reviewModes');
+  modesEl.querySelectorAll('.rmode-btn').forEach(btn => {
+    if(btn.dataset.mode === reviewMode) btn.classList.add('active');
+    btn.onclick = () => {
+      reviewMode = btn.dataset.mode;
+      modesEl.querySelectorAll('.rmode-btn').forEach(b => b.classList.toggle('active', b.dataset.mode === reviewMode));
+      startExercise();
+    };
+  });
+
+  const area = document.getElementById('reviewArea');
+  function startExercise(){
+    if(reviewMode === 'cards') runCards(area, dueWords);
+    else if(reviewMode === 'quiz') runQuiz(area, dueWords, allWords);
+    else if(reviewMode === 'type') runTyping(area, dueWords);
+    else runMatch(area, dueWords);
+  }
+  startExercise();
+}
+
+function doneScreen(container, count){
+  container.innerHTML = `
+    <div class="empty-state">
+      <div class="big">Готово на сьогодні!</div>
+      <p>Ти повторив(-ла) ${count} ${count===1?'слово':'слів'}. Онови сторінку, щоб спробувати інший формат ще раз.</p>
+    </div>`;
+}
+
+/* Картки */
+function runCards(container, dueWords){
   let idx = 0;
   const queue = dueWords.slice();
 
   function show(){
-    if(idx >= queue.length){
-      container.innerHTML = `
-        <div class="empty-state">
-          <div class="big">Готово на сьогодні!</div>
-          <p>Ти повторив(-ла) ${queue.length} ${queue.length===1?'слово':'слів'}.</p>
-        </div>`;
-      return;
-    }
+    if(idx >= queue.length){ doneScreen(container, queue.length); return; }
     const w = queue[idx];
     container.innerHTML = `
       <div class="review-wrap">
@@ -423,26 +519,182 @@ function renderReview(container, allWords, dueWords){
     const easyBtn = document.getElementById('easyBtn');
     hardBtn.onclick = async () => {
       hardBtn.disabled = true; easyBtn.disabled = true;
-      await grade(w, false);
+      await gradeWord(w, false);
       idx++; show();
     };
     easyBtn.onclick = async () => {
       hardBtn.disabled = true; easyBtn.disabled = true;
-      await grade(w, true);
+      await gradeWord(w, true);
       idx++; show();
     };
   }
+  show();
+}
 
-  async function grade(word, correct){
-    let box, due;
-    if(correct){
-      box = Math.min(word.box + 1, MAX_BOX);
-      due = addDays(todayStr(), INTERVALS[box]);
-    } else {
-      box = 0;
-      due = addDays(todayStr(), 1);
+/* Тест із варіантами */
+function runQuiz(container, dueWords, allWords){
+  let idx = 0;
+  const queue = dueWords.slice();
+
+  function shuffled(arr){
+    const a = arr.slice();
+    for(let i = a.length - 1; i > 0; i--){
+      const j = Math.floor(Math.random() * (i+1));
+      [a[i], a[j]] = [a[j], a[i]];
     }
-    await updateWord(word.id, { box, due });
+    return a;
+  }
+
+  function distractorsFor(word){
+    const pool = allWords.filter(w => w.id !== word.id && w.ua !== word.ua);
+    return shuffled(pool).slice(0, 3).map(w => w.ua);
+  }
+
+  function show(){
+    if(idx >= queue.length){ doneScreen(container, queue.length); return; }
+    const w = queue[idx];
+    const options = shuffled([w.ua, ...distractorsFor(w)]);
+    container.innerHTML = `
+      <div class="quiz-wrap">
+        <div class="progress-text">Питання ${idx+1} із ${queue.length}</div>
+        <div class="quiz-word">${w.en}</div>
+        <div class="quiz-options">
+          ${options.map(o => `<button class="quiz-option" data-val="${o}">${o}</button>`).join('')}
+        </div>
+      </div>`;
+    container.querySelectorAll('.quiz-option').forEach(btn => {
+      btn.onclick = async () => {
+        container.querySelectorAll('.quiz-option').forEach(b => b.disabled = true);
+        const chosen = btn.dataset.val;
+        const correct = chosen === w.ua;
+        if(correct){ btn.classList.add('correct'); }
+        else {
+          btn.classList.add('wrong');
+          container.querySelectorAll('.quiz-option').forEach(b => { if(b.dataset.val === w.ua) b.classList.add('correct'); });
+        }
+        await gradeWord(w, correct);
+        setTimeout(() => { idx++; show(); }, 900);
+      };
+    });
+  }
+  show();
+}
+
+/* Ввести переклад вручну */
+function runTyping(container, dueWords){
+  let idx = 0;
+  const queue = dueWords.slice();
+
+  function normalize(s){
+    return s.toLowerCase().replace(/\([^)]*\)/g, '').replace(/[.,!?]/g, '').trim().replace(/\s+/g, ' ');
+  }
+
+  function show(){
+    if(idx >= queue.length){ doneScreen(container, queue.length); return; }
+    const w = queue[idx];
+    container.innerHTML = `
+      <div class="type-wrap">
+        <div class="progress-text">Слово ${idx+1} із ${queue.length}</div>
+        <div class="type-word">${w.en}</div>
+        <input type="text" class="type-input" id="typeInput" placeholder="Введи переклад українською" autocomplete="off">
+        <div class="type-feedback" id="typeFeedback"></div>
+        <button class="type-submit" id="typeSubmit">Перевірити</button>
+      </div>`;
+    const input = document.getElementById('typeInput');
+    const feedback = document.getElementById('typeFeedback');
+    const submitBtn = document.getElementById('typeSubmit');
+    input.focus();
+    let answered = false;
+
+    async function check(){
+      if(answered) return;
+      answered = true;
+      const correct = normalize(input.value) === normalize(w.ua);
+      input.classList.add(correct ? 'correct' : 'wrong');
+      input.disabled = true;
+      submitBtn.disabled = true;
+      feedback.classList.add(correct ? 'correct' : 'wrong');
+      feedback.textContent = correct ? 'Правильно!' : `Правильна відповідь: ${w.ua}`;
+      await gradeWord(w, correct);
+      setTimeout(() => { idx++; show(); }, 1200);
+    }
+    submitBtn.onclick = check;
+    input.addEventListener('keydown', e => { if(e.key === 'Enter') check(); });
+  }
+  show();
+}
+
+/* Знайти пару */
+function runMatch(container, dueWords){
+  const words = dueWords.slice(0, 6);
+  let selected = null;
+  let matchedCount = 0;
+
+  function shuffled(arr){
+    const a = arr.slice();
+    for(let i = a.length - 1; i > 0; i--){
+      const j = Math.floor(Math.random() * (i+1));
+      [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+  }
+
+  const enTiles = words.map(w => ({ key: w.en, label: w.en, pair: w.ua, wordRef: w }));
+  const uaTiles = words.map(w => ({ key: w.ua, label: w.ua, pair: w.en, wordRef: w }));
+  const tiles = shuffled([...enTiles, ...uaTiles]);
+
+  function show(){
+    container.innerHTML = `
+      <div class="match-wrap">
+        <div class="progress-text" style="text-align:center; margin-bottom:16px;">Знайдено пар: ${matchedCount} із ${words.length}</div>
+        <div class="match-grid" id="matchGrid"></div>
+        ${dueWords.length > 6 ? `<p style="text-align:center; color:#5c6660; font-size:0.85rem; margin-top:14px;">Ще ${dueWords.length - 6} слів чекають — повтори цю вправу ще раз після цього набору.</p>` : ''}
+      </div>`;
+    const grid = document.getElementById('matchGrid');
+    tiles.forEach(t => {
+      const tile = document.createElement('div');
+      tile.className = 'match-tile';
+      tile.textContent = t.label;
+      tile.dataset.key = t.key;
+      if(t.matched) tile.classList.add('matched');
+      tile.onclick = () => onTileClick(tile, t);
+      grid.appendChild(tile);
+    });
+  }
+
+  async function onTileClick(tileEl, t){
+    if(t.matched || tileEl.classList.contains('selected')) return;
+    if(!selected){
+      selected = { tileEl, t };
+      tileEl.classList.add('selected');
+      return;
+    }
+    if(selected.tileEl === tileEl) return;
+    if(selected.t.pair === t.key){
+      selected.t.matched = true;
+      t.matched = true;
+      selected.tileEl.classList.remove('selected');
+      selected.tileEl.classList.add('matched');
+      tileEl.classList.add('matched');
+      matchedCount++;
+      const wordRef = t.wordRef;
+      const prevSelected = selected;
+      selected = null;
+      document.querySelector('.progress-text').textContent = `Знайдено пар: ${matchedCount} із ${words.length}`;
+      await gradeWord(wordRef, true);
+      if(matchedCount === words.length){
+        setTimeout(() => doneScreen(container, words.length), 500);
+      }
+    } else {
+      tileEl.classList.add('shake');
+      selected.tileEl.classList.add('shake');
+      const prevSelected = selected;
+      setTimeout(() => {
+        tileEl.classList.remove('shake', 'selected');
+        prevSelected.tileEl.classList.remove('shake', 'selected');
+        selected = null;
+      }, 500);
+    }
   }
 
   show();
