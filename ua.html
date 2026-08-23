@@ -89,6 +89,15 @@
   nav .links a{text-decoration:none; border-bottom:1px solid transparent;}
   nav .links a:hover{border-bottom-color:var(--coral);}
   .nav-right{display:flex; align-items:center; gap:16px;}
+  .menu-toggle{
+    display:none;
+    border:none; background:none; cursor:pointer;
+    width:34px; height:34px; padding:0;
+    flex-direction:column; justify-content:center; align-items:center; gap:5px;
+  }
+  .menu-toggle span{
+    display:block; width:22px; height:2px; background:var(--ink); border-radius:2px;
+  }
   .lang-switch{
     display:flex; gap:4px;
     font-family:'Space Mono', monospace;
@@ -119,7 +128,23 @@
   }
   .nav-cta:hover{background:var(--teal-deep);}
   @media (max-width:720px){
-    nav .links{display:none;}
+    nav .links{
+      display:none;
+      position:absolute;
+      top:100%; left:0; right:0;
+      flex-direction:column;
+      gap:0;
+      background:var(--paper);
+      border-bottom:1px solid var(--line);
+      box-shadow:0 12px 20px rgba(43,54,48,0.08);
+    }
+    nav .links.open{display:flex;}
+    nav .links a{
+      padding:14px 24px;
+      border-bottom:1px solid var(--line);
+    }
+    nav{position:sticky;}
+    .menu-toggle{display:flex;}
   }
 
   /* ---------- HERO ---------- */
@@ -418,6 +443,9 @@
         <a href="ua.html" class="lang-link active">UA</a>
       </div>
       <a class="nav-cta" href="https://t.me/kolyastovpyuk" target="_blank" rel="noopener">Написати</a>
+      <button class="menu-toggle" id="menuToggle" aria-label="Меню" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
     </div>
   </div>
 </nav>
@@ -588,6 +616,19 @@
 
 <script>
   document.getElementById('year').textContent = new Date().getFullYear();
+
+  const menuToggle = document.getElementById('menuToggle');
+  const navLinks = document.querySelector('nav .links');
+  menuToggle.addEventListener('click', () => {
+    const isOpen = navLinks.classList.toggle('open');
+    menuToggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+  });
+  navLinks.querySelectorAll('a').forEach(a => {
+    a.addEventListener('click', () => {
+      navLinks.classList.remove('open');
+      menuToggle.setAttribute('aria-expanded', 'false');
+    });
+  });
 </script>
 
 </body>
