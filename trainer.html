@@ -3,10 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Тренажер слів — Микола Ступюк</title>
+<title>Тренажер слів — Микола Стовп'юк</title>
 <meta name="description" content="Персональний тренажер словника: додавай нові слова та фрази і повторюй їх за системою інтервального повторення.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,500&family=Karla:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
   :root{
     --paper:#FBF1E4;
@@ -63,7 +64,13 @@
   header.top h1{font-size:clamp(1.9rem, 4vw, 2.5rem);}
   header.top p{max-width:52ch; margin:12px auto 0; color:#4a534b;}
 
-  main{padding-bottom:80px;}
+  main{padding-bottom:80px; min-height:200px;}
+
+  .loading{text-align:center; padding:60px 20px; color:#5c6660; font-family:'Space Mono', monospace; font-size:0.9rem;}
+  .error-box{
+    max-width:480px; margin:40px auto; background:#fff2ed; border:1px solid var(--bad);
+    border-radius:16px; padding:22px; text-align:center; color:var(--bad); font-size:0.9rem;
+  }
 
   /* ---------- PROFILE SCREEN ---------- */
   .profile-box{
@@ -88,6 +95,7 @@
     border:none; background:var(--coral); color:var(--paper);
     padding:11px 20px; border-radius:10px; font-weight:700; cursor:pointer;
   }
+  .start-btn:disabled{opacity:0.6; cursor:default;}
 
   /* ---------- STATS BAR ---------- */
   .stats-bar{
@@ -129,6 +137,7 @@
   .flip-face .hint{font-family:'Space Mono', monospace; font-size:0.75rem; opacity:0.6; margin-top:10px;}
   .review-actions{display:flex; gap:12px;}
   .hard-btn, .easy-btn{border:none; border-radius:100px; padding:12px 22px; font-weight:700; font-size:0.9rem; cursor:pointer;}
+  .hard-btn:disabled, .easy-btn:disabled{opacity:0.6; cursor:default;}
   .hard-btn{background:var(--bad); color:#fff;}
   .easy-btn{background:var(--good); color:#fff;}
   .empty-state{
@@ -148,6 +157,7 @@
     width:100%; border:none; background:var(--teal); color:var(--paper);
     padding:13px; border-radius:10px; font-weight:700; cursor:pointer; font-size:0.95rem;
   }
+  .add-submit:disabled{opacity:0.6; cursor:default;}
   .added-msg{
     text-align:center; color:var(--good); font-size:0.88rem; margin-top:12px; font-weight:600;
     min-height:1.2em;
@@ -163,6 +173,7 @@
   .box-dot.filled{background:var(--marigold);}
   .del-btn{border:none; background:none; color:var(--bad); cursor:pointer; font-size:0.8rem;}
   .word-list-empty{text-align:center; color:#4a534b; padding:40px 20px;}
+  .added-by{font-family:'Space Mono', monospace; font-size:0.7rem; opacity:0.6;}
 
   footer{text-align:center; padding:30px 0 40px; font-size:0.85rem; color:#6b756c;}
 </style>
@@ -171,7 +182,7 @@
 
 <nav>
   <div class="wrap">
-    <div class="brand">Микола Ступюк<span style="color:var(--coral)">.</span></div>
+    <div class="brand">Микола Стовп'юк<span style="color:var(--coral)">.</span></div>
     <a class="back-link" href="ua.html">← На головну</a>
   </div>
 </nav>
@@ -180,22 +191,45 @@
   <div class="wrap">
     <span class="eyebrow">/rɪˈvɪʒ.ən/ — повторення</span>
     <h1>Твій тренажер слів</h1>
-    <p>Додавай слова та фрази, які вивчаєш на заняттях, і повторюй їх, коли настане час.</p>
+    <p>Додавай слова та фрази, які вивчаєш на заняттях, і повторюй їх, коли настане час. Учитель теж може додати сюди слова після уроку.</p>
   </div>
 </header>
 
 <main class="wrap" id="app"></main>
 
 <footer>
-  Прогрес зберігається у твоєму браузері на цьому пристрої.
+  Слова зберігаються на сервері й доступні з будь-якого пристрою.
 </footer>
 
 <script>
-/* ================= ДАНІ ================= */
-const STUDENTS_KEY = 'vt_students';
+/* ==================================================================
+   НАЛАШТУВАННЯ SUPABASE
+   Встав сюди свій Project URL та anon public key
+   (Supabase → Project Settings → API).
+================================================================== */
+const SUPABASE_URL = 'lkvactsotpbkwuacepgq';
+const SUPABASE_ANON_KEY = 'sb_publishable_7neWEfMeG57I_wYOvrcEuw_Wg-kJSfv';
+/* ================================================================== */
+
+const sb = (SUPABASE_URL.startsWith('http'))
+  ? supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
+  : null;
+
 const CURRENT_KEY = 'vt_current_student';
 const INTERVALS = [1, 2, 4, 7, 14, 30]; // дні до наступного повторення на кожному рівні
 const MAX_BOX = INTERVALS.length - 1;
+
+/* ====== СТАРТОВІ СЛОВА: додай список для конкретного учня тут ======
+   Ключ — ім'я учня маленькими літерами (точно так, як він його вводить
+   на екрані вибору). Список підвантажиться автоматично лише один раз —
+   коли учень заходить під цим іменем уперше і в нього ще немає жодного
+   слова в базі. */
+const STARTER_WORDS = {
+  // 'олена': [
+  //   { en: 'deadline', ua: 'дедлайн', example: 'The deadline is Friday.' },
+  // ],
+};
+/* ==================================================================== */
 
 function todayStr(){ return new Date().toISOString().slice(0,10); }
 function addDays(dateStr, days){
@@ -203,30 +237,56 @@ function addDays(dateStr, days){
   d.setDate(d.getDate() + days);
   return d.toISOString().slice(0,10);
 }
-function getStudents(){
-  try{ return JSON.parse(localStorage.getItem(STUDENTS_KEY)) || []; } catch(e){ return []; }
-}
-function saveStudents(list){ localStorage.setItem(STUDENTS_KEY, JSON.stringify(list)); }
-function profileKey(name){ return 'vt_profile_' + name.trim().toLowerCase(); }
-function loadProfile(name){
-  try{ return JSON.parse(localStorage.getItem(profileKey(name))) || { words: [] }; }
-  catch(e){ return { words: [] }; }
-}
-function saveProfile(name, profile){ localStorage.setItem(profileKey(name), JSON.stringify(profile)); }
 
 let currentStudent = localStorage.getItem(CURRENT_KEY) || '';
 let currentTab = 'review';
-
 const app = document.getElementById('app');
 
-function render(){
-  if(!currentStudent){ renderProfileScreen(); return; }
-  renderTrainer();
+/* ================= SUPABASE HELPERS ================= */
+async function getStudents(){
+  const { data, error } = await sb.from('students').select('name').order('name');
+  if(error){ console.error(error); return []; }
+  return data.map(r => r.name);
+}
+async function ensureStudent(name){
+  const { error } = await sb.from('students').upsert({ name }, { onConflict: 'name' });
+  if(error) console.error(error);
+}
+async function loadWords(name){
+  const { data, error } = await sb.from('words').select('*').eq('student', name).order('due');
+  if(error){ console.error(error); return []; }
+  return data;
+}
+async function insertWord(name, word, addedBy){
+  const { error } = await sb.from('words').insert({
+    student: name, en: word.en, ua: word.ua, example: word.example || '',
+    box: 0, due: todayStr(), added: todayStr(), added_by: addedBy
+  });
+  if(error) console.error(error);
+  return !error;
+}
+async function updateWord(id, fields){
+  const { error } = await sb.from('words').update(fields).eq('id', id);
+  if(error) console.error(error);
+}
+async function deleteWordRow(id){
+  const { error } = await sb.from('words').delete().eq('id', id);
+  if(error) console.error(error);
 }
 
-/* ================= ЕКРАН ВИБОРУ УЧНЯ ================= */
-function renderProfileScreen(){
-  const students = getStudents();
+/* ================= РЕНДЕР ================= */
+async function render(){
+  if(!sb){
+    app.innerHTML = `<div class="error-box">Тренажер ще не підключено до бази даних. Встав SUPABASE_URL і SUPABASE_ANON_KEY на початку файлу trainer.html.</div>`;
+    return;
+  }
+  if(!currentStudent){ await renderProfileScreen(); return; }
+  await renderTrainer();
+}
+
+async function renderProfileScreen(){
+  app.innerHTML = `<div class="loading">Завантаження…</div>`;
+  const students = await getStudents();
   app.innerHTML = `
     <div class="profile-box">
       <h2>Хто займається?</h2>
@@ -247,30 +307,40 @@ function renderProfileScreen(){
       chipsEl.appendChild(chip);
     });
   }
-  document.getElementById('startBtn').onclick = () => {
+  const startBtn = document.getElementById('startBtn');
+  startBtn.onclick = async () => {
     const name = document.getElementById('nameInput').value.trim();
     if(!name) return;
-    if(!students.includes(name)){ students.push(name); saveStudents(students); }
-    selectStudent(name);
+    startBtn.disabled = true;
+    startBtn.textContent = '...';
+    await selectStudent(name);
   };
   document.getElementById('nameInput').addEventListener('keydown', e => {
-    if(e.key === 'Enter') document.getElementById('startBtn').click();
+    if(e.key === 'Enter') startBtn.click();
   });
 }
 
-function selectStudent(name){
+async function selectStudent(name){
+  await ensureStudent(name);
+  const words = await loadWords(name);
+  const starter = STARTER_WORDS[name.trim().toLowerCase()];
+  if(words.length === 0 && starter && starter.length){
+    for(const w of starter){
+      await insertWord(name, w, 'tutor');
+    }
+  }
   currentStudent = name;
   localStorage.setItem(CURRENT_KEY, name);
   currentTab = 'review';
   render();
 }
 
-/* ================= ГОЛОВНИЙ ЕКРАН ТРЕНАЖЕРА ================= */
-function renderTrainer(){
-  const profile = loadProfile(currentStudent);
+async function renderTrainer(){
+  app.innerHTML = `<div class="loading">Завантаження…</div>`;
+  const words = await loadWords(currentStudent);
   const today = todayStr();
-  const dueWords = profile.words.filter(w => w.due <= today);
-  const masteredCount = profile.words.filter(w => w.box >= MAX_BOX).length;
+  const dueWords = words.filter(w => w.due <= today);
+  const masteredCount = words.filter(w => w.box >= MAX_BOX).length;
 
   app.innerHTML = `
     <div style="display:flex; justify-content:space-between; align-items:center; margin-top:20px;">
@@ -278,7 +348,7 @@ function renderTrainer(){
       <button class="switch-student" id="switchBtn">Змінити учня</button>
     </div>
     <div class="stats-bar">
-      <div class="stat"><div class="num">${profile.words.length}</div><div class="lbl">всього слів</div></div>
+      <div class="stat"><div class="num">${words.length}</div><div class="lbl">всього слів</div></div>
       <div class="stat"><div class="num">${dueWords.length}</div><div class="lbl">на сьогодні</div></div>
       <div class="stat"><div class="num">${masteredCount}</div><div class="lbl">вивчено</div></div>
     </div>
@@ -299,18 +369,18 @@ function renderTrainer(){
   });
 
   const content = document.getElementById('tabContent');
-  if(currentTab === 'review') renderReview(content, profile, dueWords);
-  else if(currentTab === 'add') renderAddForm(content, profile);
-  else renderWordList(content, profile);
+  if(currentTab === 'review') renderReview(content, words, dueWords);
+  else if(currentTab === 'add') renderAddForm(content);
+  else renderWordList(content, words);
 }
 
 /* ---------- ПОВТОРЕННЯ ---------- */
-function renderReview(container, profile, dueWords){
+function renderReview(container, allWords, dueWords){
   if(dueWords.length === 0){
     container.innerHTML = `
       <div class="empty-state">
         <div class="big">На сьогодні нічого повторювати 🎉</div>
-        <p>${profile.words.length === 0 ? 'Додай перші слова у вкладці «Додати слово».' : 'Повернись, коли настане час наступного повторення.'}</p>
+        <p>${allWords.length === 0 ? 'Додай перші слова у вкладці «Додати слово».' : 'Повернись, коли настане час наступного повторення.'}</p>
       </div>`;
     return;
   }
@@ -349,28 +419,37 @@ function renderReview(container, profile, dueWords){
       </div>`;
     const cardEl = document.getElementById('flipCard');
     cardEl.onclick = () => cardEl.classList.toggle('flipped');
-    document.getElementById('hardBtn').onclick = () => { grade(w, false); idx++; show(); };
-    document.getElementById('easyBtn').onclick = () => { grade(w, true); idx++; show(); };
+    const hardBtn = document.getElementById('hardBtn');
+    const easyBtn = document.getElementById('easyBtn');
+    hardBtn.onclick = async () => {
+      hardBtn.disabled = true; easyBtn.disabled = true;
+      await grade(w, false);
+      idx++; show();
+    };
+    easyBtn.onclick = async () => {
+      hardBtn.disabled = true; easyBtn.disabled = true;
+      await grade(w, true);
+      idx++; show();
+    };
   }
 
-  function grade(word, correct){
-    const wordRef = profile.words.find(x => x.id === word.id);
-    if(!wordRef) return;
+  async function grade(word, correct){
+    let box, due;
     if(correct){
-      wordRef.box = Math.min(wordRef.box + 1, MAX_BOX);
-      wordRef.due = addDays(todayStr(), INTERVALS[wordRef.box]);
+      box = Math.min(word.box + 1, MAX_BOX);
+      due = addDays(todayStr(), INTERVALS[box]);
     } else {
-      wordRef.box = 0;
-      wordRef.due = addDays(todayStr(), 1);
+      box = 0;
+      due = addDays(todayStr(), 1);
     }
-    saveProfile(currentStudent, profile);
+    await updateWord(word.id, { box, due });
   }
 
   show();
 }
 
 /* ---------- ДОДАТИ СЛОВО ---------- */
-function renderAddForm(container, profile){
+function renderAddForm(container){
   container.innerHTML = `
     <div class="add-form">
       <div class="field">
@@ -385,43 +464,54 @@ function renderAddForm(container, profile){
         <label>Приклад речення (необов'язково)</label>
         <textarea id="exInput" rows="2" placeholder="I always procrastinate before deadlines."></textarea>
       </div>
+      <div class="field">
+        <label>Хто додає?</label>
+        <select id="whoInput" style="width:100%; border:1.5px solid var(--line); border-radius:10px; padding:11px 14px; font-size:0.95rem;">
+          <option value="student">Учень</option>
+          <option value="tutor">Викладач</option>
+        </select>
+      </div>
       <button class="add-submit" id="addSubmit">Додати слово</button>
       <div class="added-msg" id="addedMsg"></div>
     </div>`;
 
-  document.getElementById('addSubmit').onclick = () => {
+  const addSubmit = document.getElementById('addSubmit');
+  addSubmit.onclick = async () => {
     const en = document.getElementById('enInput').value.trim();
     const ua = document.getElementById('uaInput').value.trim();
     const ex = document.getElementById('exInput').value.trim();
+    const who = document.getElementById('whoInput').value;
     const msg = document.getElementById('addedMsg');
     if(!en || !ua){
       msg.style.color = 'var(--bad)';
       msg.textContent = 'Заповни слово і переклад.';
       return;
     }
-    profile.words.push({
-      id: Date.now().toString(36) + Math.random().toString(36).slice(2,7),
-      en, ua, example: ex,
-      box: 0,
-      due: todayStr(),
-      added: todayStr()
-    });
-    saveProfile(currentStudent, profile);
-    document.getElementById('enInput').value = '';
-    document.getElementById('uaInput').value = '';
-    document.getElementById('exInput').value = '';
-    msg.style.color = 'var(--good)';
-    msg.textContent = `«${en}» додано — з'явиться в сьогоднішньому повторенні.`;
+    addSubmit.disabled = true;
+    addSubmit.textContent = '...';
+    const ok = await insertWord(currentStudent, { en, ua, example: ex }, who);
+    addSubmit.disabled = false;
+    addSubmit.textContent = 'Додати слово';
+    if(ok){
+      document.getElementById('enInput').value = '';
+      document.getElementById('uaInput').value = '';
+      document.getElementById('exInput').value = '';
+      msg.style.color = 'var(--good)';
+      msg.textContent = `«${en}» додано — з'явиться в сьогоднішньому повторенні.`;
+    } else {
+      msg.style.color = 'var(--bad)';
+      msg.textContent = 'Не вдалося зберегти слово. Спробуй ще раз.';
+    }
   };
 }
 
 /* ---------- МІЙ СЛОВНИК ---------- */
-function renderWordList(container, profile){
-  if(profile.words.length === 0){
+function renderWordList(container, words){
+  if(words.length === 0){
     container.innerHTML = `<div class="word-list-empty">Список поки порожній. Додай перше слово у вкладці «Додати слово».</div>`;
     return;
   }
-  const rows = profile.words
+  const rows = words
     .slice()
     .sort((a,b) => a.due.localeCompare(b.due))
     .map(w => `
@@ -434,20 +524,20 @@ function renderWordList(container, profile){
           </div>
         </td>
         <td>${w.due}</td>
+        <td class="added-by">${w.added_by === 'tutor' ? 'вчитель' : 'учень'}</td>
         <td><button class="del-btn" data-id="${w.id}">Видалити</button></td>
       </tr>`).join('');
 
   container.innerHTML = `
     <table class="word-table">
-      <thead><tr><th>Слово</th><th>Переклад</th><th>Рівень</th><th>Наступне повторення</th><th></th></tr></thead>
+      <thead><tr><th>Слово</th><th>Переклад</th><th>Рівень</th><th>Повторення</th><th>Додав(-ла)</th><th></th></tr></thead>
       <tbody>${rows}</tbody>
     </table>`;
 
   container.querySelectorAll('.del-btn').forEach(btn => {
-    btn.onclick = () => {
-      profile.words = profile.words.filter(w => w.id !== btn.dataset.id);
-      saveProfile(currentStudent, profile);
-      renderWordList(container, profile);
+    btn.onclick = async () => {
+      btn.disabled = true;
+      await deleteWordRow(btn.dataset.id);
       render();
     };
   });
