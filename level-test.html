@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Тест на рівень англійської (A1–B2) — Микола Стовп'юк</title>
+<meta name="description" content="Безкоштовний тест, який визначить твій рівень англійської від A1 до B2.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,500&family=Karla:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#FBF1E4;
+    --paper-soft:#F3E6D3;
+    --ink:#2B3630;
+    --teal:#2F6660;
+    --teal-deep:#1E4642;
+    --marigold:#E9A23B;
+    --coral:#E2603F;
+    --line: rgba(43,54,48,0.14);
+    --good:#3f8a5e;
+    --bad:#c9503a;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Karla', sans-serif;
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3{font-family:'Fraunces', serif; margin:0; font-weight:600; letter-spacing:-0.01em;}
+  a{color:inherit;}
+  button{font-family:inherit;}
+  .wrap{max-width:720px; margin:0 auto; padding:0 24px;}
+  .eyebrow{
+    font-family:'Space Mono', monospace;
+    font-size:0.78rem;
+    color:var(--teal-deep);
+    display:inline-flex; align-items:center; gap:10px;
+    margin-bottom:14px;
+  }
+  .eyebrow::before{content:""; width:22px; height:1px; background:var(--coral); display:inline-block;}
+  a:focus-visible, button:focus-visible{outline:3px solid var(--teal); outline-offset:2px;}
+  @media (prefers-reduced-motion: reduce){*{animation:none !important; transition:none !important;}}
+
+  nav{
+    position:sticky; top:0; z-index:50;
+    background:rgba(251,241,228,0.9);
+    backdrop-filter:blur(6px);
+    border-bottom:1px solid var(--line);
+  }
+  nav .wrap{display:flex; align-items:center; justify-content:space-between; padding:16px 24px; max-width:900px;}
+  .brand{font-family:'Fraunces', serif; font-size:1.1rem; font-weight:600;}
+  .back-link{font-size:0.9rem; text-decoration:none; opacity:0.75;}
+  .back-link:hover{opacity:1;}
+
+  header.top{padding:48px 0 10px; text-align:center;}
+  header.top h1{font-size:clamp(1.9rem, 4vw, 2.6rem);}
+  header.top p{max-width:52ch; margin:14px auto 0; color:#4a534b;}
+
+  main{padding-bottom:80px; min-height:300px;}
+
+  /* ---------- INTRO ---------- */
+  .intro-box{
+    max-width:460px; margin:36px auto; background:#fff;
+    border:1px solid var(--line); border-radius:20px; padding:30px 28px;
+    text-align:center;
+  }
+  .intro-box ul{
+    text-align:left; margin:18px 0 24px; padding-left:20px;
+    color:#4a534b; font-size:0.92rem;
+  }
+  .intro-box li{margin-bottom:6px;}
+  .start-btn{
+    border:none; background:var(--coral); color:var(--paper);
+    padding:13px 26px; border-radius:100px; font-weight:700; cursor:pointer; font-size:0.95rem;
+  }
+
+  /* ---------- QUIZ ---------- */
+  .progress-bar-outer{
+    width:100%; height:6px; background:var(--paper-soft); border-radius:100px; overflow:hidden; margin-bottom:10px;
+  }
+  .progress-bar-inner{height:100%; background:var(--marigold); transition:width .3s ease;}
+  .progress-text{font-family:'Space Mono', monospace; font-size:0.8rem; color:#5c6660; text-align:center; margin-bottom:26px;}
+  .quiz-wrap{max-width:480px; margin:0 auto; text-align:center;}
+  .quiz-word{font-family:'Fraunces', serif; font-size:1.4rem; margin-bottom:22px; line-height:1.4;}
+  .quiz-options{display:grid; gap:10px;}
+  .quiz-option{
+    border:1.5px solid var(--line); background:#fff;
+    padding:13px 16px; border-radius:12px; font-size:0.95rem; cursor:pointer; text-align:left;
+  }
+  .quiz-option.correct{background:var(--good); color:#fff; border-color:var(--good);}
+  .quiz-option.wrong{background:var(--bad); color:#fff; border-color:var(--bad);}
+  .quiz-option:disabled{cursor:default;}
+
+  /* ---------- RESULT ---------- */
+  .result-box{
+    max-width:480px; margin:30px auto 0; text-align:center;
+    background:var(--ink); color:var(--paper);
+    border-radius:22px; padding:38px 28px;
+  }
+  .result-box .level{font-family:'Fraunces', serif; font-size:3rem; color:var(--marigold);}
+  .result-box .level-name{font-size:1.1rem; font-weight:700; margin-top:4px;}
+  .result-box p{color:#d9d3c6; margin:16px 0 0;}
+  .result-score{font-family:'Space Mono', monospace; font-size:0.8rem; opacity:0.7; margin-top:10px;}
+  .result-actions{display:flex; gap:12px; justify-content:center; margin-top:26px; flex-wrap:wrap;}
+  .btn{
+    display:inline-flex; align-items:center; gap:10px;
+    padding:12px 22px; border-radius:100px; text-decoration:none;
+    font-weight:700; font-size:0.9rem;
+  }
+  .btn-primary{background:var(--coral); color:var(--paper);}
+  .btn-secondary{background:transparent; color:var(--paper); border:1.5px solid var(--paper);}
+  .retry-link{display:block; margin-top:20px; font-size:0.85rem; color:#d9d3c6; text-decoration:underline; cursor:pointer;}
+
+  footer{text-align:center; padding:30px 0 40px; font-size:0.85rem; color:#6b756c;}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <div class="brand">Микола Стовп'юк<span style="color:var(--coral)">.</span></div>
+    <a class="back-link" href="ua.html">← На головну</a>
+  </div>
+</nav>
+
+<header class="top">
+  <div class="wrap">
+    <span class="eyebrow">/ˈlɛvl tɛst/ — тест на рівень</span>
+    <h1>Який у тебе рівень англійської?</h1>
+    <p>40 питань з граматики та лексики від рівня A1 до B2. Займе приблизно 10–15 хвилин.</p>
+  </div>
+</header>
+
+<main class="wrap" id="app"></main>
+
+<footer>
+  Тест орієнтовний і не замінює повноцінного співбесідування з викладачем.
+</footer>
+
+<script>
+/* ================= ПИТАННЯ ================= */
+const QUESTIONS = [
+  // --- A1 ---
+  { level: 'A1', q: "I ___ from Ukraine.", options: ["am", "is", "are", "be"], correct: "am" },
+  { level: 'A1', q: "___ she a doctor?", options: ["Is", "Are", "Do", "Am"], correct: "Is" },
+  { level: 'A1', q: "There ___ a cat in the garden.", options: ["is", "are", "am", "be"], correct: "is" },
+  { level: 'A1', q: "We ___ students.", options: ["are", "is", "am", "be"], correct: "are" },
+  { level: 'A1', q: "He ___ in London. (live)", options: ["lives", "live", "living", "lived"], correct: "lives" },
+  { level: 'A1', q: "I don't ___ tea.", options: ["like", "likes", "liking", "liked"], correct: "like" },
+  { level: 'A1', q: "___ you speak English?", options: ["Do", "Does", "Is", "Are"], correct: "Do" },
+  { level: 'A1', q: "My sister ___ two children. (have)", options: ["has", "have", "having", "had"], correct: "has" },
+  { level: 'A1', q: "This is ___ book.", options: ["my", "me", "I", "mine's"], correct: "my" },
+  { level: 'A1', q: "They ___ at home now.", options: ["are", "is", "am", "be"], correct: "are" },
+  // --- A2 ---
+  { level: 'A2', q: "Yesterday, I ___ to the cinema. (go)", options: ["went", "goed", "gone", "go"], correct: "went" },
+  { level: 'A2', q: "She ___ her homework last night. (do)", options: ["did", "done", "does", "do"], correct: "did" },
+  { level: 'A2', q: "London is ___ than Kyiv. (big)", options: ["bigger", "biggest", "more big", "big"], correct: "bigger" },
+  { level: 'A2', q: "I ___ going to visit my grandma tomorrow.", options: ["am", "is", "are", "be"], correct: "am" },
+  { level: 'A2', q: "Can you ___ me with this bag?", options: ["help", "helps", "helping", "to help"], correct: "help" },
+  { level: 'A2', q: "There isn't ___ milk in the fridge.", options: ["any", "some", "a", "much the"], correct: "any" },
+  { level: 'A2', q: "He ___ play football very well when he was young.", options: ["could", "can", "should", "must"], correct: "could" },
+  { level: 'A2', q: "We ___ a great time at the party last week.", options: ["had", "have", "has", "having"], correct: "had" },
+  { level: 'A2', q: "___ you ever been to Paris?", options: ["Have", "Has", "Did", "Do"], correct: "Have" },
+  { level: 'A2', q: "I need ___ money to buy a new phone.", options: ["some", "many", "a", "any"], correct: "some" },
+  // --- B1 ---
+  { level: 'B1', q: "I ___ this book twice.", options: ["have read", "read", "am reading", "had read"], correct: "have read" },
+  { level: 'B1', q: "If it rains, we ___ stay at home.", options: ["will", "would", "are", "did"], correct: "will" },
+  { level: 'B1', q: "The letter ___ sent yesterday.", options: ["was", "is", "has", "did"], correct: "was" },
+  { level: 'B1', q: "She is the woman ___ lives next door.", options: ["who", "which", "whose", "where"], correct: "who" },
+  { level: 'B1', q: "I used to ___ a lot of coffee, but now I don't.", options: ["drink", "drank", "drinking", "drunk"], correct: "drink" },
+  { level: 'B1', q: "By the time we arrived, the film ___ already started.", options: ["had", "has", "was", "did"], correct: "had" },
+  { level: 'B1', q: "He said he ___ tired.", options: ["was", "is", "be", "were"], correct: "was" },
+  { level: 'B1', q: "This house ___ built in 1990.", options: ["was", "is", "has", "had"], correct: "was" },
+  { level: 'B1', q: "I've been living here ___ 2015.", options: ["since", "for", "from", "at"], correct: "since" },
+  { level: 'B1', q: "She asked me what time it ___.", options: ["was", "is", "be", "were"], correct: "was" },
+  // --- B2 ---
+  { level: 'B2', q: "If I ___ known, I would have told you.", options: ["had", "have", "would have", "has"], correct: "had" },
+  { level: 'B2', q: "She must ___ left already — her coat isn't here.", options: ["have", "has", "had", "be"], correct: "have" },
+  { level: 'B2', q: "I wish I ___ harder for the exam.", options: ["had studied", "studied", "have studied", "study"], correct: "had studied" },
+  { level: 'B2', q: "The meeting ___ by the time you arrive.", options: ["will have finished", "will finish", "finishes", "finished"], correct: "will have finished" },
+  { level: 'B2', q: "He denied ___ the money.", options: ["taking", "to take", "take", "took"], correct: "taking" },
+  { level: 'B2', q: "Despite ___ tired, she kept working.", options: ["being", "be", "been", "to be"], correct: "being" },
+  { level: 'B2', q: "Not only ___ late, but he also forgot the documents.", options: ["was he", "he was", "he is", "is he"], correct: "was he" },
+  { level: 'B2', q: "The company's profits ___ risen sharply this year.", options: ["have", "has", "had", "having"], correct: "have" },
+  { level: 'B2', q: "It's high time you ___ looking for a job.", options: ["started", "start", "starting", "to start"], correct: "started" },
+  { level: 'B2', q: "Had I known about the traffic, I ___ earlier.", options: ["would have left", "will leave", "would leave", "had left"], correct: "would have left" },
+];
+
+const LEVEL_INFO = {
+  A1: { name: 'Початковий (A1)', desc: 'Ти розумієш і можеш використовувати найпростіші фрази англійською — привітання, базові запитання про себе.' },
+  A2: { name: 'Елементарний (A2)', desc: 'Ти можеш спілкуватись на прості побутові теми й розповідати про себе, роботу та оточення простими реченнями.' },
+  B1: { name: 'Середній (B1)', desc: 'Ти впевнено спілкуєшся в знайомих ситуаціях, розумієш основну думку текстів і можеш пояснити свою точку зору.' },
+  B2: { name: 'Вище середнього (B2)', desc: 'Ти вільно спілкуєшся на більшість тем, розумієш складніші тексти та можеш аргументовано дискутувати.' },
+};
+
+/* ================= ЛОГІКА ================= */
+const app = document.getElementById('app');
+let idx = 0;
+let score = 0;
+
+function renderIntro(){
+  app.innerHTML = `
+    <div class="intro-box">
+      <h2 style="font-size:1.3rem; margin-bottom:10px;">Перш ніж почати</h2>
+      <ul>
+        <li>40 питань, по 10 на кожен рівень від A1 до B2</li>
+        <li>Обирай варіант, який вважаєш правильним — не хвилюйся, якщо не впевнений(-а)</li>
+        <li>Наприкінці побачиш свій орієнтовний рівень</li>
+      </ul>
+      <button class="start-btn" id="startBtn">Почати тест</button>
+    </div>`;
+  document.getElementById('startBtn').onclick = () => { idx = 0; score = 0; renderQuestion(); };
+}
+
+function renderQuestion(){
+  if(idx >= QUESTIONS.length){ renderResult(); return; }
+  const q = QUESTIONS[idx];
+  const pct = Math.round((idx / QUESTIONS.length) * 100);
+  app.innerHTML = `
+    <div class="progress-bar-outer"><div class="progress-bar-inner" style="width:${pct}%"></div></div>
+    <div class="progress-text">Питання ${idx+1} із ${QUESTIONS.length}</div>
+    <div class="quiz-wrap">
+      <div class="quiz-word">${q.q}</div>
+      <div class="quiz-options">
+        ${q.options.map(o => `<button class="quiz-option" data-val="${o}">${o}</button>`).join('')}
+      </div>
+    </div>`;
+  app.querySelectorAll('.quiz-option').forEach(btn => {
+    btn.onclick = () => {
+      app.querySelectorAll('.quiz-option').forEach(b => b.disabled = true);
+      const chosen = btn.dataset.val;
+      const correct = chosen === q.correct;
+      if(correct){ btn.classList.add('correct'); score++; }
+      else {
+        btn.classList.add('wrong');
+        app.querySelectorAll('.quiz-option').forEach(b => { if(b.dataset.val === q.correct) b.classList.add('correct'); });
+      }
+      setTimeout(() => { idx++; renderQuestion(); }, 700);
+    };
+  });
+}
+
+function scoreToLevel(s){
+  if(s <= 10) return 'A1';
+  if(s <= 20) return 'A2';
+  if(s <= 30) return 'B1';
+  return 'B2';
+}
+
+function renderResult(){
+  const level = scoreToLevel(score);
+  const info = LEVEL_INFO[level];
+  app.innerHTML = `
+    <div class="result-box">
+      <div class="level">${level}</div>
+      <div class="level-name">${info.name}</div>
+      <p>${info.desc}</p>
+      <div class="result-score">Правильних відповідей: ${score} із ${QUESTIONS.length}</div>
+      <div class="result-actions">
+        <a class="btn btn-primary" href="https://t.me/kolyastovpyuk" target="_blank" rel="noopener">Написати в Telegram</a>
+        <a class="btn btn-secondary" href="https://www.instagram.com/kolya_stovpiuk/" target="_blank" rel="noopener">Instagram</a>
+      </div>
+      <span class="retry-link" id="retryLink">Пройти ще раз</span>
+    </div>`;
+  document.getElementById('retryLink').onclick = renderIntro;
+}
+
+renderIntro();
+</script>
+
+</body>
+</html>
