@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Неправильні дієслова — Микола Стовп'юк</title>
+<meta name="description" content="Тренажер неправильних дієслів англійської: таблиця форм, вписування Past Simple і Past Participle та тест.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,500&family=Karla:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#FBF1E4;
+    --paper-soft:#F3E6D3;
+    --ink:#2B3630;
+    --teal:#2F6660;
+    --teal-deep:#1E4642;
+    --marigold:#E9A23B;
+    --coral:#E2603F;
+    --line: rgba(43,54,48,0.14);
+    --good:#3f8a5e;
+    --bad:#c9503a;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Karla', sans-serif;
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3{font-family:'Fraunces', serif; margin:0; font-weight:600; letter-spacing:-0.01em;}
+  a{color:inherit;}
+  button, input{font-family:inherit;}
+  .wrap{max-width:820px; margin:0 auto; padding:0 24px;}
+  .eyebrow{
+    font-family:'Space Mono', monospace;
+    font-size:0.78rem;
+    color:var(--teal-deep);
+    display:inline-flex; align-items:center; gap:10px;
+    margin-bottom:14px;
+  }
+  .eyebrow::before{content:""; width:22px; height:1px; background:var(--coral); display:inline-block;}
+  a:focus-visible, button:focus-visible, input:focus-visible{outline:3px solid var(--teal); outline-offset:2px;}
+  @media (prefers-reduced-motion: reduce){*{animation:none !important; transition:none !important;}}
+
+  nav{
+    position:sticky; top:0; z-index:50;
+    background:rgba(251,241,228,0.9);
+    backdrop-filter:blur(6px);
+    border-bottom:1px solid var(--line);
+  }
+  nav .wrap{display:flex; align-items:center; justify-content:space-between; padding:16px 24px; max-width:900px;}
+  .brand{font-family:'Fraunces', serif; font-size:1.1rem; font-weight:600;}
+  .back-link{font-size:0.9rem; text-decoration:none; opacity:0.75;}
+  .back-link:hover{opacity:1;}
+
+  header.top{padding:44px 0 6px; text-align:center;}
+  header.top h1{font-size:clamp(1.8rem, 4vw, 2.5rem);}
+  header.top p{max-width:54ch; margin:12px auto 0; color:#4a534b;}
+
+  main{padding-bottom:70px;}
+
+  /* ---------- CONTROLS ---------- */
+  .tabs{display:flex; justify-content:center; gap:8px; margin:28px 0 14px; flex-wrap:wrap;}
+  .tab-btn{
+    border:none; background:var(--paper-soft); color:var(--ink); opacity:0.65;
+    padding:10px 18px; border-radius:10px; font-size:0.88rem; font-weight:600; cursor:pointer;
+    font-family:'Space Mono', monospace;
+  }
+  .tab-btn.active{opacity:1; background:var(--marigold);}
+  .sets{display:flex; justify-content:center; gap:6px; margin-bottom:28px; flex-wrap:wrap;}
+  .set-btn{
+    border:1.5px solid var(--line); background:#fff; color:var(--ink); opacity:0.75;
+    padding:7px 14px; border-radius:100px; font-size:0.82rem; cursor:pointer;
+  }
+  .set-btn.active{opacity:1; border-color:var(--teal); background:var(--paper-soft); font-weight:700;}
+
+  /* ---------- TABLE ---------- */
+  .table-tools{display:flex; gap:10px; margin-bottom:14px; flex-wrap:wrap;}
+  .table-tools input{
+    flex:1; min-width:180px; border:1.5px solid var(--line); border-radius:10px;
+    padding:10px 14px; font-size:0.95rem; background:#fff;
+  }
+  .tool-btn{
+    border:1.5px solid var(--line); background:#fff; color:var(--ink);
+    padding:10px 16px; border-radius:10px; font-size:0.85rem; font-weight:600; cursor:pointer;
+  }
+  .tool-btn[aria-pressed="true"]{border-color:var(--teal); background:var(--paper-soft);}
+  .table-scroll{overflow-x:auto; border:1px solid var(--line); border-radius:14px; background:#fff;}
+  .vtable{width:100%; border-collapse:collapse; min-width:440px;}
+  .vtable th, .vtable td{padding:11px 14px; text-align:left; font-size:0.9rem; border-bottom:1px solid var(--line);}
+  .vtable th{font-family:'Space Mono', monospace; font-size:0.72rem; color:#5c6660; background:var(--paper-soft); position:sticky; top:0;}
+  .vtable tr:last-child td{border-bottom:none;}
+  .vtable .base{font-family:'Fraunces', serif; font-weight:600; font-size:1rem;}
+  .vtable .form{font-family:'Space Mono', monospace; font-size:0.85rem;}
+  .vtable .note{font-size:0.75rem; color:#6b756c; margin-top:2px;}
+  .vtable.hide-forms .form:not(.revealed){filter:blur(7px); cursor:pointer; user-select:none;}
+  .table-hint{font-size:0.8rem; color:#6b756c; margin:10px 2px 0;}
+  .empty-note{text-align:center; padding:40px 20px; color:#4a534b;}
+
+  /* ---------- EXERCISES ---------- */
+  .ex-wrap{max-width:440px; margin:0 auto; text-align:center;}
+  .progress-text{font-family:'Space Mono', monospace; font-size:0.82rem; color:#5c6660; margin-bottom:18px;}
+  .ex-verb{font-family:'Fraunces', serif; font-size:2.2rem; line-height:1.15;}
+  .ex-ua{color:#5c6660; margin-bottom:22px;}
+  .ex-q{font-size:0.92rem; color:#4a534b; margin-bottom:6px;}
+  .ex-fields{display:grid; gap:12px; margin-bottom:14px; text-align:left;}
+  .ex-fields label{display:block; font-family:'Space Mono', monospace; font-size:0.75rem; color:#4a534b;}
+  .ex-fields input{
+    display:block; width:100%; margin-top:5px;
+    border:1.5px solid var(--line); border-radius:12px; padding:12px 14px;
+    font-size:1.05rem; background:#fff;
+  }
+  .ex-fields input.correct{border-color:var(--good); background:#eef8f0;}
+  .ex-fields input.wrong{border-color:var(--bad); background:#fdf0ee;}
+  .ex-feedback{min-height:1.6em; font-size:0.92rem; margin-bottom:14px;}
+  .ex-feedback.correct{color:var(--good); font-weight:700;}
+  .ex-feedback.wrong{color:var(--bad); font-weight:700;}
+  .ex-feedback .note{display:block; font-weight:400; color:#4a534b; font-size:0.82rem; margin-top:2px;}
+  .primary-btn{
+    border:none; background:var(--teal); color:var(--paper);
+    padding:12px 28px; border-radius:100px; font-weight:700; cursor:pointer; font-size:0.92rem;
+  }
+  .quiz-options{display:grid; gap:10px; margin-top:6px;}
+  .quiz-option{
+    border:1.5px solid var(--line); background:#fff;
+    padding:13px 16px; border-radius:12px; font-size:1rem; cursor:pointer; text-align:left;
+    font-family:'Space Mono', monospace;
+  }
+  .quiz-option.correct{background:var(--good); color:#fff; border-color:var(--good);}
+  .quiz-option.wrong{background:var(--bad); color:#fff; border-color:var(--bad);}
+  .quiz-option:disabled{cursor:default;}
+
+  /* ---------- RESULT ---------- */
+  .result-box{
+    max-width:460px; margin:10px auto 0; text-align:center;
+    background:var(--ink); color:var(--paper); border-radius:22px; padding:34px 26px;
+  }
+  .result-box .score{font-family:'Fraunces', serif; font-size:2.8rem; color:var(--marigold);}
+  .result-box p{color:#d9d3c6; margin:6px 0 0;}
+  .missed{text-align:left; margin-top:22px; background:rgba(251,241,228,0.08); border-radius:14px; padding:14px 18px;}
+  .missed h3{font-size:1rem; margin-bottom:8px; color:var(--paper);}
+  .missed ul{list-style:none; margin:0; padding:0; font-family:'Space Mono', monospace; font-size:0.82rem;}
+  .missed li{padding:4px 0; border-bottom:1px solid rgba(251,241,228,0.12);}
+  .missed li:last-child{border-bottom:none;}
+  .result-actions{display:flex; gap:10px; justify-content:center; margin-top:24px; flex-wrap:wrap;}
+  .btn-coral{border:none; background:var(--coral); color:var(--paper); padding:12px 22px; border-radius:100px; font-weight:700; cursor:pointer; font-size:0.9rem;}
+  .btn-ghost{background:transparent; color:var(--paper); border:1.5px solid var(--paper); padding:11px 20px; border-radius:100px; font-weight:700; cursor:pointer; font-size:0.9rem;}
+
+  footer{text-align:center; padding:26px 24px 40px; font-size:0.85rem; color:#6b756c;}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <div class="brand">Микола Стовп'юк<span style="color:var(--coral)">.</span></div>
+    <a class="back-link" href="ua.html">← На головну</a>
+  </div>
+</nav>
+
+<header class="top">
+  <div class="wrap">
+    <span class="eyebrow">/ɪˈrɛɡjʊlə vɜːbz/ — неправильні дієслова</span>
+    <h1>Тренажер неправильних дієслів</h1>
+    <p>Вивчай три форми дієслів за таблицею, вписуй їх самостійно або перевір себе тестом. Дієслова, у яких помиляєшся, збережуться для повторення.</p>
+  </div>
+</header>
+
+<main class="wrap" id="app"></main>
+
+<footer>
+  Якщо форм дві через «/», правильні обидві. Помилки зберігаються у твоєму браузері на цьому пристрої.
+</footer>
+
+<script>
+/* PURE:START */
+/* [V1, V2, V3, переклад, примітка (необов'язково)] */
+const VERBS = [
+  ['be','was/were','been','бути'],
+  ['beat','beat','beaten','бити, перемагати'],
+  ['become','became','become','ставати'],
+  ['begin','began','begun','починати'],
+  ['bend','bent','bent','гнути'],
+  ['bet','bet','bet','укладати парі'],
+  ['bite','bit','bitten','кусати'],
+  ['bleed','bled','bled','кровоточити'],
+  ['blow','blew','blown','дути'],
+  ['break','broke','broken','ламати'],
+  ['bring','brought','brought','приносити'],
+  ['broadcast','broadcast','broadcast','транслювати'],
+  ['build','built','built','будувати'],
+  ['buy','bought','bought','купувати'],
+  ['catch','caught','caught','ловити'],
+  ['choose','chose','chosen','обирати'],
+  ['cling','clung','clung','чіплятися'],
+  ['come','came','come','приходити'],
+  ['cost','cost','cost','коштувати'],
+  ['creep','crept','crept','повзти'],
+  ['cut','cut','cut','різати'],
+  ['deal','dealt','dealt','мати справу'],
+  ['dig','dug','dug','копати'],
+  ['do','did','done','робити'],
+  ['draw','drew','drawn','малювати'],
+  ['drink','drank','drunk','пити'],
+  ['drive','drove','driven','водити (авто)'],
+  ['eat','ate','eaten','їсти'],
+  ['fall','fell','fallen','падати'],
+  ['feed','fed','fed','годувати'],
+  ['feel','felt','felt','відчувати'],
+  ['fight','fought','fought','боротися'],
+  ['find','found','found','знаходити'],
+  ['flee','fled','fled','тікати'],
+  ['fly','flew','flown','літати'],
+  ['forbid','forbade','forbidden','забороняти'],
+  ['forget','forgot','forgotten','забувати'],
+  ['forgive','forgave','forgiven','пробачати'],
+  ['freeze','froze','frozen','замерзати'],
+  ['get','got','got','отримувати'],
+  ['give','gave','given','давати'],
+  ['go','went','gone','йти, їхати'],
+  ['grow','grew','grown','рости, вирощувати'],
+  ['hang','hung','hung','вішати'],
+  ['have','had','had','мати'],
+  ['hear','heard','heard','чути'],
+  ['hide','hid','hidden','ховати'],
+  ['hit','hit','hit','вдаряти'],
+  ['hold','held','held','тримати'],
+  ['hurt','hurt','hurt','завдавати болю'],
+  ['keep','kept','kept','зберігати, тримати'],
+  ['know','knew','known','знати'],
+  ['lay','laid','laid','класти','Не плутай з lie (лежати).'],
+  ['lead','led','led','вести'],
+  ['learn','learnt/learned','learnt/learned','вчити, вивчати'],
+  ['leave','left','left','залишати, їхати'],
+  ['lend','lent','lent','позичати (комусь)'],
+  ['let','let','let','дозволяти'],
+  ['lie','lay','lain','лежати','Не плутай з lay (класти): його V2 — laid.'],
+  ['light','lit','lit','запалювати'],
+  ['lose','lost','lost','втрачати, програвати'],
+  ['make','made','made','робити, виготовляти'],
+  ['mean','meant','meant','означати'],
+  ['meet','met','met','зустрічати'],
+  ['overcome','overcame','overcome','долати'],
+  ['pay','paid','paid','платити'],
+  ['put','put','put','класти, ставити'],
+  ['quit','quit','quit','кидати (звичку)'],
+  ['read','read','read','читати','Пишеться однаково, але V2 і V3 звучать /red/.'],
+  ['ride','rode','ridden','їздити верхи, на велосипеді'],
+  ['ring','rang','rung','дзвонити'],
+  ['rise','rose','risen','підніматися'],
+  ['run','ran','run','бігти'],
+  ['say','said','said','казати'],
+  ['see','saw','seen','бачити'],
+  ['seek','sought','sought','шукати'],
+  ['sell','sold','sold','продавати'],
+  ['send','sent','sent','надсилати'],
+  ['set','set','set','встановлювати'],
+  ['shake','shook','shaken','трясти'],
+  ['shine','shone','shone','світити'],
+  ['shoot','shot','shot','стріляти'],
+  ['show','showed','shown/showed','показувати'],
+  ['shrink','shrank','shrunk','скорочуватися'],
+  ['shut','shut','shut','зачиняти'],
+  ['sing','sang','sung','співати'],
+  ['sink','sank','sunk','тонути'],
+  ['sit','sat','sat','сидіти'],
+  ['sleep','slept','slept','спати'],
+  ['slide','slid','slid','ковзати'],
+  ['speak','spoke','spoken','говорити'],
+  ['spend','spent','spent','витрачати, проводити (час)'],
+  ['spin','spun','spun','крутити'],
+  ['spit','spat','spat','плювати'],
+  ['split','split','split','розколювати'],
+  ['spread','spread','spread','поширювати'],
+  ['stand','stood','stood','стояти'],
+  ['steal','stole','stolen','красти'],
+  ['stick','stuck','stuck','приклеювати'],
+  ['sting','stung','stung','жалити'],
+  ['strike','struck','struck','вдаряти'],
+  ['swear','swore','sworn','лаятися, присягати'],
+  ['sweep','swept','swept','підмітати'],
+  ['swim','swam','swum','плавати'],
+  ['swing','swung','swung','гойдатися'],
+  ['take','took','taken','брати'],
+  ['teach','taught','taught','навчати'],
+  ['tear','tore','torn','рвати'],
+  ['tell','told','told','розповідати'],
+  ['think','thought','thought','думати'],
+  ['throw','threw','thrown','кидати'],
+  ['understand','understood','understood','розуміти'],
+  ['upset','upset','upset','засмучувати'],
+  ['wake','woke','woken','прокидатися, будити'],
+  ['wear','wore','worn','носити (одяг)'],
+  ['weep','wept','wept','плакати'],
+  ['win','won','won','вигравати'],
+  ['withdraw','withdrew','withdrawn','знімати, відкликати'],
+  ['write','wrote','written','писати'],
+];
+
+const CORE = new Set(['be','become','begin','break','bring','build','buy','catch','choose','come','do','drink','drive','eat','fall','feel','find','fly','forget','get','give','go','have','hear','keep','know','leave','lose','make','meet','pay','put','read','run','say','see','sell','send','sing','sit','sleep','speak','spend','stand','swim','take','teach','tell','think','understand','wake','wear','win','write']);
+
+const ALL = VERBS.map(([v1, v2, v3, ua, note]) => ({ v1, v2, v3, ua, note: note || '', core: CORE.has(v1) }));
+
+function norm(s){
+  return String(s).toLowerCase().trim().replace(/\s+/g, ' ').replace(/\s*\/\s*/g, '/');
+}
+function accepted(form){
+  const n = norm(form);
+  return new Set([n, ...n.split('/')]);
+}
+function isCorrect(input, form){
+  const n = norm(input);
+  if(!n) return false;
+  return accepted(form).has(n);
+}
+function regularize(v1){
+  if(v1 === 'be') return null;
+  if(/e$/.test(v1)) return v1 + 'd';
+  if(/[^aeiou]y$/.test(v1)) return v1.slice(0, -1) + 'ied';
+  return v1 + 'ed';
+}
+function shuffle(arr){
+  const a = arr.slice();
+  for(let i = a.length - 1; i > 0; i--){
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+/* 4 варіанти відповіді: правильна форма + 3 правдоподібні хибні */
+function makeOptions(verb, which, pool){
+  const correct = verb[which];
+  const acc = accepted(correct);
+  const other = which === 'v2' ? verb.v3 : verb.v2;
+  const first = [];
+  if(other && !other.includes('/') && !acc.has(norm(other))) first.push(other);
+  const reg = regularize(verb.v1);
+  if(reg && !acc.has(reg)) first.push(reg);
+  const rest = shuffle(pool.filter(x => x !== verb).map(x => x[which]))
+    .filter(f => !f.includes('/') && !acc.has(norm(f)));
+  const opts = [];
+  for(const c of [...first, ...rest]){
+    if(opts.length >= 3) break;
+    if(!opts.includes(c)) opts.push(c);
+  }
+  return shuffle([correct, ...opts]);
+}
+/* PURE:END */
+
+/* ================= СТАН ================= */
+const MISTAKES_KEY = 'iv_mistakes';
+const ROUND_SIZE = 10;
+let mode = 'table';   // table | practice | quiz
+let setName = 'core'; // core | all | mistakes
+
+function loadMistakes(){
+  try{
+    const v = JSON.parse(localStorage.getItem(MISTAKES_KEY));
+    return Array.isArray(v) ? v : [];
+  }catch(e){ return []; }
+}
+let mistakes = loadMistakes();
+function saveMistakes(){
+  try{ localStorage.setItem(MISTAKES_KEY, JSON.stringify(mistakes)); }catch(e){}
+}
+function markWrong(v1){ if(!mistakes.includes(v1)){ mistakes.push(v1); saveMistakes(); } }
+function markRight(v1){
+  const i = mistakes.indexOf(v1);
+  if(i !== -1){ mistakes.splice(i, 1); saveMistakes(); }
+}
+
+function currentPool(){
+  if(setName === 'core') return ALL.filter(v => v.core);
+  if(setName === 'mistakes') return ALL.filter(v => mistakes.includes(v.v1));
+  return ALL;
+}
+
+const app = document.getElementById('app');
+
+/* ================= КАРКАС ================= */
+function render(){
+  if(setName === 'mistakes' && mistakes.length === 0) setName = 'core';
+  const coreCount = ALL.filter(v => v.core).length;
+  app.innerHTML = `
+    <div class="tabs" id="tabs">
+      <button class="tab-btn ${mode==='table'?'active':''}" data-mode="table">Таблиця</button>
+      <button class="tab-btn ${mode==='practice'?'active':''}" data-mode="practice">Вписати форми</button>
+      <button class="tab-btn ${mode==='quiz'?'active':''}" data-mode="quiz">Тест</button>
+    </div>
+    <div class="sets" id="sets">
+      <button class="set-btn ${setName==='core'?'active':''}" data-set="core">Найуживаніші (${coreCount})</button>
+      <button class="set-btn ${setName==='all'?'active':''}" data-set="all">Усі (${ALL.length})</button>
+      ${mistakes.length ? `<button class="set-btn ${setName==='mistakes'?'active':''}" data-set="mistakes">Мої помилки (${mistakes.length})</button>` : ''}
+    </div>
+    <div id="area"></div>`;
+  app.querySelectorAll('#tabs .tab-btn').forEach(b => {
+    b.onclick = () => { mode = b.dataset.mode; render(); };
+  });
+  app.querySelectorAll('#sets .set-btn').forEach(b => {
+    b.onclick = () => { setName = b.dataset.set; render(); };
+  });
+  const area = document.getElementById('area');
+  if(mode === 'table') renderTable(area);
+  else if(mode === 'practice') renderPractice(area);
+  else renderQuiz(area);
+}
+
+/* ================= ТАБЛИЦЯ ================= */
+function renderTable(area){
+  area.innerHTML = `
+    <div class="table-tools">
+      <input type="search" id="q" placeholder="Пошук: go, took, йти…" aria-label="Пошук дієслова">
+      <button class="tool-btn" id="hideBtn" aria-pressed="false">Самоперевірка</button>
+    </div>
+    <div class="table-scroll">
+      <table class="vtable" id="vtable">
+        <thead><tr><th>Infinitive</th><th>Past Simple</th><th>Past Participle</th><th>Переклад</th></tr></thead>
+        <tbody id="vbody"></tbody>
+      </table>
+    </div>
+    <p class="table-hint" id="tableHint"></p>`;
+  const body = document.getElementById('vbody');
+  const q = document.getElementById('q');
+  const table = document.getElementById('vtable');
+  const hideBtn = document.getElementById('hideBtn');
+  const hint = document.getElementById('tableHint');
+  const pool = currentPool();
+
+  function fill(){
+    const term = q.value.trim().toLowerCase();
+    const rows = pool.filter(v => !term || [v.v1, v.v2, v.v3, v.ua].some(s => s.toLowerCase().includes(term)));
+    if(rows.length === 0){
+      body.innerHTML = `<tr><td colspan="4"><div class="empty-note">Нічого не знайдено.</div></td></tr>`;
+    } else {
+      body.innerHTML = rows.map(v => `
+        <tr>
+          <td class="base">${v.v1}</td>
+          <td class="form">${v.v2}</td>
+          <td class="form">${v.v3}</td>
+          <td>${v.ua}${v.note ? `<div class="note">${v.note}</div>` : ''}</td>
+        </tr>`).join('');
+    }
+    hint.textContent = `Показано дієслів: ${rows.length}`;
+  }
+  q.addEventListener('input', fill);
+  hideBtn.onclick = () => {
+    const on = table.classList.toggle('hide-forms');
+    hideBtn.setAttribute('aria-pressed', on ? 'true' : 'false');
+    table.querySelectorAll('.form.revealed').forEach(c => c.classList.remove('revealed'));
+  };
+  body.addEventListener('click', e => {
+    const cell = e.target.closest('.form');
+    if(cell) cell.classList.toggle('revealed');
+  });
+  fill();
+}
+
+/* ================= ЗАГАЛЬНИЙ РЕЗУЛЬТАТ ================= */
+function emptyPoolMessage(area){
+  area.innerHTML = `<div class="empty-note">У цьому наборі поки немає дієслів. Обери інший набір.</div>`;
+}
+
+function renderResult(area, score, total, missed, again){
+  area.innerHTML = `
+    <div class="result-box">
+      <div class="score">${score} / ${total}</div>
+      <p>${missed.length === 0 ? 'Без жодної помилки!' : 'правильних відповідей'}</p>
+      ${missed.length ? `
+        <div class="missed">
+          <h3>Повтори ці дієслова</h3>
+          <ul>${missed.map(v => `<li>${v.v1} — ${v.v2} — ${v.v3}</li>`).join('')}</ul>
+        </div>` : ''}
+      <div class="result-actions">
+        <button class="btn-coral" id="againBtn">Ще раунд</button>
+        ${missed.length ? `<button class="btn-ghost" id="missBtn">Повторити помилки</button>` : ''}
+      </div>
+    </div>`;
+  document.getElementById('againBtn').onclick = again;
+  const missBtn = document.getElementById('missBtn');
+  if(missBtn) missBtn.onclick = () => { setName = 'mistakes'; render(); };
+}
+
+/* ================= ВПИСАТИ ФОРМИ ================= */
+function renderPractice(area){
+  const pool = currentPool();
+  if(pool.length === 0){ emptyPoolMessage(area); return; }
+  const queue = shuffle(pool).slice(0, ROUND_SIZE);
+  let idx = 0, score = 0;
+  const missed = [];
+
+  function show(){
+    if(idx >= queue.length){
+      renderResult(area, score, queue.length, missed, () => renderPractice(area));
+      return;
+    }
+    const v = queue[idx];
+    area.innerHTML = `
+      <div class="ex-wrap">
+        <div class="progress-text">Дієслово ${idx + 1} із ${queue.length}</div>
+        <div class="ex-verb">${v.v1}</div>
+        <div class="ex-ua">${v.ua}</div>
+        <div class="ex-fields">
+          <label>Past Simple
+            <input type="text" id="in2" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false">
+          </label>
+          <label>Past Participle
+            <input type="text" id="in3" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false">
+          </label>
+        </div>
+        <div class="ex-feedback" id="fb" aria-live="polite"></div>
+        <button class="primary-btn" id="actionBtn">Перевірити</button>
+      </div>`;
+    const in2 = document.getElementById('in2');
+    const in3 = document.getElementById('in3');
+    const fb = document.getElementById('fb');
+    const btn = document.getElementById('actionBtn');
+    let checked = false;
+    in2.focus();
+
+    function check(){
+      checked = true;
+      const ok2 = isCorrect(in2.value, v.v2);
+      const ok3 = isCorrect(in3.value, v.v3);
+      in2.classList.add(ok2 ? 'correct' : 'wrong');
+      in3.classList.add(ok3 ? 'correct' : 'wrong');
+      in2.disabled = true; in3.disabled = true;
+      const note = v.note ? `<span class="note">${v.note}</span>` : '';
+      if(ok2 && ok3){
+        score++; markRight(v.v1);
+        fb.className = 'ex-feedback correct';
+        fb.innerHTML = `Правильно!${note}`;
+      } else {
+        missed.push(v); markWrong(v.v1);
+        fb.className = 'ex-feedback wrong';
+        fb.innerHTML = `Правильно: ${v.v2} — ${v.v3}${note}`;
+      }
+      btn.textContent = idx + 1 >= queue.length ? 'Результат' : 'Далі';
+      btn.focus();
+    }
+    function next(){ idx++; show(); }
+
+    btn.onclick = () => { checked ? next() : check(); };
+    [in2, in3].forEach(inp => inp.addEventListener('keydown', e => {
+      if(e.key !== 'Enter') return;
+      e.preventDefault();
+      if(checked) next();
+      else if(inp === in2) in3.focus();
+      else check();
+    }));
+  }
+  show();
+}
+
+/* ================= ТЕСТ ================= */
+function renderQuiz(area){
+  const pool = currentPool();
+  if(pool.length === 0){ emptyPoolMessage(area); return; }
+  const queue = shuffle(pool).slice(0, ROUND_SIZE);
+  let idx = 0, score = 0;
+  const missed = [];
+
+  function show(){
+    if(idx >= queue.length){
+      renderResult(area, score, queue.length, missed, () => renderQuiz(area));
+      return;
+    }
+    const v = queue[idx];
+    const which = Math.random() < 0.5 ? 'v2' : 'v3';
+    const label = which === 'v2' ? 'Past Simple' : 'Past Participle';
+    const options = makeOptions(v, which, ALL);
+    area.innerHTML = `
+      <div class="ex-wrap">
+        <div class="progress-text">Питання ${idx + 1} із ${queue.length}</div>
+        <div class="ex-q">${label} від</div>
+        <div class="ex-verb">${v.v1}</div>
+        <div class="ex-ua">${v.ua}</div>
+        <div class="quiz-options">
+          ${options.map(o => `<button class="quiz-option" data-val="${o}">${o}</button>`).join('')}
+        </div>
+      </div>`;
+    const buttons = area.querySelectorAll('.quiz-option');
+    buttons.forEach(btn => {
+      btn.onclick = () => {
+        buttons.forEach(b => b.disabled = true);
+        const ok = btn.dataset.val === v[which];
+        if(ok){
+          btn.classList.add('correct');
+          score++; markRight(v.v1);
+        } else {
+          btn.classList.add('wrong');
+          buttons.forEach(b => { if(b.dataset.val === v[which]) b.classList.add('correct'); });
+          missed.push(v); markWrong(v.v1);
+        }
+        setTimeout(() => { idx++; show(); }, ok ? 800 : 1500);
+      };
+    });
+  }
+  show();
+}
+
+render();
+</script>
+
+</body>
+</html>
