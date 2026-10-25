@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>To be у Present Simple — Микола Стовп'юк</title>
+<meta name="description" content="Коротке пояснення дієслова to be (am, is, are) у Present Simple та інтерактивні вправи для закріплення.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,500&family=Karla:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#FBF1E4;
+    --paper-soft:#F3E6D3;
+    --ink:#2B3630;
+    --teal:#2F6660;
+    --teal-deep:#1E4642;
+    --marigold:#E9A23B;
+    --coral:#E2603F;
+    --line: rgba(43,54,48,0.14);
+    --good:#3f8a5e;
+    --bad:#c9503a;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Karla', sans-serif;
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3{font-family:'Fraunces', serif; margin:0; font-weight:600; letter-spacing:-0.01em;}
+  a{color:inherit;}
+  button, input{font-family:inherit;}
+  .wrap{max-width:820px; margin:0 auto; padding:0 24px;}
+  .eyebrow{
+    font-family:'Space Mono', monospace;
+    font-size:0.78rem;
+    color:var(--teal-deep);
+    display:inline-flex; align-items:center; gap:10px;
+    margin-bottom:14px;
+  }
+  .eyebrow::before{content:""; width:22px; height:1px; background:var(--coral); display:inline-block;}
+  a:focus-visible, button:focus-visible, input:focus-visible{outline:3px solid var(--teal); outline-offset:2px;}
+  @media (prefers-reduced-motion: reduce){*{animation:none !important; transition:none !important;}}
+
+  nav{
+    position:sticky; top:0; z-index:50;
+    background:rgba(251,241,228,0.9);
+    backdrop-filter:blur(6px);
+    border-bottom:1px solid var(--line);
+  }
+  nav .wrap{display:flex; align-items:center; justify-content:space-between; padding:16px 24px; max-width:900px;}
+  .brand{font-family:'Fraunces', serif; font-size:1.1rem; font-weight:600;}
+  .back-link{font-size:0.9rem; text-decoration:none; opacity:0.75;}
+  .back-link:hover{opacity:1;}
+
+  header.top{padding:44px 0 6px; text-align:center;}
+  header.top h1{font-size:clamp(1.8rem, 4vw, 2.5rem);}
+  header.top p{max-width:54ch; margin:12px auto 0; color:#4a534b;}
+
+  main{padding-bottom:70px;}
+
+
+  .result-box{max-width:460px; margin:26px auto 10px; text-align:center; background:var(--ink); color:var(--paper); border-radius:22px; padding:30px 26px;}
+  .result-box .score{font-family:'Fraunces', serif; font-size:2.8rem; color:var(--marigold);}
+  .result-box p{color:#d9d3c6; margin:6px 0 0;}
+  .result-actions{display:flex; gap:10px; justify-content:center; margin-top:22px;}
+  .btn-coral{border:none; background:var(--coral); color:var(--paper); padding:12px 22px; border-radius:100px; font-weight:700; cursor:pointer; font-size:0.9rem;}
+  .card{background:#fff; border:1px solid var(--line); border-radius:16px; padding:22px 22px; margin:18px 0;}
+  .card h2{font-size:1.35rem; margin-bottom:10px;}
+  .card p{margin:8px 0;}
+  .ftable{width:100%; border-collapse:collapse; margin:12px 0; font-size:0.95rem;}
+  .ftable th, .ftable td{padding:9px 12px; text-align:left; border-bottom:1px solid var(--line);}
+  .ftable th{font-family:'Space Mono', monospace; font-size:0.72rem; color:#5c6660; background:var(--paper-soft);}
+  .ftable tr:last-child td{border-bottom:none;}
+  .ftable .v{font-family:'Space Mono', monospace; font-weight:700; color:var(--teal-deep);}
+  .scroll{overflow-x:auto; border:1px solid var(--line); border-radius:12px;}
+  .tip{background:var(--paper-soft); border-left:4px solid var(--marigold); border-radius:10px; padding:12px 16px; margin:14px 0; font-size:0.93rem;}
+  .ex-eg{font-family:'Space Mono', monospace; font-size:0.85rem;}
+  .ex-block h2{font-size:1.35rem; margin-bottom:4px;}
+  .ex-block .ex-intro{color:#4a534b; font-size:0.92rem; margin-bottom:14px;}
+  .item{background:#fff; border:1px solid var(--line); border-radius:14px; padding:16px 18px; margin-bottom:10px;}
+  .item.done-ok{border-color:var(--good); background:#f4fbf6;}
+  .item.done-bad{border-color:var(--bad); background:#fdf5f3;}
+  .item .q{font-size:1.05rem; margin-bottom:10px;}
+  .item .q .gap{display:inline-block; min-width:44px; border-bottom:2px solid var(--ink); text-align:center; font-weight:700; color:var(--teal-deep);}
+  .opts{display:flex; gap:8px; flex-wrap:wrap;}
+  .opt{border:1.5px solid var(--line); background:#fff; padding:9px 18px; border-radius:100px; font-size:0.95rem; cursor:pointer; font-family:'Space Mono', monospace;}
+  .opt:hover:not(:disabled){border-color:var(--teal);}
+  .opt.correct{background:var(--good); color:#fff; border-color:var(--good);}
+  .opt.wrong{background:var(--bad); color:#fff; border-color:var(--bad);}
+  .opt:disabled{cursor:default;}
+  .typed{display:flex; gap:8px; flex-wrap:wrap;}
+  .typed input{flex:1; min-width:200px; border:1.5px solid var(--line); border-radius:12px; padding:10px 14px; font-size:1rem; background:#fff;}
+  .check-btn{border:none; background:var(--teal); color:var(--paper); padding:10px 20px; border-radius:100px; font-weight:700; cursor:pointer;}
+  .fb{font-size:0.9rem; margin-top:10px; min-height:1.2em;}
+  .fb.ok{color:var(--good); font-weight:700;}
+  .fb.bad{color:var(--bad); font-weight:700;}
+  .fb .why{display:block; font-weight:400; color:#4a534b; margin-top:2px;}
+  .answer-line{min-height:48px; border:1.5px dashed var(--line); border-radius:12px; padding:8px; display:flex; flex-wrap:wrap; gap:6px; margin-bottom:10px; background:var(--paper);}
+  .chips{display:flex; flex-wrap:wrap; gap:6px; margin-bottom:10px;}
+  .chip{border:1.5px solid var(--line); background:#fff; padding:7px 14px; border-radius:10px; font-size:0.95rem; cursor:pointer; font-family:'Space Mono', monospace;}
+  .chip:hover{border-color:var(--teal);}
+  .chip:disabled{cursor:default; opacity:0.7;}
+  .scorebar{position:sticky; bottom:0; background:rgba(251,241,228,0.95); border-top:1px solid var(--line); padding:10px 24px; text-align:center; font-family:'Space Mono', monospace; font-size:0.82rem; z-index:20;}
+  .scorebar b{color:var(--teal-deep);}
+  footer{text-align:center; padding:26px 24px 40px; font-size:0.85rem; color:#6b756c;}
+  @media (max-width:520px){ .card{padding:18px 16px;} .ftable th, .ftable td{padding:8px 8px; font-size:0.88rem;} }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <div class="brand">Микола Стовп'юк<span style="color:var(--coral)">.</span></div>
+    <a class="back-link" href="ua.html">← На головну</a>
+  </div>
+</nav>
+
+<header class="top">
+  <div class="wrap">
+    <span class="eyebrow">/tuː biː/ — Present Simple</span>
+    <h1>To be: am, is, are</h1>
+    <p>Коротке пояснення і вправи на закріплення. Спочатку прочитай правило, потім виконай завдання.</p>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <section class="card">
+    <h2>Коротко про правило</h2>
+    <p>Дієслово <b>to be</b> («бути») у теперішньому часі має три форми. В англійській речення завжди потребує дієслова, тому «Я студент» — це <span class="ex-eg">I am a student.</span></p>
+    <div class="scroll"><table class="ftable">
+      <tr><th>Підмет</th><th>Форма</th><th>Скорочено</th><th>Приклад</th></tr>
+      <tr><td>I</td><td class="v">am</td><td>I'm</td><td>I'm a teacher.</td></tr>
+      <tr><td>he / she / it</td><td class="v">is</td><td>he's / she's / it's</td><td>She's from Kyiv.</td></tr>
+      <tr><td>you / we / they</td><td class="v">are</td><td>you're / we're / they're</td><td>They're friends.</td></tr>
+    </table></div>
+
+    <p><b>Заперечення:</b> додаємо <b>not</b> після дієслова.</p>
+    <p class="ex-eg">I am not (I'm not) · he is not (isn't) · they are not (aren't)</p>
+
+    <p><b>Питання:</b> дієслово виходить на перше місце.</p>
+    <p class="ex-eg">Are you ready? · Is she at home? · Am I late?</p>
+
+    <p><b>Коротка відповідь:</b> Yes + підмет + форма to be, або No + підмет + форма + not.</p>
+    <p class="ex-eg">Are you tired? — Yes, I am. / No, I'm not.<br>Is he a doctor? — Yes, he is. / No, he isn't.</p>
+
+    <div class="tip"><b>Запам'ятай:</b> вік в англійській — теж через to be: <span class="ex-eg">I am 25.</span> (не «I have 25»). Те саме з емоціями: <span class="ex-eg">I am hungry / tired / happy.</span><br>
+    У короткій ствердній відповіді скорочення не вживаємо: <span class="ex-eg">Yes, I am.</span> (не «Yes, I'm»).</div>
+  </section>
+
+  <div id="exercises"></div>
+
+  <div class="result-box" id="result" style="display:none;"></div>
+</main>
+
+<div class="scorebar" id="scorebar">Виконано: <b>0</b> з <b id="total">0</b> · Правильно: <b>0</b></div>
+
+<footer>Результати не зберігаються — можна виконувати вправи скільки завгодно разів.</footer>
+
+<script>
+/* PURE:START */
+function norm(s){
+  return String(s).toLowerCase().replace(/[\u2018\u2019`]/g, "'").replace(/[.?!]+$/,'').replace(/\s+/g,' ').trim();
+}
+function checkTyped(input, answers){
+  return answers.some(a => norm(a) === norm(input));
+}
+function shuffle(arr){
+  const a = arr.slice();
+  for(let i=a.length-1;i>0;i--){ const j = Math.floor(Math.random()*(i+1)); [a[i],a[j]] = [a[j],a[i]]; }
+  return a;
+}
+function shuffleDifferent(arr){
+  if(arr.length < 2) return arr.slice();
+  let s, tries = 0;
+  do { s = shuffle(arr); tries++; } while(s.join(' ') === arr.join(' ') && tries < 20);
+  return s;
+}
+/* PURE:END */
+
+const EXERCISES = [
+  {
+    id:'choose', type:'choice',
+    title:'Вправа 1. Am, is чи are?',
+    intro:'Обери правильну форму to be.',
+    items:[
+      {q:'I ___ a teacher.', opts:['am','is','are'], a:'am'},
+      {q:'She ___ from Ukraine.', opts:['am','is','are'], a:'is', why:'she → is'},
+      {q:'We ___ friends.', opts:['am','is','are'], a:'are', why:'we → are'},
+      {q:'My brother ___ a doctor.', opts:['am','is','are'], a:'is', why:'my brother = he → is'},
+      {q:'They ___ at work.', opts:['am','is','are'], a:'are'},
+      {q:'It ___ cold today.', opts:['am','is','are'], a:'is'},
+      {q:'You ___ very kind.', opts:['am','is','are'], a:'are', why:'you → завжди are'},
+      {q:'___ he at home?', opts:['Am','Is','Are'], a:'Is', why:'у питанні дієслово стоїть першим'},
+      {q:'The children ___ in the garden.', opts:['am','is','are'], a:'are', why:'the children = they → are'},
+      {q:'I ___ 25 years old.', opts:['am','is','are'], a:'am', why:'вік: I am 25'}
+    ]
+  },
+  {
+    id:'negative', type:'typed',
+    title:'Вправа 2. Заперечення',
+    intro:'Перепиши речення у запереченні. Можна писати і повну форму (is not), і скорочену (isn\'t).',
+    items:[
+      {q:'She is a nurse.', answers:["She isn't a nurse","She is not a nurse","She's not a nurse"], show:"She isn't a nurse."},
+      {q:'They are at home.', answers:["They aren't at home","They are not at home","They're not at home"], show:"They aren't at home."},
+      {q:'I am late.', answers:["I'm not late","I am not late"], show:"I'm not late.", why:'«I amn\'t» не існує — кажемо I\'m not'},
+      {q:'It is expensive.', answers:["It isn't expensive","It is not expensive","It's not expensive"], show:"It isn't expensive."},
+      {q:'We are ready.', answers:["We aren't ready","We are not ready","We're not ready"], show:"We aren't ready."}
+    ]
+  },
+  {
+    id:'order', type:'order',
+    title:'Вправа 3. Склади питання',
+    intro:'Натискай на слова, щоб скласти питання у правильному порядку. Натисни на слово у рядку, щоб повернути його.',
+    items:[
+      {words:['Are','you','from','Kyiv'], a:'Are you from Kyiv?'},
+      {words:['Is','she','your','sister'], a:'Is she your sister?'},
+      {words:['Where','is','my','bag'], a:'Where is my bag?'},
+      {words:['How','old','are','you'], a:'How old are you?'},
+      {words:['Are','they','at','school'], a:'Are they at school?'}
+    ]
+  },
+  {
+    id:'short', type:'choice',
+    title:'Вправа 4. Коротка відповідь',
+    intro:'Обери правильну коротку відповідь.',
+    items:[
+      {q:'Is she a doctor? (так)', opts:['Yes, she is.','Yes, she does.','Yes, she are.'], a:'Yes, she is.'},
+      {q:'Are they tired? (ні)', opts:["No, they don't.","No, they aren't.","No, they isn't."], a:"No, they aren't."},
+      {q:'Am I late? (так)', opts:['Yes, you are.','Yes, I am.','Yes, you is.'], a:'Yes, you are.', why:'відповідаємо від другої особи: питають про «I», ти кажеш «you»'},
+      {q:'Is it cold? (ні)', opts:["No, it doesn't.","No, it isn't.","No, it not."], a:"No, it isn't."},
+      {q:'Are you ready? (так, про себе)', opts:["Yes, I'm.",'Yes, I am.','Yes, you are.'], a:'Yes, I am.', why:'у короткій ствердній відповіді не скорочуємо'}
+    ]
+  }
+];
+
+const root = document.getElementById('exercises');
+let answered = 0, correct = 0, total = 0;
+EXERCISES.forEach(e => total += e.items.length);
+document.getElementById('total').textContent = total;
+
+function updateScore(){
+  const bar = document.getElementById('scorebar');
+  bar.innerHTML = 'Виконано: <b>'+answered+'</b> з <b>'+total+'</b> · Правильно: <b>'+correct+'</b>';
+  if(answered === total){ showResult(); }
+}
+function finish(card, ok, fb, html){
+  card.classList.add(ok ? 'done-ok' : 'done-bad');
+  fb.className = 'fb ' + (ok ? 'ok' : 'bad');
+  fb.innerHTML = html;
+  answered++; if(ok) correct++;
+  updateScore();
+}
+function whyHtml(why){ return why ? '<span class="why">'+why+'</span>' : ''; }
+
+function buildChoice(item, card, fb){
+  const q = document.createElement('div'); q.className='q';
+  q.innerHTML = item.q.replace('___','<span class="gap">&nbsp;&nbsp;&nbsp;</span>');
+  card.appendChild(q);
+  const wrap = document.createElement('div'); wrap.className='opts';
+  item.opts.forEach(o => {
+    const b = document.createElement('button'); b.className='opt'; b.textContent=o;
+    b.addEventListener('click', () => {
+      const ok = o === item.a;
+      wrap.querySelectorAll('button').forEach(x => { x.disabled = true; if(x.textContent === item.a) x.classList.add('correct'); });
+      if(!ok) b.classList.add('wrong');
+      finish(card, ok, fb, ok ? 'Правильно!' + whyHtml(item.why) : 'Правильна відповідь: ' + item.a + whyHtml(item.why));
+    });
+    wrap.appendChild(b);
+  });
+  card.appendChild(wrap);
+}
+function buildTyped(item, card, fb){
+  const q = document.createElement('div'); q.className='q'; q.textContent = item.q;
+  card.appendChild(q);
+  const row = document.createElement('div'); row.className='typed';
+  const inp = document.createElement('input'); inp.type='text'; inp.autocomplete='off'; inp.autocapitalize='off'; inp.spellcheck=false;
+  inp.setAttribute('aria-label','Твоя відповідь');
+  const btn = document.createElement('button'); btn.className='check-btn'; btn.textContent='Перевірити';
+  function go(){
+    if(!inp.value.trim() || inp.disabled) return;
+    const ok = checkTyped(inp.value, item.answers);
+    inp.disabled = true; btn.disabled = true;
+    finish(card, ok, fb, ok ? 'Правильно!' + whyHtml(item.why) : 'Правильна відповідь: ' + item.show + whyHtml(item.why));
+  }
+  btn.addEventListener('click', go);
+  inp.addEventListener('keydown', e => { if(e.key === 'Enter') go(); });
+  row.appendChild(inp); row.appendChild(btn); card.appendChild(row);
+}
+function buildOrder(item, card, fb){
+  const line = document.createElement('div'); line.className='answer-line';
+  const pool = document.createElement('div'); pool.className='chips';
+  const btn = document.createElement('button'); btn.className='check-btn'; btn.textContent='Перевірити'; btn.disabled = true;
+  const chosen = [];
+  const tokens = shuffleDifferent(item.words).map((w,i) => ({w, i, used:false}));
+  function redraw(){
+    line.innerHTML = ''; pool.innerHTML = '';
+    chosen.forEach(t => {
+      const c = document.createElement('button'); c.className='chip'; c.textContent=t.w;
+      c.addEventListener('click', () => { t.used = false; chosen.splice(chosen.indexOf(t),1); redraw(); });
+      line.appendChild(c);
+    });
+    tokens.filter(t => !t.used).forEach(t => {
+      const c = document.createElement('button'); c.className='chip'; c.textContent=t.w;
+      c.addEventListener('click', () => { t.used = true; chosen.push(t); redraw(); });
+      pool.appendChild(c);
+    });
+    btn.disabled = chosen.length !== tokens.length;
+  }
+  btn.addEventListener('click', () => {
+    const attempt = chosen.map(t => t.w).join(' ');
+    const ok = norm(attempt) === norm(item.a);
+    line.querySelectorAll('button').forEach(x => x.disabled = true);
+    btn.disabled = true;
+    finish(card, ok, fb, ok ? 'Правильно: ' + item.a : 'Правильна відповідь: ' + item.a);
+  });
+  card.appendChild(line); card.appendChild(pool); card.appendChild(btn);
+  redraw();
+}
+
+function render(){
+  root.innerHTML = ''; answered = 0; correct = 0;
+  document.getElementById('result').style.display = 'none';
+  EXERCISES.forEach(ex => {
+    const block = document.createElement('section'); block.className='ex-block';
+    block.innerHTML = '<h2></h2><p class="ex-intro"></p>';
+    block.querySelector('h2').textContent = ex.title;
+    block.querySelector('.ex-intro').textContent = ex.intro;
+    ex.items.forEach(item => {
+      const card = document.createElement('div'); card.className='item';
+      const fb = document.createElement('div'); fb.className='fb'; fb.setAttribute('aria-live','polite');
+      if(ex.type === 'choice') buildChoice(item, card, fb);
+      else if(ex.type === 'typed') buildTyped(item, card, fb);
+      else buildOrder(item, card, fb);
+      card.appendChild(fb);
+      block.appendChild(card);
+    });
+    root.appendChild(block);
+  });
+  updateScore();
+}
+
+function showResult(){
+  const r = document.getElementById('result');
+  const pct = Math.round(correct / total * 100);
+  let msg = pct === 100 ? 'Чудово, без жодної помилки!' : pct >= 80 ? 'Дуже добре! Ще трохи — і ідеально.' : pct >= 50 ? 'Непогано. Перечитай правило і спробуй ще раз.' : 'Перечитай правило вгорі і спробуй ще раз — вийде!';
+  r.innerHTML = '<div class="score">'+correct+' / '+total+'</div><p>'+msg+'</p><div class="result-actions"><button class="btn-coral" id="again">Спробувати ще раз</button></div>';
+  r.style.display = 'block';
+  document.getElementById('again').addEventListener('click', () => { render(); window.scrollTo({top:0, behavior:'smooth'}); });
+}
+
+render();
+</script>
+</body>
+</html>
