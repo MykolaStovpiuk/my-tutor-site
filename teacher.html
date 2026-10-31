@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Панель викладача — Микола Стовп'юк</title>
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=Karla:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/cabinet.css">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+  .t-head{display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap; margin-bottom:16px;}
+  .t-head h1{font-size:1.6rem;}
+  .toolbar{display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin-bottom:16px;}
+  .toolbar input[type=search]{flex:1 1 200px; border:1.5px solid var(--line); border-radius:100px; padding:9px 16px; background:#fff;}
+  .s-grid{display:grid; grid-template-columns:repeat(auto-fill, minmax(240px, 1fr)); gap:12px;}
+  .s-card{background:#fff; border:1px solid var(--line); border-radius:16px; padding:16px; cursor:pointer; text-align:left; width:100%; transition:border-color .15s, transform .15s;}
+  .s-card:hover{border-color:var(--teal); transform:translateY(-1px);}
+  .s-card.inactive{opacity:.55;}
+  .s-name{font-family:'Fraunces', serif; font-size:1.08rem; font-weight:600;}
+  .s-line{font-size:0.84rem; color:var(--muted); margin-top:6px; display:flex; gap:8px; flex-wrap:wrap;}
+  .creds{background:var(--paper); border:1px dashed var(--teal); border-radius:12px; padding:14px; white-space:pre-wrap; font-family:'Space Mono', monospace; font-size:0.82rem; margin:10px 0; word-break:break-word;}
+  .item-row{display:flex; justify-content:space-between; gap:12px; align-items:flex-start;}
+  .item-actions{display:flex; gap:6px; flex-wrap:wrap; justify-content:flex-end;}
+  details.card summary{cursor:pointer; font-weight:600;}
+  details.card[open] summary{margin-bottom:14px;}
+  .stack{display:flex; flex-direction:column; gap:12px;}
+  .hint{font-size:0.82rem; color:var(--muted); margin-top:4px;}
+</style>
+</head>
+<body>
+
+<nav class="top">
+  <div class="wrap">
+    <a class="brand" href="teacher.html">Панель викладача<span>.</span></a>
+    <div class="nav-actions" id="navActions"></div>
+  </div>
+</nav>
+
+<main class="wrap" id="app"><div class="loading">Завантаження…</div></main>
+
+<script src="assets/cabinet-common.js"></script>
+<script>
+const app = document.getElementById('app');
+const navActions = document.getElementById('navActions');
+const CABINET_URL = new URL('cabinet.html', location.href).href;
+
+const T = {
+  me: null, students: [], overview: {}, search: '', showArchived: false, showNewForm: false, lastCreated: null,
+  current: null, tab: 'lessons', lessons: [], tasks: [], words: [], wordFilter: 'all', editLesson: null
+};
+
+/* ================= СТАРТ ================= */
+async function start(){
+  const me = await getMyProfile();
+  if(!me){
+    navActions.innerHTML = '';
+    renderLogin(app, { title: 'Панель викладача', subtitle: 'Увійдіть у свій акаунт викладача.', onSuccess: start });
+    return;
+  }
+  navActions.innerHTML = `<button class="pill-btn" id="logoutBtn">Вийти</button>`;
+  document.getElementById('logoutBtn').onclick = async () => { await sb.auth.signOut(); location.reload(); };
+  if(me.role !== 'teacher'){
+    app.innerHTML = `<div class="error-box">Цей акаунт (${esc(me.email)}) не має доступу до панелі викладача.
+      <br><br>Якщо це ваш акаунт викладача — перевірте, що в SQL-скрипті вказано саме цей email, і запустіть скрипт ще раз.
+      <br><br><a href="cabinet.html">Перейти в кабінет учня</a></div>`;
+    return;
+  }
+  T.me = me;
+  const hash = location.hash.slice(1);
+  await loadStudents();
+  if(hash && T.students.some(s => s.id === hash)) await openStudent(hash, false);
+  else renderList();
+}
+
+window.addEventListener('popstate', () => {
+  const id = location.hash.slice(1);
+  if(!T.me) return;
+  if(id && T.students.some(s => s.id === id)) openStudent(id, false);
+  else { T.current = null; renderList(); }
+});
+
+async function loadStudents(){
+  const [profilesRes, ovRes] = await Promise.all([
+    sb.from('profiles').select('*').eq('role', 'student').order('full_name'),
+    sb.rpc('teacher_overview')
+  ]);
+  if(profilesRes.error) console.error(profilesRes.error);
+  if(ovRes.error) console.error(ovRes.error);
+  T.students = profilesRes.data || [];
+  T.overview = {};
+  (ovRes.data || []).forEach(o => T.overview[o.student_id] = o);
+}
+
+/* ================= СПИСОК УЧНІВ ================= */
+function renderList(){
+  T.current = null;
+  const q = T.search.toLowerCase();
+  const list = T.students
+    .filter(s => T.showArchived || s.active)
+    .filter(s => !q || (s.full_name + ' ' + s.email).toLowerCase().includes(q));
+  const activeCount = T.students.filter(s => s.active).length;
+
+  app.innerHTML = `
+    <div class="t-head">
+      <h1>Учні <span class="muted" style="font-size:1rem;font-family:Karla">(${activeCount})</span></h1>
+      <button class="btn" id="newBtn">${T.showNewForm ? 'Скасувати' : '+ Новий учень'}</button>
+    </div>
+    <div id="newBox"></div>
+    <div class="toolbar">
+      <input type="search" id="search" placeholder="Пошук за ім'ям або email" value="${esc(T.search)}">
+      <label class="small"><input type="checkbox" id="archToggle" ${T.showArchived ? 'checked' : ''}> показати архів</label>
+    </div>
+    ${list.length ? `<div class="s-grid">${list.map(studentCard).join('')}</div>` :
+      `<div class="empty"><div class="big">${T.students.length ? 'Нікого не знайдено' : 'Учнів поки немає'}</div>
+       <p>${T.students.length ? '' : 'Натисніть «+ Новий учень», щоб створити перший кабінет.'}</p></div>`}`;
+
+  document.getElementById('newBtn').onclick = () => { T.showNewForm = !T.showNewForm; T.lastCreated = null; renderList(); };
+  const search = document.getElementById('search');
+  search.oninput = () => { T.search = search.value; renderListGridOnly(); };
+  document.getElementById('archToggle').onchange = (e) => { T.showArchived = e.target.checked; renderList(); };
+  bindCards();
+  renderNewBox();
+}
+function renderListGridOnly(){
+  const pos = document.getElementById('search').selectionStart;
+  renderList();
+  const s = document.getElementById('search'); s.focus(); s.setSelectionRange(pos, pos);
+}
+function studentCard(s){
+  const o = T.overview[s.id] || {};
+  const total = o.lessons_total || 0, done = o.lessons_done || 0;
+  return `
+    <button class="s-card ${s.active ? '' : 'inactive'}" data-id="${s.id}">
+      <div style="display:flex;justify-content:space-between;gap:8px;align-items:baseline;">
+        <span class="s-name">${esc(s.full_name || s.email)}</span>
+        ${s.level ? `<span class="badge planned">${esc(s.level)}</span>` : ''}
+      </div>
+      <div class="s-line">Уроків: ${done}${total > done ? ` / ${total}` : ''}${o.last_lesson ? ` · останній ${esc(o.last_lesson.split('-').reverse().slice(0,2).join('.'))}` : ''}</div>
+      ${total ? `<div class="progress" style="height:6px"><div style="width:${Math.round(done/total*100)}%"></div></div>` : ''}
+      <div class="s-line">
+        ${o.tasks_open ? `<span class="badge open">${o.tasks_open} ${plural(o.tasks_open,'завдання','завдання','завдань')} не виконано</span>` : ''}
+        <span>${o.words_total || 0} слів${o.words_due ? ` · ${o.words_due} до повторення` : ''}</span>
+      </div>
+      ${s.active ? '' : '<div class="s-line">в архіві</div>'}
+    </button>`;
+}
+function bindCards(){
+  app.querySelectorAll('.s-card').forEach(c => c.onclick = () => openStudent(c.dataset.id, true));
+}
+
+/* ---------- Новий учень ---------- */
+function genPassword(){
+  const chars = 'abcdefghjkmnpqrstuvwxyz23456789';
+  const a = new Uint32Array(8); crypto.getRandomValues(a);
+  return Array.from(a, n => chars[n % chars.length]).join('');
+}
+function credsText(name, email, password){
+  return `Привіт${name ? ', ' + name.split(' ')[0] : ''}! Ось твій особистий кабінет для занять англійською:\n${CABINET_URL}\n\nЛогін: ${email}\nПароль: ${password}\n\nТам будуть пройдені уроки, додаткові завдання та нові слова для повторення. Пароль можна змінити у вкладці «Профіль».`;
+}
+function renderNewBox(){
+  const box = document.getElementById('newBox');
+  if(T.lastCreated){
+    const c = T.lastCreated;
+    box.innerHTML = `
+      <div class="card" style="margin-bottom:16px;">
+        <h3>Кабінет створено ✓</h3>
+        ${c.warning ? `<div class="error-box" style="margin-top:10px;">${c.warning}</div>` : ''}
+        <p class="small muted">Надішліть учню це повідомлення (пароль більше ніде не показується):</p>
+        <div class="creds" id="credsText">${esc(credsText(c.name, c.email, c.password))}</div>
+        <div class="row"><button class="btn small" id="copyCreds">Скопіювати</button>
+        <button class="btn secondary small" id="openNew">Відкрити кабінет учня</button></div>
+      </div>`;
+    document.getElementById('copyCreds').onclick = () => copyText(credsText(c.name, c.email, c.password));
+    document.getElementById('openNew').onclick = () => { T.lastCreated = null; T.showNewForm = false; openStudent(c.id, true); };
+    return;
+  }
+  if(!T.showNewForm){ box.innerHTML = ''; return; }
+  box.innerHTML = `
+    <form class="card" id="newForm" style="margin-bottom:16px;">
+      <h3 style="margin-bottom:14px;">Новий учень</h3>
+      <div class="row">
+        <div class="field"><label for="nName">Ім'я та прізвище</label><input id="nName" required></div>
+        <div class="field"><label for="nLevel">Рівень</label><input id="nLevel" placeholder="A2, B1…"></div>
+      </div>
+      <div class="row">
+        <div class="field"><label for="nEmail">Email учня (буде логіном)</label><input type="email" id="nEmail" required autocomplete="off"></div>
+        <div class="field"><label for="nPass">Пароль</label><input id="nPass" required minlength="6" value="${genPassword()}" autocomplete="off"></div>
+      </div>
+      <button class="btn" type="submit" id="nBtn">Створити кабінет</button>
+      <div class="form-msg" id="nMsg"></div>
+    </form>`;
+  document.getElementById('newForm').onsubmit = createStudent;
+}
+
+async function createStudent(e){
+  e.preventDefault();
+  const name = document.getElementById('nName').value.trim();
+  const level = document.getElementById('nLevel').value.trim();
+  const email = document.getElementById('nEmail').value.trim().toLowerCase();
+  const password = document.getElementById('nPass').value;
+  const msg = document.getElementById('nMsg');
+  const btn = document.getElementById('nBtn');
+  btn.disabled = true; btn.textContent = 'Створюю…'; msg.textContent = '';
+
+  // Окремий клієнт, щоб реєстрація учня не вийшла з акаунта викладача
+  const tmp = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+    auth: { persistSession: false, autoRefreshToken: false, detectSessionInUrl: false, storageKey: 'sb-tmp-signup' }
+  });
+  const { data, error } = await tmp.auth.signUp({ email, password, options: { data: { full_name: name } } });
+  const fail = (text) => { btn.disabled = false; btn.textContent = 'Створити кабінет'; msg.className = 'form-msg err'; msg.textContent = text; };
+  if(error){
+    if(/registered|exists/i.test(error.message)) return fail('Акаунт з таким email уже існує.');
+    if(/signups? not allowed|disabled/i.test(error.message)) return fail('У Supabase вимкнено реєстрацію нових користувачів. Увімкніть «Allow new users to sign up» (Authentication → Sign In / Providers).');
+    if(/rate limit/i.test(error.message)) return fail('Supabase обмежив кількість листів. Вимкніть «Confirm email» (Authentication → Sign In / Providers → Email) і спробуйте ще раз.');
+    return fail('Помилка: ' + error.message);
+  }
+  if(!data.user || (data.user.identities && data.user.identities.length === 0)){
+    return fail('Акаунт з таким email уже існує.');
+  }
+  const id = data.user.id;
+  await tmp.auth.signOut().catch(() => {});
+
+  // Профіль створюється автоматично; дописуємо ім'я та рівень
+  let tries = 0, updated = false;
+  while(tries < 5 && !updated){
+    const { data: rows } = await sb.from('profiles').update({ full_name: name, level, active: true }).eq('id', id).select();
+    updated = rows && rows.length > 0;
+    if(!updated){ tries++; await new Promise(r => setTimeout(r, 500)); }
+  }
+  T.lastCreated = {
+    id, name, email, password,
+    warning: data.session ? '' : 'Увага: у Supabase увімкнено підтвердження email, тож учень отримав лист і має спершу натиснути посилання в ньому. Щоб надалі обходитись без цього, вимкніть «Confirm email» (Authentication → Sign In / Providers → Email).'
+  };
+  T.showNewForm = false;
+  await loadStudents();
+  renderList();
+}
+
+function copyText(text){
+  if(navigator.clipboard && window.isSecureContext){
+    navigator.clipboard.writeText(text).then(() => toast('Скопійовано'), () => fallbackCopy(text));
+  } else fallbackCopy(text);
+}
+function fallbackCopy(text){
+  const ta = document.createElement('textarea'); ta.value = text; document.body.appendChild(ta);
+  ta.select(); try{ document.execCommand('copy'); toast('Скопійовано'); }catch(_){ toast('Не вдалося скопіювати'); }
+  ta.remove();
+}
+
+/* ================= КАБІНЕТ УЧНЯ (вигляд викладача) ================= */
+async function openStudent(id, push){
+  if(push) history.pushState(null, '', '#' + id);
+  T.current = T.students.find(s => s.id === id);
+  T.wordFilter = 'all'; T.editLesson = null;
+  app.innerHTML = `<div class="loading">Завантаження…</div>`;
+  await loadStudentData();
+  renderStudent();
+  window.scrollTo(0, 0);
+}
+async function loadStudentData(){
+  const id = T.current.id;
+  const [lessons, tasks, words] = await Promise.all([
+    fetchAll(() => sb.from('cabinet_lessons').select('*').eq('student_id', id).order('lesson_date', { ascending: true, nullsFirst: false }).order('id')),
+    fetchAll(() => sb.from('cabinet_tasks').select('*').eq('student_id', id).order('created_at', { ascending: false })),
+    fetchAll(() => sb.from('cabinet_words').select('*').eq('student_id', id).order('created_at', { ascending: false }))
+  ]);
+  T.lessons = lessons; T.tasks = tasks; T.words = words;
+}
+function lessonOptions(selectedId, includeNone = true){
+  const done = T.lessons.filter(l => l.status === 'done').slice().reverse();
+  const planned = T.lessons.filter(l => l.status !== 'done');
+  const opt = l => `<option value="${l.id}" ${l.id == selectedId ? 'selected' : ''}>${esc(l.title)}${l.lesson_date ? ' · ' + esc(l.lesson_date.split('-').reverse().slice(0,2).join('.')) : ''}${l.status !== 'done' ? ' (заплановано)' : ''}</option>`;
+  return `${includeNone ? `<option value="">— без уроку —</option>` : ''}${done.map(opt).join('')}${planned.map(opt).join('')}`;
+}
+function latestDoneLessonId(){
+  const done = T.lessons.filter(l => l.status === 'done');
+  return done.length ? done[done.length - 1].id : '';
+}
+
+function renderStudent(){
+  const s = T.current;
+  const done = T.lessons.filter(l => l.status === 'done').length;
+  const openTasks = T.tasks.filter(t => !t.done).length;
+  app.innerHTML = `
+    <button class="link-btn" id="backBtn" style="margin-bottom:12px;">← Усі учні</button>
+    <section class="card">
+      <div style="display:flex;justify-content:space-between;gap:10px;align-items:baseline;flex-wrap:wrap;">
+        <h1 style="font-size:1.5rem;">${esc(s.full_name || s.email)}</h1>
+        <div>${s.level ? `<span class="badge planned">${esc(s.level)}</span>` : ''} ${s.active ? '' : '<span class="badge open">архів</span>'}</div>
+      </div>
+      <div class="small muted">${esc(s.email || '')}</div>
+      <div class="stats">
+        <div class="stat"><div class="num">${done}${T.lessons.length > done ? `<span class="muted" style="font-size:1rem">/${T.lessons.length}</span>` : ''}</div><div class="lbl">уроків пройдено</div></div>
+        <div class="stat"><div class="num">${openTasks}</div><div class="lbl">завдань не виконано</div></div>
+        <div class="stat"><div class="num">${T.words.length}</div><div class="lbl">слів у словнику</div></div>
+      </div>
+    </section>
+    <div class="tabs">
+      ${[['lessons','Уроки'],['tasks','Завдання'],['words','Слова'],['settings','Налаштування']].map(([k,t]) =>
+        `<button class="tab-btn ${T.tab===k?'active':''}" data-tab="${k}">${t}</button>`).join('')}
+    </div>
+    <div id="tabContent"></div>`;
+  document.getElementById('backBtn').onclick = async () => {
+    history.pushState(null, '', location.pathname);
+    app.innerHTML = `<div class="loading">Завантаження…</div>`;
+    await loadStudents(); renderList();
+  };
+  app.querySelectorAll('.tab-btn').forEach(b => b.onclick = () => { T.tab = b.dataset.tab; T.editLesson = null; renderStudent(); });
+  const c = document.getElementById('tabContent');
+  if(T.tab === 'lessons') tabLessons(c);
+  else if(T.tab === 'tasks') tabTasks(c);
+  else if(T.tab === 'words') tabWords(c);
+  else tabSettings(c);
+}
+
+/* ---------- УРОКИ ---------- */
+function lessonFormHtml(l){
+  const isNew = !l;
+  l = l || { title:'', topic:'', lesson_date: todayStr(), status:'done', notes:'' };
+  return `
+    <div class="row">
+      <div class="field" style="flex:0 1 160px"><label>Урок</label><input name="title" required value="${esc(l.title)}" placeholder="8A"></div>
+      <div class="field"><label>Тема</label><input name="topic" value="${esc(l.topic)}" placeholder="Past Simple: regular verbs"></div>
+    </div>
+    <div class="row">
+      <div class="field"><label>Дата</label><input type="date" name="lesson_date" value="${esc(l.lesson_date || '')}"></div>
+      <div class="field"><label>Статус</label>
+        <select name="status"><option value="done" ${l.status==='done'?'selected':''}>Пройдено</option><option value="planned" ${l.status!=='done'?'selected':''}>Заплановано</option></select></div>
+    </div>
+    <div class="field"><label>Коментар для учня (необов'язково)</label><textarea name="notes" rows="2" placeholder="Що вивчили, на що звернути увагу…">${esc(l.notes)}</textarea></div>
+    <div class="row"><button class="btn" type="submit">${isNew ? 'Додати урок' : 'Зберегти'}</button>
+    ${isNew ? '' : '<button class="btn secondary" type="button" data-cancel>Скасувати</button>'}</div>
+    <div class="form-msg"></div>`;
+}
+function readLessonForm(f){
+  const fd = new FormData(f);
+  return {
+    title: fd.get('title').trim(), topic: fd.get('topic').trim(),
+    lesson_date: fd.get('lesson_date') || null, status: fd.get('status'), notes: fd.get('notes').trim()
+  };
+}
+
+function tabLessons(c){
+  const sorted = T.lessons.slice().reverse();
+  c.innerHTML = `
+    <form class="card" id="lessonForm" style="margin-bottom:12px;">
+      <h3 style="margin-bottom:12px;">Відмітити урок</h3>
+      ${lessonFormHtml(null)}
+    </form>
+    <details class="card" style="margin-bottom:20px;">
+      <summary>Додати план курсу (кілька уроків одразу)</summary>
+      <form id="planForm">
+        <div class="field"><label>Один урок на рядок: «Урок — тема»</label>
+          <textarea id="planText" rows="6" placeholder="9A — Present Perfect\n9B — Present Perfect vs Past Simple\n9C — Vocabulary: travel"></textarea></div>
+        <button class="btn secondary" type="submit">Додати як заплановані</button>
+        <div class="form-msg" id="planMsg"></div>
+      </form>
+    </details>
+    <div class="lesson-list" id="lessonList">
+      ${sorted.length ? sorted.map(lessonRow).join('') : '<div class="empty">Уроків ще немає.</div>'}
+    </div>`;
+
+  document.getElementById('lessonForm').onsubmit = async (e) => {
+    e.preventDefault();
+    const row = readLessonForm(e.target);
+    if(!row.title) return;
+    if(row.status === 'done' && !row.lesson_date) row.lesson_date = todayStr();
+    const { data, error } = await sb.from('cabinet_lessons').insert({ ...row, student_id: T.current.id }).select().single();
+    if(error){ console.error(error); toast('Не вдалося зберегти урок'); return; }
+    T.lessons.push(data); sortLessons();
+    toast(`Урок ${row.title} додано`);
+    renderStudent();
+  };
+  document.getElementById('planForm').onsubmit = async (e) => {
+    e.preventDefault();
+    const lines = document.getElementById('planText').value.split('\n').map(x => x.trim()).filter(Boolean);
+    if(!lines.length) return;
+    const rows = lines.map(line => {
+      const m = line.split(/\s+[—–-]\s+|\t/);
+      return { student_id: T.current.id, title: m[0].trim(), topic: (m.slice(1).join(' — ') || '').trim(), status: 'planned' };
+    });
+    const { data, error } = await sb.from('cabinet_lessons').insert(rows).select();
+    if(error){ console.error(error); toast('Не вдалося зберегти'); return; }
+    T.lessons.push(...data); sortLessons();
+    toast(`Додано ${data.length} ${plural(data.length,'урок','уроки','уроків')}`);
+    renderStudent();
+  };
+  bindLessonRows(c);
+}
+function sortLessons(){
+  T.lessons.sort((a,b) => {
+    if(a.lesson_date && b.lesson_date && a.lesson_date !== b.lesson_date) return a.lesson_date.localeCompare(b.lesson_date);
+    if(a.lesson_date && !b.lesson_date) return -1;
+    if(!a.lesson_date && b.lesson_date) return 1;
+    return a.id - b.id;
+  });
+}
+function lessonRow(l){
+  if(T.editLesson === l.id){
+    return `<form class="lesson card" data-edit-form="${l.id}">${lessonFormHtml(l)}</form>`;
+  }
+  const tasks = T.tasks.filter(t => t.lesson_id === l.id);
+  const words = T.words.filter(w => w.lesson_id === l.id).length;
+  return `
+    <article class="lesson ${l.status === 'done' ? 'done' : ''}">
+      <div class="item-row">
+        <div>
+          <div class="lesson-title">${esc(l.title)} <span class="badge ${l.status === 'done' ? 'done' : 'planned'}">${l.status === 'done' ? 'пройдено' : 'заплановано'}</span></div>
+          <div class="lesson-meta">${[esc(l.topic), l.lesson_date ? fmtDate(l.lesson_date) : ''].filter(Boolean).join(' · ')}</div>
+          <div class="small muted" style="margin-top:4px;">${tasks.length} ${plural(tasks.length,'завдання','завдання','завдань')} · ${words} слів</div>
+          ${l.notes ? `<div class="lesson-notes">${esc(l.notes)}</div>` : ''}
+        </div>
+        <div class="item-actions">
+          <button class="btn small ${l.status === 'done' ? 'secondary' : ''}" data-toggle="${l.id}">${l.status === 'done' ? 'Скасувати' : '✓ Пройдено'}</button>
+          <button class="btn secondary small" data-edit="${l.id}">Змінити</button>
+          <button class="btn danger small" data-del="${l.id}">✕</button>
+        </div>
+      </div>
+    </article>`;
+}
+function bindLessonRows(c){
+  c.querySelectorAll('[data-toggle]').forEach(b => b.onclick = async () => {
+    const l = T.lessons.find(x => x.id == b.dataset.toggle);
+    const status = l.status === 'done' ? 'planned' : 'done';
+    const patch = { status };
+    if(status === 'done' && !l.lesson_date) patch.lesson_date = todayStr();
+    b.disabled = true;
+    const { error } = await sb.from('cabinet_lessons').update(patch).eq('id', l.id);
+    if(error){ toast('Не вдалося зберегти'); b.disabled = false; return; }
+    Object.assign(l, patch); sortLessons(); renderStudent();
+  });
+  c.querySelectorAll('[data-edit]').forEach(b => b.onclick = () => { T.editLesson = +b.dataset.edit; renderStudent(); });
+  c.querySelectorAll('[data-del]').forEach(b => b.onclick = async () => {
+    const l = T.lessons.find(x => x.id == b.dataset.del);
+    if(!confirm(`Видалити урок «${l.title}»? Завдання й слова залишаться, але без прив'язки до уроку.`)) return;
+    const { error } = await sb.from('cabinet_lessons').delete().eq('id', l.id);
+    if(error){ toast('Не вдалося видалити'); return; }
+    T.lessons = T.lessons.filter(x => x.id !== l.id);
+    T.tasks.forEach(t => { if(t.lesson_id === l.id) t.lesson_id = null; });
+    T.words.forEach(w => { if(w.lesson_id === l.id) w.lesson_id = null; });
+    renderStudent();
+  });
+  const ef = c.querySelector('[data-edit-form]');
+  if(ef){
+    ef.querySelector('[data-cancel]').onclick = () => { T.editLesson = null; renderStudent(); };
+    ef.onsubmit = async (e) => {
+      e.preventDefault();
+      const row = readLessonForm(ef);
+      if(!row.title) return;
+      const id = +ef.dataset.editForm;
+      const { error } = await sb.from('cabinet_lessons').update(row).eq('id', id);
+      if(error){ toast('Не вдалося зберегти'); return; }
+      Object.assign(T.lessons.find(x => x.id === id), row);
+      T.editLesson = null; sortLessons(); renderStudent();
+    };
+  }
+}
+
+/* ---------- ЗАВДАННЯ ---------- */
+function tabTasks(c){
+  const defLesson = latestDoneLessonId();
+  c.innerHTML = `
+    <form class="card" id="taskForm" style="margin-bottom:20px;">
+      <h3 style="margin-bottom:12px;">Нове завдання</h3>
+      <div class="row">
+        <div class="field"><label for="tLesson">До уроку</label><select id="tLesson">${lessonOptions(defLesson)}</select></div>
+        <div class="field"><label for="tTitle">Назва</label><input id="tTitle" required></div>
+      </div>
+      <div class="field"><label for="tUrl">Посилання на матеріал</label><input id="tUrl" type="url" placeholder="https://claude.ai/…">
+        <div class="hint">Посилання на артефакт із вправами, Google Doc, відео тощо.</div></div>
+      <div class="field"><label for="tDesc">Опис (необов'язково)</label><textarea id="tDesc" rows="2" placeholder="Зроби вправи 1–4 до наступного уроку"></textarea></div>
+      <button class="btn" type="submit">Додати завдання</button>
+      <div class="form-msg" id="tMsg"></div>
+    </form>
+    <div class="task-list">
+      ${T.tasks.length ? T.tasks.map(taskRow).join('') : '<div class="empty">Завдань ще немає.</div>'}
+    </div>`;
+  const sel = document.getElementById('tLesson'), title = document.getElementById('tTitle');
+  let autoTitle = true;
+  const suggest = () => {
+    if(!autoTitle) return;
+    const l = T.lessons.find(x => x.id == sel.value);
+    title.value = l ? `Додаткові вправи — ${l.title}` : '';
+  };
+  title.oninput = () => { autoTitle = !title.value; };
+  sel.onchange = suggest; suggest();
+
+  document.getElementById('taskForm').onsubmit = async (e) => {
+    e.preventDefault();
+    const msg = document.getElementById('tMsg');
+    const urlRaw = document.getElementById('tUrl').value.trim();
+    if(urlRaw && !safeUrl(urlRaw)){ msg.className = 'form-msg err'; msg.textContent = 'Посилання має починатися з https://'; return; }
+    const row = {
+      student_id: T.current.id,
+      lesson_id: sel.value ? +sel.value : null,
+      title: title.value.trim(),
+      url: urlRaw,
+      description: document.getElementById('tDesc').value.trim()
+    };
+    if(!row.title) return;
+    const { data, error } = await sb.from('cabinet_tasks').insert(row).select().single();
+    if(error){ console.error(error); msg.className = 'form-msg err'; msg.textContent = 'Не вдалося зберегти.'; return; }
+    T.tasks.unshift(data);
+    toast('Завдання додано');
+    renderStudent();
+  };
+  c.querySelectorAll('[data-del-task]').forEach(b => b.onclick = async () => {
+    if(!confirm('Видалити це завдання?')) return;
+    const { error } = await sb.from('cabinet_tasks').delete().eq('id', b.dataset.delTask);
+    if(error){ toast('Не вдалося видалити'); return; }
+    T.tasks = T.tasks.filter(t => t.id != b.dataset.delTask);
+    renderStudent();
+  });
+  c.querySelectorAll('[data-toggle-task]').forEach(b => b.onclick = async () => {
+    const t = T.tasks.find(x => x.id == b.dataset.toggleTask);
+    const { error } = await sb.rpc('set_task_done', { task_id: t.id, is_done: !t.done });
+    if(error){ toast('Не вдалося зберегти'); return; }
+    t.done = !t.done; t.done_at = t.done ? new Date().toISOString() : null;
+    renderStudent();
+  });
+}
+function taskRow(t){
+  const url = safeUrl(t.url);
+  const l = T.lessons.find(x => x.id === t.lesson_id);
+  return `
+    <div class="task ${t.done ? 'done' : ''}">
+      <button class="task-check" data-toggle-task="${t.id}" title="Змінити статус">${t.done ? '✓' : ''}</button>
+      <div class="task-body">
+        <div class="item-row">
+          <div>
+            <div class="task-title">${esc(t.title)}</div>
+            <div class="small muted">${l ? 'Урок ' + esc(l.title) + ' · ' : ''}додано ${esc(t.created_at.slice(0,10).split('-').reverse().join('.'))}
+              ${t.done ? ` · <span style="color:var(--good)">виконано${t.done_at ? ' ' + esc(t.done_at.slice(0,10).split('-').reverse().join('.')) : ''}</span>` : ''}</div>
+          </div>
+          <button class="btn danger small" data-del-task="${t.id}">✕</button>
+        </div>
+        ${t.description ? `<div class="task-desc">${esc(t.description)}</div>` : ''}
+        ${url ? `<div class="task-actions"><a class="open-link" href="${esc(url)}" target="_blank" rel="noopener">Відкрити ↗</a></div>` : ''}
+      </div>
+    </div>`;
+}
+
+/* ---------- СЛОВА ---------- */
+function parseWordLines(text){
+  const out = [], bad = [];
+  text.split('\n').forEach(raw => {
+    const line = raw.trim();
+    if(!line) return;
+    const parts = line.includes('\t') ? line.split('\t') : line.split(/\s+[—–-]\s+|\s*=\s*/);
+    const [en, ua, ...rest] = parts.map(p => p.trim());
+    if(en && ua) out.push({ en, ua, example: rest.join(' — ').trim() });
+    else bad.push(line);
+  });
+  return { out, bad };
+}
+function tabWords(c){
+  const lessonsWithWords = T.lessons.filter(l => T.words.some(w => w.lesson_id === l.id));
+  let list = T.words;
+  if(T.wordFilter === 'student') list = list.filter(w => w.added_by === 'student');
+  else if(T.wordFilter === 'due') list = list.filter(w => w.due <= todayStr());
+  else if(T.wordFilter !== 'all') list = list.filter(w => w.lesson_id == T.wordFilter);
+  c.innerHTML = `
+    <form class="card" id="wordsForm" style="margin-bottom:20px;">
+      <h3 style="margin-bottom:12px;">Додати слова</h3>
+      <div class="field" style="max-width:340px;"><label for="wLesson">До уроку</label><select id="wLesson">${lessonOptions(latestDoneLessonId())}</select></div>
+      <div class="field"><label for="wText">Одне слово на рядок: <b>слово - переклад - приклад</b></label>
+        <textarea id="wText" rows="7" placeholder="look forward to - з нетерпінням чекати - I'm looking forward to the trip.\ncommute - добиратися на роботу\nrecently - нещодавно"></textarea>
+        <div class="hint">Приклад необов'язковий. Можна також вставити дві-три колонки з Excel / Google Таблиць.</div></div>
+      <button class="btn" type="submit" id="wBtn">Додати слова</button>
+      <div class="form-msg" id="wMsg"></div>
+    </form>
+    <div class="toolbar">
+      <select id="wFilter" style="border:1.5px solid var(--line);border-radius:100px;padding:8px 14px;background:#fff;">
+        <option value="all">Усі слова (${T.words.length})</option>
+        <option value="due" ${T.wordFilter==='due'?'selected':''}>Чекають повторення</option>
+        <option value="student" ${T.wordFilter==='student'?'selected':''}>Додані учнем</option>
+        ${lessonsWithWords.map(l => `<option value="${l.id}" ${T.wordFilter==l.id?'selected':''}>Урок ${esc(l.title)}</option>`).join('')}
+      </select>
+    </div>
+    ${list.length ? `<div class="table-wrap"><table class="data">
+      <thead><tr><th>Слово</th><th>Переклад</th><th>Урок</th><th>Рівень</th><th>Повторення</th><th></th></tr></thead>
+      <tbody>${list.map(w => {
+        const l = T.lessons.find(x => x.id === w.lesson_id);
+        return `<tr>
+          <td><b>${esc(w.en)}</b>${w.example ? `<div class="small muted"><i>${esc(w.example)}</i></div>` : ''}${w.added_by === 'student' ? '<div class="small" style="color:var(--coral)">додав(-ла) учень</div>' : ''}</td>
+          <td>${esc(w.ua)}</td>
+          <td class="small">${l ? esc(l.title) : '—'}</td>
+          <td>${boxDots(w.box)}</td>
+          <td class="small" style="white-space:nowrap;">${w.due <= todayStr() ? '<span class="badge open">зараз</span>' : esc(w.due.split('-').reverse().join('.'))}</td>
+          <td><button class="del-btn" data-del-word="${w.id}" aria-label="Видалити">✕</button></td>
+        </tr>`; }).join('')}</tbody>
+    </table></div>` : '<div class="empty">Слів ще немає.</div>'}`;
+
+  document.getElementById('wFilter').onchange = (e) => { T.wordFilter = e.target.value; renderStudent(); };
+  document.getElementById('wordsForm').onsubmit = async (e) => {
+    e.preventDefault();
+    const msg = document.getElementById('wMsg');
+    const { out, bad } = parseWordLines(document.getElementById('wText').value);
+    const existing = new Set(T.words.map(w => w.en.toLowerCase()));
+    const fresh = [], dup = [];
+    out.forEach(w => { if(existing.has(w.en.toLowerCase())) dup.push(w.en); else { existing.add(w.en.toLowerCase()); fresh.push(w); } });
+    if(!fresh.length){
+      msg.className = 'form-msg err';
+      msg.textContent = bad.length ? `Не вдалося розпізнати: ${bad.slice(0,3).join('; ')}. Формат: слово - переклад` : (dup.length ? 'Усі ці слова вже є в словнику учня.' : 'Введіть слова.');
+      return;
+    }
+    const lessonVal = document.getElementById('wLesson').value;
+    const rows = fresh.map(w => ({ ...w, student_id: T.current.id, lesson_id: lessonVal ? +lessonVal : null, added_by: 'tutor', due: todayStr(), added: todayStr() }));
+    const btn = document.getElementById('wBtn'); btn.disabled = true;
+    const { data, error } = await sb.from('cabinet_words').insert(rows).select();
+    btn.disabled = false;
+    if(error){ console.error(error); msg.className = 'form-msg err'; msg.textContent = 'Не вдалося зберегти.'; return; }
+    T.words.unshift(...data);
+    let note = `Додано ${data.length} ${plural(data.length,'слово','слова','слів')}.`;
+    if(dup.length) note += ` Пропущено (вже є): ${dup.join(', ')}.`;
+    if(bad.length) note += ` Не розпізнано: ${bad.length}.`;
+    renderStudent();
+    toast(note);
+  };
+  c.querySelectorAll('[data-del-word]').forEach(b => b.onclick = async () => {
+    const { error } = await sb.from('cabinet_words').delete().eq('id', b.dataset.delWord);
+    if(error){ toast('Не вдалося видалити'); return; }
+    T.words = T.words.filter(w => w.id != b.dataset.delWord);
+    renderStudent();
+  });
+}
+
+/* ---------- НАЛАШТУВАННЯ ---------- */
+function tabSettings(c){
+  const s = T.current;
+  c.innerHTML = `
+    <div class="stack">
+      <form class="card" id="profForm">
+        <h3 style="margin-bottom:12px;">Дані учня</h3>
+        <div class="row">
+          <div class="field"><label for="pName">Ім'я та прізвище</label><input id="pName" value="${esc(s.full_name)}" required></div>
+          <div class="field" style="flex:0 1 140px"><label for="pLevel">Рівень</label><input id="pLevel" value="${esc(s.level)}"></div>
+        </div>
+        <label class="small" style="display:block;margin-bottom:14px;"><input type="checkbox" id="pActive" ${s.active ? 'checked' : ''}> Активний учень (зніміть, щоб перенести в архів — кабінет учня залишиться доступним)</label>
+        <button class="btn" type="submit">Зберегти</button>
+      </form>
+
+      <form class="card" id="pwForm">
+        <h3 style="margin-bottom:6px;">Новий пароль</h3>
+        <p class="small muted" style="margin:0 0 12px;">Якщо учень забув пароль. Логін: ${esc(s.email)}</p>
+        <div class="row">
+          <div class="field"><label for="pPass">Пароль</label><input id="pPass" minlength="6" required value="${genPassword()}" autocomplete="off"></div>
+        </div>
+        <button class="btn secondary" type="submit">Встановити пароль</button>
+        <div id="pwResult"></div>
+      </form>
+
+      <form class="card" id="importForm">
+        <h3 style="margin-bottom:6px;">Перенести слова зі старого тренажера</h3>
+        <p class="small muted" style="margin:0 0 12px;">Слова, які учень вчив на сторінці «Тренажер слів», разом із прогресом повторення. Повтори не дублюються.</p>
+        <div class="row">
+          <div class="field"><label for="oldName">Ім'я учня в старому тренажері</label><input id="oldName" value="${esc((s.full_name || '').split(' ')[0])}" required></div>
+        </div>
+        <button class="btn secondary" type="submit">Перенести слова</button>
+        <div class="form-msg" id="impMsg"></div>
+      </form>
+    </div>`;
+
+  document.getElementById('profForm').onsubmit = async (e) => {
+    e.preventDefault();
+    const patch = { full_name: document.getElementById('pName').value.trim(), level: document.getElementById('pLevel').value.trim(), active: document.getElementById('pActive').checked };
+    const { error } = await sb.from('profiles').update(patch).eq('id', s.id);
+    if(error){ toast('Не вдалося зберегти'); return; }
+    Object.assign(s, patch); toast('Збережено'); renderStudent();
+  };
+  document.getElementById('pwForm').onsubmit = async (e) => {
+    e.preventDefault();
+    const pw = document.getElementById('pPass').value;
+    const { error } = await sb.rpc('teacher_set_password', { p_student: s.id, p_password: pw });
+    const out = document.getElementById('pwResult');
+    if(error){ console.error(error); out.innerHTML = `<div class="form-msg err">Не вдалося: ${esc(error.message)}</div>`; return; }
+    const text = credsText(s.full_name, s.email, pw);
+    out.innerHTML = `<div class="creds">${esc(text)}</div><button class="btn small" type="button" id="copyPw">Скопіювати повідомлення</button>`;
+    document.getElementById('copyPw').onclick = () => copyText(text);
+  };
+  document.getElementById('importForm').onsubmit = async (e) => {
+    e.preventDefault();
+    const msg = document.getElementById('impMsg');
+    const { data, error } = await sb.rpc('import_old_words', { p_student: s.id, p_old_name: document.getElementById('oldName').value.trim() });
+    if(error){ console.error(error); msg.className = 'form-msg err'; msg.textContent = 'Помилка: ' + error.message; return; }
+    msg.className = 'form-msg ok';
+    msg.textContent = data ? `Перенесено ${data} ${plural(data,'слово','слова','слів')}.` : 'Нових слів не знайдено (перевірте написання імені).';
+    if(data){ await loadStudentData(); }
+  };
+}
+
+start();
+</script>
+</body>
+</html>
