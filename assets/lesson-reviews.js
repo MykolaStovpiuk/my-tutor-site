@@ -142,6 +142,130 @@ const LESSON_REVIEWS = [
         'I\'ve tried …ing, and it really works.'
       ]
     }
+  },
+  {
+    level: 'B1',
+    lesson: '3D',
+    title: 'B1 · 3D What matters most?',
+    rules: [
+      {
+        title: 'Що таке фразове дієслово',
+        text: 'Дієслово + частка (**up, off, on, away, down, after**…). Значення часто нове, не таке, як у самого дієслова.',
+        examples: [
+          '*I **get up** at 6.15.* — встаю з ліжка',
+          '*My car **broke down**.* — зламалася',
+          'Без об\'єкта: *I **go out** at night. My alarm **goes off** at 7. The plane **takes off** in ten minutes.*'
+        ]
+      },
+      {
+        title: 'Можна розділити',
+        text: 'Об\'єкт може стояти **після частки** або **між дієсловом і часткою**.',
+        examples: [
+          '*I **put on** my coat.* = *I **put** my coat **on**.*',
+          '*We **picked up** our rubbish.* = *We **picked** our rubbish **up**.*',
+          'Так само: **throw away, switch on/off, write down, shut down, look up, try on, take off, put away**'
+        ]
+      },
+      {
+        title: 'Не можна розділити',
+        text: 'Дієслово і частка завжди разом.',
+        examples: [
+          '*I **look after** my children.* — НЕ *I look my children after.*',
+          '*We **got on** the bus.* — НЕ *We got the bus on.*',
+          'Так само: **come across, stick with, log onto, break into, look out for**'
+        ]
+      },
+      {
+        title: 'Займенник — посередині',
+        text: 'Якщо об\'єкт — займенник (**it, them, her, me**…), у розділюваних дієсловах він завжди стоїть між дієсловом і часткою.',
+        examples: [
+          '*I\'ll **throw it away**.* — НЕ *I\'ll throw away it.*',
+          '*She **picked it up**.* — НЕ *She picked up it.*'
+        ]
+      }
+    ],
+    sections: [
+      {
+        title: 'Граматика: обери правильний варіант',
+        intro: 'Розділяється дієслово чи ні? Де стоїть займенник?',
+        items: [
+          { type:'choice', q:'Grandma is ill, so I ___ this week.', options:['look after her','look her after'], answer:0, explain:'**look after** не розділяється.' },
+          { type:'choice', q:'Here\'s your jacket. ___!', options:['Put on it','Put it on'], answer:1, explain:'Займенник — посередині: **put it on**.' },
+          { type:'choice', q:'We ___ outside the cinema.', options:['got on the bus','got the bus on'], answer:0, explain:'**get on** (транспорт) не розділяється.' },
+          { type:'choice', q:'I ___ in an old box last night.', options:['came across these photos','came these photos across'], answer:0, explain:'**come across** = випадково знайти; не розділяється.' },
+          { type:'choice', q:'I don\'t know this word. I\'ll ___.', options:['look up it','look it up'], answer:1, explain:'**look it up** — займенник між дієсловом і часткою.' },
+          { type:'choice', q:'Which sentence is NOT correct?', options:['Switch the TV off.','Switch off the TV.','Switch off it.'], answer:2, explain:'З займенником тільки **switch it off**.' },
+          { type:'choice', q:'Someone ___ last week, but they didn\'t take anything.', options:['broke our house into','broke into our house'], answer:1, explain:'**break into** не розділяється.' },
+          { type:'choice', q:'These shoes are too small. Can I ___ in a bigger size?', options:['try them on','try on them'], answer:0, explain:'**try them on**.' },
+          { type:'choice', q:'I\'m enjoying my guitar lessons, so I\'m going to ___.', options:['stick them with','stick with them'], answer:1, explain:'**stick with** не розділяється.' },
+          { type:'choice', q:'The plane will ___ in thirty minutes.', options:['take off','take on'], answer:0, explain:'Літак злітає — **take off**.' }
+        ]
+      },
+      {
+        title: 'Граматика: напиши з займенником',
+        intro: 'Напиши фразове дієслово з дужок разом із займенником (it / them / her). Зверни увагу на час.',
+        items: [
+          { type:'gap', q:'These old magazines are useless. Let\'s ___.', hint:'(throw away)', answer:['throw them away'], explain:'**throw them away**.' },
+          { type:'gap', q:'This is my new number. Please ___.', hint:'(write down)', answer:['write it down'], explain:'**write it down**.' },
+          { type:'gap', q:'The music is too loud. Can you ___?', hint:'(switch off)', answer:['switch it off','turn it off'], explain:'**switch it off**.' },
+          { type:'gap', q:'I saw some money on the floor, so I ___.', hint:'(pick up, past)', answer:['picked it up'], explain:'**picked it up** — минулий час.' },
+          { type:'gap', q:'Your toys are everywhere! ___ now, please.', hint:'(put away)', answer:['put them away','Put them away'], explain:'**Put them away**.' },
+          { type:'gap', q:'Mrs Garcia asked me to take her cat and ___ while she\'s away.', hint:'(look after)', answer:['look after it','look after her','look after him'], explain:'**look after it** — не розділяється, займенник іде після.' }
+        ]
+      },
+      {
+        title: 'Повторення уроку: що сказали люди',
+        intro: 'BBC Street Interviews, life coach Gavin та коментар Alex.',
+        items: [
+          { type:'choice', q:'Lotte: "I\'m more interested ___ current events."', options:['in','about','on'], answer:0, explain:'**interested in**.' },
+          { type:'choice', q:'Mon Zer: "I don\'t care ___ new trends that much."', options:['for','about','of'], answer:1, explain:'**care about**.' },
+          { type:'choice', q:'Gerard: "I\'m not really ___ brands at all."', options:['in','into','on'], answer:1, explain:'**be into** = захоплюватися.' },
+          { type:'choice', q:'Lily: "Other people\'s opinions are not very ___."', options:['important','interesting','interested'], answer:0, explain:'Для Lily думки інших не дуже важливі.' },
+          { type:'choice', q:'"It\'s important to look ___ for each other."', options:['after','out','up'], answer:1, explain:'**look out for** = підтримувати, оберігати.' },
+          { type:'choice', q:'Gavin: when we learn, we have the things we need to make ___.', options:['no mistakes','the right choices'], answer:1, explain:'**make the right choices**.' },
+          { type:'choice', q:'Gavin: friends make us feel ___ relaxed.', options:['more','less'], answer:0, explain:'Друзі допомагають розслабитися.' },
+          { type:'choice', q:'Gavin: when we\'re very tired, we get ___ more often.', options:['annoyed','jealous'], answer:0, explain:'**annoyed** — роздратований.' },
+          { type:'choice', q:'Alex: "Some dishes take two hours or more, but it\'s ___ it!"', options:['worth','value','good'], answer:0, explain:'**it\'s worth it** — воно того варте.' },
+          { type:'choice', q:'Alex: "I\'m not really ___ shopping in big supermarkets."', options:['into','in','about'], answer:0, explain:'**I\'m not really into …**' }
+        ]
+      },
+      {
+        title: 'Лексика: впиши слово',
+        intro: 'Одне слово в кожен пропуск.',
+        items: [
+          { type:'gap', q:'I need a good ___ between my work and my free time.', hint:'рівновага', answer:['balance'], explain:'**a balance between A and B**.' },
+          { type:'gap', q:'I plan every hour of my day. ___ is really important to me.', hint:'порядок', answer:['structure','Structure'], explain:'**structure**.' },
+          { type:'gap', q:'Music always changes my ___.', hint:'настрій', answer:['mood'], explain:'**change your mood**.' },
+          { type:'gap', q:'My dog gives me a ___ to get out of bed.', hint:'причина', answer:['reason'], explain:'**a reason to get out of bed**.' },
+          { type:'gap', q:'I love to ___ with new dishes.', hint:'експериментувати', answer:['experiment'], explain:'**experiment with**.' },
+          { type:'gap', q:'I try to buy ___ ingredients from the farms near where I live.', hint:'місцеві', answer:['local'], explain:'**local ingredients**.' }
+        ]
+      }
+    ],
+    speaking: {
+      intro: 'Відповідай уголос, 1–2 хвилини на питання. Вживай фрази нижче і фразові дієслова з уроку.',
+      questions: [
+        'What three things or activities are most important in your life? Why?',
+        'What three things are NOT important to you? Why not?',
+        'Is it important for you to follow trends or buy brands? Why / why not?',
+        'How do you keep a balance between work or study and free time?',
+        'What song do you put on when you need a good mood?',
+        'Do you need structure in your day, or do you prefer to be spontaneous?',
+        'Who looks out for you? Who do you look after?',
+        'Tell me about a hobby you started and stuck with. When did you first become interested in it?',
+        'What is a good reason to get out of bed in the morning?',
+        'What would you never throw away? Why?'
+      ],
+      phrases: [
+        'The things that are important in my life are …',
+        'Spending time with … is important.',
+        'It\'s important to look after …',
+        'I\'m not interested in … at all.',
+        'I don\'t care about … that much.',
+        'I\'m not really into …',
+        '… means a lot to me. / I couldn\'t live without …'
+      ]
+    }
   }
 ];
 

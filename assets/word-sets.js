@@ -119,6 +119,65 @@ const WORD_SETS = [
         ]
       }
     ]
+  },
+  {
+    level: 'B1',
+    lesson: '3D',
+    title: 'B1 · 3D What matters most?',
+    parts: [
+      {
+        title: 'Фразові дієслова (phrasal verbs)',
+        words: [
+          { en: 'get up', ua: 'вставати (з ліжка)', example: 'I usually get up at 6.15 on weekdays.' },
+          { en: 'go off', ua: 'спрацювати (про будильник)', example: 'My alarm didn\'t go off this morning, so I was late.' },
+          { en: 'put on', ua: 'вдягнути; увімкнути (пісню)', example: 'When I feel sad, I put on my favourite song.' },
+          { en: 'take off', ua: 'зняти (одяг); злетіти (про літак)', example: 'Please take off your shoes before you come in.' },
+          { en: 'pick up', ua: 'підняти, взяти в руки', example: 'Can you pick up that pen for me, please?' },
+          { en: 'put away', ua: 'прибрати на місце', example: 'Put away your toys before dinner!' },
+          { en: 'throw away', ua: 'викинути', example: 'Don\'t throw away old photos — they\'re memories.' },
+          { en: 'switch off', ua: 'вимкнути', example: 'Don\'t forget to switch off the lights.' },
+          { en: 'write down', ua: 'записати', example: 'Let me write down your phone number.' },
+          { en: 'look up', ua: 'знайти (слово в словнику)', example: 'I don\'t know this word, so I need to look up the meaning.' },
+          { en: 'try on', ua: 'приміряти', example: 'Can I try on these jeans, please?' },
+          { en: 'shut down', ua: 'вимкнути (комп\'ютер)', example: 'Shut down your laptop before you leave the office.' },
+          { en: 'look after', ua: 'доглядати, піклуватися', example: 'I look after my friend\'s son on Saturdays.' },
+          { en: 'look out for', ua: 'підтримувати, оберігати (одне одного)', example: 'It\'s important to look out for each other.' },
+          { en: 'come across', ua: 'випадково знайти, натрапити', example: 'You sometimes come across old letters when you clean the house.' },
+          { en: 'stick with', ua: 'не кидати, продовжувати', example: 'I\'m enjoying my Spanish lessons, so I\'m going to stick with them.' },
+          { en: 'log onto', ua: 'увійти (в систему, акаунт)', example: 'I need to log onto the computer first.' },
+          { en: 'break into', ua: 'вломитися, проникнути', example: 'Someone tried to break into our house last week.' },
+          { en: 'get on', ua: 'сісти (в автобус, потяг)', example: 'We get on the bus outside the school.' },
+          { en: 'break down', ua: 'зламатися (про техніку, авто)', example: 'Our old car can break down at any moment.' },
+          { en: 'go out', ua: 'піти кудись (розважитися)', example: 'We go out with friends every Friday.' },
+          { en: 'go away', ua: 'піти геть; поїхати', example: 'Please go away, I\'m busy!' }
+        ]
+      },
+      {
+        title: 'Що для нас важливо (what matters)',
+        words: [
+          { en: 'creative activities', ua: 'творчі заняття', example: 'Painting and singing are my favourite creative activities.' },
+          { en: 'socialise', ua: 'спілкуватися, проводити час з людьми', example: 'I love to socialise with my friends at the weekend.' },
+          { en: 'trends', ua: 'тренди, модні тенденції', example: 'I don\'t care about new trends that much.' },
+          { en: 'brands', ua: 'бренди', example: 'I\'m not really into brands at all.' },
+          { en: 'current events', ua: 'поточні події, новини', example: 'I\'m more interested in current events.' },
+          { en: 'opinions', ua: 'думки', example: 'Other people\'s opinions are not very important to me.' },
+          { en: 'mood', ua: 'настрій', example: 'Natalia sings to change her mood.' },
+          { en: 'uplift', ua: 'підбадьорити, підняти настрій', example: 'Putting on a certain song can uplift you.' },
+          { en: 'balance', ua: 'баланс, рівновага', example: 'I need a good balance between my work and my free time.' },
+          { en: 'structure', ua: 'структура, чіткий розпорядок', example: 'Structure is really important to me.' },
+          { en: 'relaxed', ua: 'розслаблений, спокійний', example: 'Good friends make us feel more relaxed.' },
+          { en: 'annoyed', ua: 'роздратований', example: 'When we\'re very tired, we get annoyed more often.' },
+          { en: 'jealous', ua: 'заздрісний; ревнивий', example: 'I feel a bit jealous when my sister travels without me.' },
+          { en: 'be into', ua: 'захоплюватися (чимось)', example: 'My kids seem to be into computer games.' },
+          { en: 'care about', ua: 'дбати про; хвилювати (когось)', example: 'I really care about my family.' },
+          { en: 'make the right choices', ua: 'робити правильний вибір', example: 'Learning helps us make the right choices.' },
+          { en: 'a reason to get out of bed', ua: 'причина вставати зранку', example: 'My dog gives me a reason to get out of bed.' },
+          { en: 'local ingredients', ua: 'місцеві продукти', example: 'I try to buy local ingredients at the market.' },
+          { en: 'experiment with', ua: 'експериментувати з', example: 'I like to experiment with new dishes.' },
+          { en: 'worth it', ua: 'варте того', example: 'Some dishes take two hours, but it\'s worth it!' }
+        ]
+      }
+    ]
   }
 ];
 
