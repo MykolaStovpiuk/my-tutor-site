@@ -72,6 +72,53 @@ const WORD_SETS = [
         ]
       }
     ]
+  },
+  {
+    level: 'B2',
+    lesson: '1B',
+    title: 'B2 · 1B Memory',
+    parts: [
+      {
+        title: 'Сполучення про пам\'ять (collocations about memory)',
+        words: [
+          { en: 'remember every detail', ua: 'пам\'ятати кожну дрібницю', example: 'I remember every detail of my first day at school.' },
+          { en: 'learn things by heart', ua: 'вчити напам\'ять', example: 'At school we had to learn things by heart.' },
+          { en: 'bring back memories', ua: 'навівати спогади, пробуджувати спогади', example: 'Old family photos always bring back memories.' },
+          { en: 'short-term memory', ua: 'короткочасна пам\'ять', example: 'My short-term memory is terrible — I can\'t remember what I had for breakfast!' },
+          { en: 'long-term memory', ua: 'довготривала пам\'ять', example: 'My long-term memory is pretty good.' },
+          { en: 'perfect recall', ua: 'бездоганна пам\'ять, здатність точно все відтворити', example: 'I definitely don\'t have perfect recall when it comes to appointments.' },
+          { en: 'childhood memories', ua: 'дитячі спогади', example: 'We love sharing our childhood memories with the family.' },
+          { en: 'have a good memory', ua: 'мати хорошу пам\'ять', example: 'Do you have a good memory for names?' },
+          { en: 'forgetful', ua: 'забудькуватий', example: 'My dad is so forgetful — he loses his keys every day.' },
+          { en: 'recall', ua: 'пригадувати, згадувати', example: 'Can you recall the name of your first teacher?' }
+        ]
+      },
+      {
+        title: 'Ідіоми про пам\'ять (idioms: memory)',
+        words: [
+          { en: 'go in one ear and out the other', ua: 'в одне вухо влетіло, в інше вилетіло', example: 'Everything I tell him seems to go in one ear and out the other.' },
+          { en: 'slipped my mind', ua: 'вилетіло з голови, я забув(-ла)', example: 'I forgot the milk! Sorry, it totally slipped my mind.' },
+          { en: 'refresh my memory', ua: 'нагадати мені, освіжити пам\'ять', example: 'Can you refresh my memory — what time are we starting tomorrow?' },
+          { en: 'on the tip of my tongue', ua: 'крутиться на язиці', example: 'Her name is on the tip of my tongue — don\'t tell me!' },
+          { en: 'ring a bell', ua: 'здаватися знайомим, щось нагадувати', example: 'Does the name Jill Price ring a bell?' },
+          { en: 'memory is playing tricks on me', ua: 'пам\'ять мене підводить (я щось неправильно запам\'ятав)', example: 'I was sure the café was here — my memory is playing tricks on me.' }
+        ]
+      },
+      {
+        title: 'Слова зі статей (reading)',
+        words: [
+          { en: 'relive', ua: 'знову переживати', example: 'She began to relive everything that had happened on that day.' },
+          { en: 'daydreaming', ua: 'мріяння, витання в хмарах', example: 'He spends hours daydreaming instead of doing his homework.' },
+          { en: 'reliable', ua: 'надійний', example: 'Our memories may not be as reliable as we think.' },
+          { en: 'false memories', ua: 'хибні спогади', example: 'Sometimes we create false memories from family stories.' },
+          { en: 'fill in the gaps', ua: 'заповнювати прогалини', example: 'If we can\'t remember small details, we fill in the gaps ourselves.' },
+          { en: 'bring to mind', ua: 'пригадати, відновити в пам\'яті', example: 'I can\'t bring to mind the name of that film.' },
+          { en: 'emotional connection', ua: 'емоційний зв\'язок', example: 'We remember things better when we have an emotional connection with them.' },
+          { en: 'focus on', ua: 'зосереджуватися на', example: 'You remember more if you focus on one task at a time.' },
+          { en: 'stamina', ua: 'витривалість', example: 'Running up and down the stairs improved my stamina.' }
+        ]
+      }
+    ]
   }
 ];
 
