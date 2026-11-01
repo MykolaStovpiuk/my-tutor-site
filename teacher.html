@@ -42,6 +42,8 @@
 
 <script src="assets/cabinet-common.js"></script>
 <script src="assets/word-sets.js"></script>
+<script src="assets/lesson-reviews.js"></script>
+<script src="assets/review-player.js"></script>
 <script>
 const app = document.getElementById('app');
 const navActions = document.getElementById('navActions');
@@ -421,7 +423,7 @@ function lessonRow(l){
         <div>
           <div class="lesson-title">${esc(l.title)} <span class="badge ${l.status === 'done' ? 'done' : 'planned'}">${l.status === 'done' ? 'пройдено' : 'заплановано'}</span></div>
           <div class="lesson-meta">${[esc(l.topic), l.lesson_date ? fmtDate(l.lesson_date) : ''].filter(Boolean).join(' · ')}</div>
-          <div class="small muted" style="margin-top:4px;">${tasks.length} ${plural(tasks.length,'завдання','завдання','завдань')} · ${words} слів</div>
+          <div class="small muted" style="margin-top:4px;">${tasks.length} ${plural(tasks.length,'завдання','завдання','завдань')} · ${words} слів${findLessonReview(l.title, T.current.level) ? ` · <button class="link-btn small" data-review-preview="${l.id}">📘 є повторення — переглянути</button>` : ''}</div>
           ${l.notes ? `<div class="lesson-notes">${esc(l.notes)}</div>` : ''}
         </div>
         <div class="item-actions">
@@ -453,6 +455,11 @@ function bindLessonRows(c){
     renderStudent();
   });
   c.querySelectorAll('[data-edit]').forEach(b => b.onclick = () => { T.editLesson = +b.dataset.edit; renderStudent(); });
+  c.querySelectorAll('[data-review-preview]').forEach(b => b.onclick = () => {
+    const l = T.lessons.find(x => x.id == b.dataset.reviewPreview);
+    const review = findLessonReview(l.title, T.current.level);
+    if(review) openLessonReview(review);
+  });
   c.querySelectorAll('[data-del]').forEach(b => b.onclick = async () => {
     const l = T.lessons.find(x => x.id == b.dataset.del);
     if(!confirm(`Видалити урок «${l.title}»? Завдання й слова залишаться, але без прив'язки до уроку.`)) return;

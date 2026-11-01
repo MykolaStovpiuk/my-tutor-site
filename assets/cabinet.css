@@ -217,3 +217,55 @@ table.data tr:last-child td{border-bottom:none;}
 .gap-sentence{font-size:1.25rem; line-height:1.6; margin:6px 0 8px; word-break:break-word;}
 .gap-blank{display:inline-block; min-width:80px; border-bottom:2px solid var(--teal); color:var(--teal); font-weight:600; padding:0 4px;}
 .gap-hint{color:var(--muted); font-size:0.9rem; margin-bottom:16px;}
+
+/* Повторення уроку (assets/review-player.js) */
+.rv-overlay{position:fixed; inset:0; z-index:90; background:rgba(43,54,48,.45); overflow-y:auto; -webkit-overflow-scrolling:touch; padding:0 12px 24px;}
+.rv-sheet{max-width:720px; margin:24px auto 0; background:var(--paper); border-radius:20px; padding:22px 20px 26px; box-shadow:0 20px 50px rgba(0,0,0,.18);}
+.rv-top{display:flex; justify-content:space-between; align-items:flex-start; gap:12px;}
+.rv-kicker{font-family:'Space Mono', monospace; font-size:0.78rem; color:var(--coral); text-transform:uppercase; letter-spacing:.06em;}
+.rv-title{font-family:'Fraunces', serif; font-size:1.5rem; margin:2px 0 0;}
+.rv-score{position:sticky; top:0; z-index:2; background:var(--paper); padding:12px 0 8px; margin-top:8px; font-size:0.92rem; border-bottom:1px solid var(--line);}
+.rv-h{font-size:1.1rem; margin:24px 0 8px;}
+.rv-intro{margin:0 0 12px; color:var(--muted); font-size:0.92rem;}
+.rv-rules{display:flex; flex-direction:column; gap:8px;}
+.rv-rule{background:var(--card); border:1px solid var(--line); border-radius:14px; padding:12px 16px;}
+.rv-rule summary{cursor:pointer; font-weight:600;}
+.rv-rule p{margin:10px 0 6px; font-size:0.95rem;}
+.rv-rule ul{margin:6px 0 0; padding-left:20px; font-size:0.93rem;}
+.rv-rule li{margin:4px 0;}
+.rv-items{display:flex; flex-direction:column; gap:10px;}
+.rv-item{background:var(--card); border:1px solid var(--line); border-left:4px solid var(--line); border-radius:14px; padding:12px 14px;}
+.rv-item.ok{border-left-color:var(--good);}
+.rv-item.bad{border-left-color:var(--bad);}
+.rv-q{display:flex; gap:10px; font-size:1rem; line-height:1.55;}
+.rv-n{flex:0 0 auto; font-family:'Space Mono', monospace; font-size:0.8rem; color:var(--muted); padding-top:3px; min-width:20px;}
+.rv-blank{display:inline-block; min-width:60px; border-bottom:2px solid var(--teal); color:var(--teal); font-weight:600; padding:0 3px; line-height:1.3;}
+.rv-blank.ok{color:var(--good); border-color:var(--good);}
+.rv-blank.bad{color:var(--bad); border-color:var(--bad);}
+.rv-opts{display:flex; flex-wrap:wrap; gap:8px; margin:10px 0 0 30px;}
+.rv-opt{background:#fff; border:1.5px solid var(--line); border-radius:100px; padding:7px 16px; cursor:pointer; font-size:0.95rem;}
+.rv-opt:hover:not(:disabled){border-color:var(--teal);}
+.rv-opt:disabled{cursor:default;}
+.rv-opt.correct{background:var(--good-soft); border-color:var(--good); color:var(--good); font-weight:600;}
+.rv-opt.wrong{background:var(--bad-soft); border-color:var(--bad); color:var(--bad);}
+.rv-gap{display:flex; gap:8px; margin:10px 0 0 30px; flex-wrap:wrap;}
+.rv-gap input{flex:1 1 160px; min-width:0; border:1.5px solid var(--line); border-radius:10px; padding:8px 12px; background:#fff;}
+.rv-gap input:focus{border-color:var(--teal); outline:none;}
+.rv-gap input.correct{border-color:var(--good); background:var(--good-soft);}
+.rv-gap input.wrong{border-color:var(--bad); background:var(--bad-soft);}
+.rv-explain{margin:8px 0 0 30px; font-size:0.88rem; color:var(--muted);}
+.rv-good{color:var(--good);} .rv-wrong{color:var(--bad);}
+.rv-speak{background:var(--card); border:1px solid var(--line); border-radius:14px; padding:14px 16px;}
+.rv-speak ol{margin:0; padding-left:20px;}
+.rv-speak li{margin:6px 0;}
+.rv-phrases-title{font-weight:600; font-size:0.9rem; margin:14px 0 8px;}
+.rv-phrases{display:flex; flex-wrap:wrap; gap:6px;}
+.rv-phrases span{background:var(--teal-soft); border-radius:100px; padding:5px 12px; font-size:0.88rem;}
+.rv-bottom{display:flex; gap:10px; justify-content:center; flex-wrap:wrap; margin-top:24px;}
+@media (max-width:560px){
+  .rv-overlay{padding:0;}
+  .rv-sheet{border-radius:0; min-height:100%; padding:16px 16px 24px; margin-top:0;}
+  .rv-opts,.rv-gap,.rv-explain{margin-left:0;}
+}
+.btn-review{background:var(--marigold); color:#fff;}
+.btn-review:hover{background:#d08d2a;}

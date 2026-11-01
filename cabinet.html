@@ -23,6 +23,8 @@
 <main class="wrap" id="app"><div class="loading">Завантаження…</div></main>
 
 <script src="assets/cabinet-common.js"></script>
+<script src="assets/lesson-reviews.js"></script>
+<script src="assets/review-player.js"></script>
 <script>
 const app = document.getElementById('app');
 const navActions = document.getElementById('navActions');
@@ -157,6 +159,8 @@ function renderLessons(c){
   const lessonCard = (l) => {
     const tasks = S.tasks.filter(t => t.lesson_id === l.id);
     const wordCount = S.words.filter(w => w.lesson_id === l.id).length;
+    const review = l.status === 'done' ? findLessonReview(l.title, S.me.level) : null;
+    const best = review ? rvBestGet(S.me.id + ':' + l.id) : null;
     return `
       <article class="lesson ${l.status === 'done' ? 'done' : ''}">
         <div class="lesson-head">
@@ -167,9 +171,13 @@ function renderLessons(c){
           <span class="badge ${l.status === 'done' ? 'done' : 'planned'}">${l.status === 'done' ? '✓ Пройдено' : 'Попереду'}</span>
         </div>
         ${l.notes ? `<div class="lesson-notes">${esc(l.notes)}</div>` : ''}
-        ${(tasks.length || wordCount) ? `<div class="lesson-extra">
+        ${(tasks.length || wordCount || review) ? `<div class="lesson-extra">
           ${tasks.map(t => taskHtml(t, false)).join('')}
-          ${wordCount ? `<div><button class="btn secondary small" data-practice="${l.id}">Практикувати слова уроку (${wordCount})</button></div>` : ''}
+          ${(review || wordCount) ? `<div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
+            ${review ? `<button class="btn small btn-review" data-review="${l.id}">📘 Повторити урок</button>` : ''}
+            ${wordCount ? `<button class="btn secondary small" data-practice="${l.id}">Практикувати слова уроку (${wordCount})</button>` : ''}
+            ${best != null ? `<span class="small muted">повторення: ${best}/${rvTotal(review)}</span>` : ''}
+          </div>` : ''}
         </div>` : ''}
       </article>`;
   };
@@ -177,6 +185,11 @@ function renderLessons(c){
     ${done.length ? `<div class="lesson-list">${done.map(lessonCard).join('')}</div>` : ''}
     ${planned.length ? `<h3 class="section-title">Попереду</h3><div class="lesson-list">${planned.map(lessonCard).join('')}</div>` : ''}`;
   bindTaskChecks(c);
+  c.querySelectorAll('[data-review]').forEach(b => b.onclick = () => {
+    const l = S.lessons.find(x => x.id == b.dataset.review);
+    const review = findLessonReview(l.title, S.me.level);
+    if(review) openLessonReview(review, { storeKey: S.me.id + ':' + l.id, onClose: render });
+  });
   c.querySelectorAll('[data-practice]').forEach(b => b.onclick = () => {
     const l = S.lessons.find(x => x.id == b.dataset.practice);
     S.practice = { lessonId: l.id, title: l.title };
