@@ -240,7 +240,7 @@ function renderReview(area){
   }
   area.innerHTML = `${label}
     <div class="review-modes">
-      ${[['cards','Картки'],['quiz','Тест'],['type','Написати переклад'],['match','Знайти пару']].map(([m,t]) =>
+      ${[['cards','Картки'],['quiz','Тест'],['gap','Встав у речення'],['match','Знайти пару'],['type','Написати переклад'],['spell','Написати англійською']].map(([m,t]) =>
         `<button class="rmode-btn ${S.reviewMode===m?'active':''}" data-mode="${m}">${t}</button>`).join('')}
     </div>
     <div id="exercise"></div>`;
@@ -251,6 +251,8 @@ function renderReview(area){
   if(S.reviewMode === 'cards') runCards(ex, queue, finish);
   else if(S.reviewMode === 'quiz') runQuiz(ex, queue, S.words, finish);
   else if(S.reviewMode === 'type') runTyping(ex, queue, finish);
+  else if(S.reviewMode === 'gap') runGap(ex, queue, S.words, finish);
+  else if(S.reviewMode === 'spell') runSpell(ex, queue, finish);
   else runMatch(ex, queue, finish);
 }
 function bindExitPractice(){

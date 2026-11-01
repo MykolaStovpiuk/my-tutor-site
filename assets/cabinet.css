@@ -206,3 +206,14 @@ table.data tr:last-child td{border-bottom:none;}
   .tab-btn{padding:10px 9px; font-size:0.9rem;}
   .tabs{gap:2px;}
 }
+
+/* Готові набори слів (панель викладача) */
+.set-box{border:1.5px dashed var(--teal); border-radius:12px; padding:12px 14px; margin:4px 0 14px; background:var(--paper-soft);}
+.set-box-title{font-weight:600; margin-bottom:8px;}
+.set-part{display:flex; gap:8px; align-items:flex-start; padding:4px 0; cursor:pointer; font-size:0.95rem;}
+.set-part input{margin-top:4px; accent-color:var(--teal);}
+
+/* Вправа «Встав у речення» */
+.gap-sentence{font-size:1.25rem; line-height:1.6; margin:6px 0 8px; word-break:break-word;}
+.gap-blank{display:inline-block; min-width:80px; border-bottom:2px solid var(--teal); color:var(--teal); font-weight:600; padding:0 4px;}
+.gap-hint{color:var(--muted); font-size:0.9rem; margin-bottom:16px;}

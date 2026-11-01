@@ -41,6 +41,7 @@
 <main class="wrap" id="app"><div class="loading">Завантаження…</div></main>
 
 <script src="assets/cabinet-common.js"></script>
+<script src="assets/word-sets.js"></script>
 <script>
 const app = document.getElementById('app');
 const navActions = document.getElementById('navActions');
@@ -48,7 +49,7 @@ const CABINET_URL = new URL('cabinet.html', location.href).href;
 
 const T = {
   me: null, students: [], overview: {}, search: '', showArchived: false, showNewForm: false, lastCreated: null,
-  current: null, tab: 'lessons', lessons: [], tasks: [], words: [], wordFilter: 'all', editLesson: null
+  current: null, tab: 'lessons', lessons: [], tasks: [], words: [], wordFilter: 'all', editLesson: null, setPick: null
 };
 
 /* ================= СТАРТ ================= */
@@ -332,6 +333,7 @@ function lessonFormHtml(l){
         <select name="status"><option value="done" ${l.status==='done'?'selected':''}>Пройдено</option><option value="planned" ${l.status!=='done'?'selected':''}>Заплановано</option></select></div>
     </div>
     <div class="field"><label>Коментар для учня (необов'язково)</label><textarea name="notes" rows="2" placeholder="Що вивчили, на що звернути увагу…">${esc(l.notes)}</textarea></div>
+    ${isNew ? '<div class="set-offer" data-set-offer></div>' : ''}
     <div class="row"><button class="btn" type="submit">${isNew ? 'Додати урок' : 'Зберегти'}</button>
     ${isNew ? '' : '<button class="btn secondary" type="button" data-cancel>Скасувати</button>'}</div>
     <div class="form-msg"></div>`;
@@ -369,12 +371,20 @@ function tabLessons(c){
     const row = readLessonForm(e.target);
     if(!row.title) return;
     if(row.status === 'done' && !row.lesson_date) row.lesson_date = todayStr();
+    const parts = checkedParts(e.target);
     const { data, error } = await sb.from('cabinet_lessons').insert({ ...row, student_id: T.current.id }).select().single();
     if(error){ console.error(error); toast('Не вдалося зберегти урок'); return; }
     T.lessons.push(data); sortLessons();
-    toast(`Урок ${row.title} додано`);
+    let note = `Урок ${row.title} додано`;
+    const set = findWordSet(row.title);
+    if(set && parts.length){
+      const n = await addSetWords(set, parts, data.id);
+      if(n > 0) note += ` + ${n} ${plural(n,'слово','слова','слів')} у кабінет`;
+    }
+    toast(note);
     renderStudent();
   };
+  bindSetOffer(document.getElementById('lessonForm'));
   document.getElementById('planForm').onsubmit = async (e) => {
     e.preventDefault();
     const lines = document.getElementById('planText').value.split('\n').map(x => x.trim()).filter(Boolean);
@@ -431,7 +441,16 @@ function bindLessonRows(c){
     b.disabled = true;
     const { error } = await sb.from('cabinet_lessons').update(patch).eq('id', l.id);
     if(error){ toast('Не вдалося зберегти'); b.disabled = false; return; }
-    Object.assign(l, patch); sortLessons(); renderStudent();
+    Object.assign(l, patch); sortLessons();
+    const set = status === 'done' ? findWordSet(l.title) : null;
+    if(set && !T.words.some(w => w.lesson_id === l.id)){
+      const total = set.parts.reduce((a,p) => a + p.words.length, 0);
+      if(confirm(`Додати учневі слова уроку «${set.title}» (${total})?`)){
+        const n = await addSetWords(set, set.parts.map((_,i) => i), l.id);
+        toast(n ? `Додано ${n} ${plural(n,'слово','слова','слів')}` : 'Усі ці слова вже є в словнику учня');
+      }
+    }
+    renderStudent();
   });
   c.querySelectorAll('[data-edit]').forEach(b => b.onclick = () => { T.editLesson = +b.dataset.edit; renderStudent(); });
   c.querySelectorAll('[data-del]').forEach(b => b.onclick = async () => {
@@ -557,13 +576,70 @@ function parseWordLines(text){
   });
   return { out, bad };
 }
+/* ---------- Готові набори слів (assets/word-sets.js) ---------- */
+function setPartsHtml(set, name){
+  return set.parts.map((p,i) => `
+    <label class="set-part"><input type="checkbox" name="${name}" value="${i}" checked>
+      <span>${esc(p.title)} <span class="muted">· ${p.words.length}</span></span></label>`).join('');
+}
+function checkedParts(form){
+  return [...form.querySelectorAll('input[name="setPart"]:checked')].map(x => +x.value);
+}
+function bindSetOffer(form){
+  const box = form.querySelector('[data-set-offer]');
+  if(!box) return;
+  const title = form.querySelector('[name="title"]');
+  let shown = null;
+  const upd = () => {
+    const set = findWordSet(title.value);
+    if(set === shown) return;
+    shown = set;
+    box.innerHTML = set ? `
+      <div class="set-box">
+        <div class="set-box-title">📚 Одразу додати слова уроку «${esc(set.title)}» у кабінет учня</div>
+        ${setPartsHtml(set, 'setPart')}
+        <div class="hint">Зніми галочки, якщо ці слова учню не потрібні.</div>
+      </div>` : '';
+  };
+  title.addEventListener('input', upd); upd();
+}
+async function addSetWords(set, partIdxs, lessonId){
+  const existing = new Set(T.words.map(w => w.en.toLowerCase()));
+  const rows = [];
+  partIdxs.forEach(i => (set.parts[i]?.words || []).forEach(w => {
+    if(existing.has(w.en.toLowerCase())) return;
+    existing.add(w.en.toLowerCase());
+    rows.push({ en: w.en, ua: w.ua, example: w.example || '', student_id: T.current.id,
+      lesson_id: lessonId || null, added_by: 'tutor', due: todayStr(), added: todayStr() });
+  }));
+  if(!rows.length) return 0;
+  const { data, error } = await sb.from('cabinet_words').insert(rows).select();
+  if(error){ console.error(error); toast('Не вдалося додати слова'); return -1; }
+  T.words.unshift(...data);
+  return data.length;
+}
+
 function tabWords(c){
   const lessonsWithWords = T.lessons.filter(l => T.words.some(w => w.lesson_id === l.id));
   let list = T.words;
   if(T.wordFilter === 'student') list = list.filter(w => w.added_by === 'student');
   else if(T.wordFilter === 'due') list = list.filter(w => w.due <= todayStr());
   else if(T.wordFilter !== 'all') list = list.filter(w => w.lesson_id == T.wordFilter);
+  const setSel = T.setPick ?? (findWordSet(T.lessons.find(l => l.id == latestDoneLessonId())?.title)?.lesson || WORD_SETS[0]?.lesson || '');
+  const pickSet = WORD_SETS.find(s => s.lesson === setSel);
+  const setLesson = T.lessons.slice().reverse().find(l => findWordSet(l.title) === pickSet);
   c.innerHTML = `
+    ${WORD_SETS.length ? `<form class="card" id="setForm" style="margin-bottom:12px;">
+      <h3 style="margin-bottom:12px;">Готовий набір слів</h3>
+      <div class="row">
+        <div class="field"><label for="setPick">Набір</label><select id="setPick">
+          ${WORD_SETS.map(s => `<option value="${esc(s.lesson)}" ${s.lesson===setSel?'selected':''}>${esc(s.title)} (${s.parts.reduce((a,p)=>a+p.words.length,0)} слів)</option>`).join('')}</select></div>
+        <div class="field"><label for="setLesson">До уроку</label><select id="setLesson">${lessonOptions(setLesson ? setLesson.id : latestDoneLessonId())}</select></div>
+      </div>
+      ${pickSet ? setPartsHtml(pickSet, 'setPart') : ''}
+      <button class="btn" type="submit" style="margin-top:10px;">Додати набір</button>
+      <div class="hint">Слова, які вже є в словнику учня, пропускаються.</div>
+    </form>` : ''}
     <form class="card" id="wordsForm" style="margin-bottom:20px;">
       <h3 style="margin-bottom:12px;">Додати слова</h3>
       <div class="field" style="max-width:340px;"><label for="wLesson">До уроку</label><select id="wLesson">${lessonOptions(latestDoneLessonId())}</select></div>
@@ -596,6 +672,22 @@ function tabWords(c){
     </table></div>` : '<div class="empty">Слів ще немає.</div>'}`;
 
   document.getElementById('wFilter').onchange = (e) => { T.wordFilter = e.target.value; renderStudent(); };
+  const setForm = document.getElementById('setForm');
+  if(setForm){
+    document.getElementById('setPick').onchange = (e) => { T.setPick = e.target.value; renderStudent(); };
+    setForm.onsubmit = async (e) => {
+      e.preventDefault();
+      const parts = checkedParts(setForm);
+      if(!pickSet || !parts.length) return;
+      const btn = setForm.querySelector('button[type="submit"]'); btn.disabled = true;
+      const lv = document.getElementById('setLesson').value;
+      const n = await addSetWords(pickSet, parts, lv ? +lv : null);
+      btn.disabled = false;
+      if(n < 0) return;
+      renderStudent();
+      toast(n ? `Додано ${n} ${plural(n,'слово','слова','слів')}` : 'Усі ці слова вже є в словнику учня');
+    };
+  }
   document.getElementById('wordsForm').onsubmit = async (e) => {
     e.preventDefault();
     const msg = document.getElementById('wMsg');

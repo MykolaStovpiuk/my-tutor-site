@@ -263,6 +263,122 @@ function runMatch(container, queue, onDone){
   });
 }
 
+/* Англійські варіанти відповіді: «lorry (truck)» → lorry, truck; «a/an/the/to» на початку не обов'язкові */
+function normEn(s){
+  return String(s).toLowerCase().replace(/[’`]/g,"'").replace(/[.,!?;:]/g,'').trim().replace(/\s+/g,' ').replace(/^(a|an|the|to) /,'');
+}
+function acceptedEn(en){
+  const base = String(en).replace(/\([^)]*\)/g,' ');
+  const inner = (String(en).match(/\(([^)]*)\)/g) || []).map(x => x.slice(1,-1));
+  return [base, ...inner].flatMap(x => x.split(/[\/,;]/)).map(normEn).filter(Boolean);
+}
+function mainEn(en){ return String(en).replace(/\([^)]*\)/g,' ').split(/[\/,;]/)[0].trim().replace(/\s+/g,' '); }
+
+/* Знаходить слово в прикладі й робить пропуск. null — якщо слова в прикладі немає */
+function makeGap(w){
+  if(!w.example) return null;
+  const target = mainEn(w.en);
+  if(!target) return null;
+  const re = new RegExp('(^|[^A-Za-z])(' + target.replace(/[.*+?^${}()|[\]\\]/g,'\\$&') + ')(?![A-Za-z])', 'i');
+  const m = w.example.match(re);
+  if(!m) return null;
+  const start = m.index + m[1].length;
+  return { before: w.example.slice(0, start), answer: m[2], after: w.example.slice(start + m[2].length) };
+}
+
+/* Вправа: українське слово → написати англійською */
+function runSpell(container, queue, onDone){
+  let idx = 0;
+  function show(){
+    if(idx >= queue.length){ onDone(queue.length); return; }
+    const w = queue[idx];
+    const gap = makeGap(w);
+    container.innerHTML = `
+      <div class="type-wrap">
+        <div class="progress-text">Слово ${idx+1} із ${queue.length}</div>
+        <div class="type-word">${esc(w.ua)}</div>
+        <input type="text" class="type-input" id="typeInput" placeholder="Англійською" autocomplete="off" autocapitalize="off" spellcheck="false">
+        <div class="type-feedback" id="typeFeedback"></div>
+        <div class="row" style="justify-content:center;">
+          <button class="btn secondary" id="hintBtn" type="button">Підказка</button>
+          <button class="btn" id="typeSubmit">Перевірити</button>
+        </div>
+      </div>`;
+    const input = document.getElementById('typeInput');
+    const fb = document.getElementById('typeFeedback');
+    const submit = document.getElementById('typeSubmit');
+    const hintBtn = document.getElementById('hintBtn');
+    input.focus();
+    let answered = false, hinted = 0;
+    const answer = mainEn(w.en);
+    hintBtn.onclick = () => {
+      hinted++;
+      const shown = answer.slice(0, hinted);
+      fb.className = 'type-feedback';
+      fb.textContent = `Починається з: ${shown}${hinted < answer.length ? '…' : ''}`;
+      if(hinted >= answer.length) hintBtn.disabled = true;
+      input.focus();
+    };
+    async function check(){
+      if(answered || !input.value.trim()) return;
+      answered = true;
+      const correct = acceptedEn(w.en).includes(normEn(input.value));
+      input.classList.add(correct ? 'correct' : 'wrong');
+      input.disabled = submit.disabled = hintBtn.disabled = true;
+      fb.className = 'type-feedback ' + (correct ? 'correct' : 'wrong');
+      fb.innerHTML = (correct ? 'Правильно!' : `Правильна відповідь: <b>${esc(w.en)}</b>`) +
+        (w.example ? `<div class="small muted" style="margin-top:6px;"><i>${esc(w.example)}</i></div>` : '');
+      // з підказкою слово зараховуємо, але не підвищуємо рівень
+      await gradeWord(w, correct && hinted === 0);
+      setTimeout(() => { idx++; show(); }, correct ? 1400 : 2600);
+    }
+    submit.onclick = check;
+    input.addEventListener('keydown', e => { if(e.key === 'Enter') check(); });
+  }
+  show();
+}
+
+/* Вправа: вибрати слово, яке пасує в речення */
+function runGap(container, queue, allWords, onDone){
+  const items = queue.map(w => ({ w, gap: makeGap(w) })).filter(x => x.gap);
+  if(!items.length){
+    container.innerHTML = `<div class="empty"><div class="big">Тут поки немає речень</div><p>Для цієї вправи потрібні слова з прикладами. Спробуй інші вправи.</p></div>`;
+    return;
+  }
+  let idx = 0;
+  function show(){
+    if(idx >= items.length){ onDone(items.length); return; }
+    const { w, gap } = items[idx];
+    // спершу варіанти з того ж уроку — так вони схожіші й цікавіші
+    const near = allWords.filter(x => x.id !== w.id && x.lesson_id && x.lesson_id === w.lesson_id);
+    const far = allWords.filter(x => x.id !== w.id && !near.includes(x));
+    // схожі за довжиною (одне слово ↔ одне слово, фраза ↔ фраза), щоб відповідь не вгадувалась
+    const wc = s => mainEn(s).split(' ').length;
+    const byLen = arr => shuffled(arr).sort((a,b) => Math.abs(wc(a.en) - wc(w.en)) - Math.abs(wc(b.en) - wc(w.en)));
+    const pool = [...new Set([...byLen(near), ...byLen(far)].map(x => mainEn(x.en)).filter(e => e && normEn(e) !== normEn(gap.answer)))];
+    const options = shuffled([gap.answer, ...pool.slice(0, 3)]);
+    container.innerHTML = `
+      <div class="quiz-wrap">
+        <div class="progress-text">Речення ${idx+1} із ${items.length}</div>
+        <div class="gap-sentence">${esc(gap.before)}<span class="gap-blank" id="gapBlank">&nbsp;</span>${esc(gap.after)}</div>
+        <div class="gap-hint">${esc(w.ua)}</div>
+        <div class="quiz-options">${options.map((o,i) => `<button class="quiz-option" data-i="${i}">${esc(o)}</button>`).join('')}</div>
+      </div>`;
+    container.querySelectorAll('.quiz-option').forEach(btn => {
+      btn.onclick = async () => {
+        container.querySelectorAll('.quiz-option').forEach(b => b.disabled = true);
+        const correct = normEn(options[btn.dataset.i]) === normEn(gap.answer);
+        btn.classList.add(correct ? 'correct' : 'wrong');
+        if(!correct) container.querySelectorAll('.quiz-option').forEach(b => { if(normEn(options[b.dataset.i]) === normEn(gap.answer)) b.classList.add('correct'); });
+        document.getElementById('gapBlank').textContent = gap.answer;
+        await gradeWord(w, correct);
+        setTimeout(() => { idx++; show(); }, correct ? 1000 : 2000);
+      };
+    });
+  }
+  show();
+}
+
 function boxDots(box){
   return `<div class="box-dots" title="Рівень ${box} з ${MAX_BOX}">${Array.from({length: MAX_BOX+1}).map((_,i) => `<span class="box-dot ${i<=box?'filled':''}"></span>`).join('')}</div>`;
 }
