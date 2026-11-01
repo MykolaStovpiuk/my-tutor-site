@@ -324,7 +324,7 @@ function lessonFormHtml(l){
   l = l || { title:'', topic:'', lesson_date: todayStr(), status:'done', notes:'' };
   return `
     <div class="row">
-      <div class="field" style="flex:0 1 160px"><label>Урок</label><input name="title" required value="${esc(l.title)}" placeholder="8A"></div>
+      <div class="field" style="flex:0 1 160px"><label>Урок</label><input name="title" required value="${esc(l.title)}" placeholder="A2 Lesson 6B"></div>
       <div class="field"><label>Тема</label><input name="topic" value="${esc(l.topic)}" placeholder="Past Simple: regular verbs"></div>
     </div>
     <div class="row">
@@ -376,7 +376,7 @@ function tabLessons(c){
     if(error){ console.error(error); toast('Не вдалося зберегти урок'); return; }
     T.lessons.push(data); sortLessons();
     let note = `Урок ${row.title} додано`;
-    const set = findWordSet(row.title);
+    const set = findWordSet(row.title, T.current.level);
     if(set && parts.length){
       const n = await addSetWords(set, parts, data.id);
       if(n > 0) note += ` + ${n} ${plural(n,'слово','слова','слів')} у кабінет`;
@@ -442,7 +442,7 @@ function bindLessonRows(c){
     const { error } = await sb.from('cabinet_lessons').update(patch).eq('id', l.id);
     if(error){ toast('Не вдалося зберегти'); b.disabled = false; return; }
     Object.assign(l, patch); sortLessons();
-    const set = status === 'done' ? findWordSet(l.title) : null;
+    const set = status === 'done' ? findWordSet(l.title, T.current.level) : null;
     if(set && !T.words.some(w => w.lesson_id === l.id)){
       const total = set.parts.reduce((a,p) => a + p.words.length, 0);
       if(confirm(`Додати учневі слова уроку «${set.title}» (${total})?`)){
@@ -591,7 +591,7 @@ function bindSetOffer(form){
   const title = form.querySelector('[name="title"]');
   let shown = null;
   const upd = () => {
-    const set = findWordSet(title.value);
+    const set = findWordSet(title.value, T.current.level);
     if(set === shown) return;
     shown = set;
     box.innerHTML = set ? `
@@ -625,15 +625,15 @@ function tabWords(c){
   if(T.wordFilter === 'student') list = list.filter(w => w.added_by === 'student');
   else if(T.wordFilter === 'due') list = list.filter(w => w.due <= todayStr());
   else if(T.wordFilter !== 'all') list = list.filter(w => w.lesson_id == T.wordFilter);
-  const setSel = T.setPick ?? (findWordSet(T.lessons.find(l => l.id == latestDoneLessonId())?.title)?.lesson || WORD_SETS[0]?.lesson || '');
-  const pickSet = WORD_SETS.find(s => s.lesson === setSel);
-  const setLesson = T.lessons.slice().reverse().find(l => findWordSet(l.title) === pickSet);
+  const setSel = T.setPick ?? ((s => s && wordSetKey(s))(findWordSet(T.lessons.find(l => l.id == latestDoneLessonId())?.title, T.current.level)) || (WORD_SETS[0] ? wordSetKey(WORD_SETS[0]) : '') || '');
+  const pickSet = WORD_SETS.find(s => wordSetKey(s) === setSel);
+  const setLesson = T.lessons.slice().reverse().find(l => findWordSet(l.title, T.current.level) === pickSet);
   c.innerHTML = `
     ${WORD_SETS.length ? `<form class="card" id="setForm" style="margin-bottom:12px;">
       <h3 style="margin-bottom:12px;">Готовий набір слів</h3>
       <div class="row">
         <div class="field"><label for="setPick">Набір</label><select id="setPick">
-          ${WORD_SETS.map(s => `<option value="${esc(s.lesson)}" ${s.lesson===setSel?'selected':''}>${esc(s.title)} (${s.parts.reduce((a,p)=>a+p.words.length,0)} слів)</option>`).join('')}</select></div>
+          ${WORD_SETS.map(s => `<option value="${esc(wordSetKey(s))}" ${wordSetKey(s)===setSel?'selected':''}>${esc(s.title)} (${s.parts.reduce((a,p)=>a+p.words.length,0)} слів)</option>`).join('')}</select></div>
         <div class="field"><label for="setLesson">До уроку</label><select id="setLesson">${lessonOptions(setLesson ? setLesson.id : latestDoneLessonId())}</select></div>
       </div>
       ${pickSet ? setPartsHtml(pickSet, 'setPart') : ''}

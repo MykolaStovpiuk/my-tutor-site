@@ -11,8 +11,9 @@
 ================================================================== */
 const WORD_SETS = [
   {
+    level: 'A2',
     lesson: '6B',
-    title: '6B My way',
+    title: 'A2 · 6B My way',
     parts: [
       {
         title: 'Прикметники (common adjectives 2)',
@@ -74,9 +75,19 @@ const WORD_SETS = [
   }
 ];
 
-/* Знайти набір за назвою уроку: «6B», «6b», «6B My way», «Lesson 6B» */
-function findWordSet(lessonTitle){
-  const m = String(lessonTitle || '').toUpperCase().match(/\b(\d{1,2}[A-E])\b/);
+/* Ключ набору: «A2 6B» */
+function wordSetKey(set){ return `${set.level} ${set.lesson}`; }
+
+/* Знайти набір за назвою уроку: «A2 Lesson 6B», «A2 6B», «6B».
+   Рівень береться з назви уроку; якщо його там немає — з рівня учня
+   (поле «Рівень» у налаштуваннях учня). Без рівня набір знаходиться,
+   лише якщо урок із такою назвою є тільки в одному наборі. */
+function findWordSet(lessonTitle, studentLevel){
+  const t = String(lessonTitle || '').toUpperCase();
+  const m = t.match(/(?:^|[^A-Z0-9])(\d{1,2}[A-E])(?![A-Z0-9])/);
   if(!m) return null;
-  return WORD_SETS.find(s => s.lesson.toUpperCase() === m[1]) || null;
+  const sameLesson = WORD_SETS.filter(s => s.lesson.toUpperCase() === m[1]);
+  const lv = (t.match(/(?:^|[^A-Z0-9])([ABC][12])(?![0-9])/) || String(studentLevel || '').toUpperCase().match(/([ABC][12])/) || [])[1];
+  if(lv) return sameLesson.find(s => s.level.toUpperCase() === lv) || null;
+  return sameLesson.length === 1 ? sameLesson[0] : null;
 }
