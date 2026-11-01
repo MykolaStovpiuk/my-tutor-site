@@ -59,7 +59,9 @@ async function start(){
     renderLogin(app, { title: 'Панель викладача', subtitle: 'Увійдіть у свій акаунт викладача.', onSuccess: start });
     return;
   }
-  navActions.innerHTML = `<button class="pill-btn" id="logoutBtn">Вийти</button>`;
+  navActions.innerHTML = me.role === 'teacher'
+    ? `<a class="pill-btn" href="schedule.html">Розклад і оплати</a><span class="pill-btn" style="background:var(--ink);color:var(--paper);border-color:var(--ink);cursor:default;">Кабінети учнів</span><button class="pill-btn" id="logoutBtn">Вийти</button>`
+    : `<button class="pill-btn" id="logoutBtn">Вийти</button>`;
   document.getElementById('logoutBtn').onclick = async () => { await sb.auth.signOut(); location.reload(); };
   if(me.role !== 'teacher'){
     app.innerHTML = `<div class="error-box">Цей акаунт (${esc(me.email)}) не має доступу до панелі викладача.

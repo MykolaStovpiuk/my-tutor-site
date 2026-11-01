@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Розклад і оплати — Панель викладача</title>
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=Karla:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+:root{
+  --bg:#FBF1E4; --surface:#FFFFFF; --surface-2:#F3E6D3; --ink:#2B3630; --muted:#5c6660; --line:#E2D7C6;
+  --accent:#2F6660; --accent-ink:#FFFFFF; --accent-soft:#e3eeec; --coral:#E2603F;
+  --ok:#2f7a50; --ok-bg:#e1f1e7; --warn:#9A5B00; --warn-bg:#FBEBCF; --bad:#B4342A; --bad-bg:#F8DEDB;
+  --paid:#6B3FA0; --paid-bg:#ECE2F7; --plan-bg:#F3E6D3;
+  --f-display:'Fraunces',Georgia,serif; --f-body:'Karla',system-ui,-apple-system,'Segoe UI',sans-serif;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.45;-webkit-font-smoothing:antialiased}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+a{color:var(--accent)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.num{font-variant-numeric:tabular-nums}
+
+/* nav */
+nav.topnav{position:sticky;top:0;z-index:30;background:rgba(251,241,228,.93);backdrop-filter:blur(6px);border-bottom:1px solid var(--line)}
+nav.topnav .in{max-width:920px;margin:0 auto;padding:12px 16px;display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.brand{font-family:var(--f-display);font-weight:600;font-size:1.05rem;text-decoration:none;color:var(--ink)}
+.brand span{color:var(--coral)}
+.navlinks{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.navlink{text-decoration:none;color:var(--ink);border:1px solid var(--line);border-radius:999px;padding:6px 14px;font-size:.88rem;background:transparent}
+.navlink.active{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.navlink:hover:not(.active){border-color:var(--accent)}
+
+.wrap{max-width:920px;margin:0 auto;padding:20px 16px 60px;display:flex;flex-direction:column;gap:18px}
+header.top{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px}
+h1{font-family:var(--f-display);font-weight:600;font-size:24px;margin:0;letter-spacing:-.01em}
+.sub{color:var(--muted);font-size:13px}
+.monthnav{display:flex;align-items:center;gap:6px;background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:4px}
+.monthnav button{border:0;background:transparent;width:34px;height:34px;border-radius:50%;font-size:18px}
+.monthnav button:hover{background:var(--surface-2)}
+.monthnav strong{min-width:150px;text-align:center;font-weight:600}
+
+.tiles{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.tile{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:12px 14px;display:flex;flex-direction:column;gap:4px;min-width:0}
+.tile .lbl{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+.tile .val{font-size:20px;font-weight:700;overflow-wrap:anywhere}
+.tile.hl{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.tile.hl .lbl{color:inherit;opacity:.85}
+.counts{display:flex;flex-wrap:wrap;gap:8px}
+
+.chip{display:inline-flex;align-items:center;gap:5px;border-radius:999px;padding:2px 10px;font-size:12.5px;font-weight:600;white-space:nowrap}
+.c-planned{background:var(--plan-bg);color:var(--muted)}
+.c-done{background:var(--ok-bg);color:var(--ok)}
+.c-moved{background:var(--warn-bg);color:var(--warn)}
+.c-cancelled{background:var(--bad-bg);color:var(--bad)}
+.c-cancelled_paid{background:var(--paid-bg);color:var(--paid)}
+.c-overdue{background:transparent;color:var(--bad);border:1px dashed var(--bad)}
+.tag{font-size:12px;color:var(--muted);border:1px solid var(--line);border-radius:6px;padding:0 6px}
+.cablink{font-size:12px;text-decoration:none;border:1px solid var(--line);border-radius:6px;padding:0 6px;color:var(--accent)}
+
+nav.tabs{display:flex;gap:4px;border-bottom:1px solid var(--line);overflow-x:auto}
+nav.tabs button{border:0;background:transparent;padding:10px 14px;font-weight:600;color:var(--muted);border-bottom:2.5px solid transparent;margin-bottom:-1px;white-space:nowrap}
+nav.tabs button[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--coral)}
+
+.toolbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between}
+.btn{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:6px 14px;font-size:14px;font-weight:600}
+.btn:hover{background:var(--surface-2)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.btn.primary:hover{background:#1E4642}
+.btn.ok{border-color:var(--ok);color:var(--ok)}
+.btn.ok:hover{background:var(--ok-bg)}
+.btn.warn{border-color:var(--warn);color:var(--warn)}
+.btn.warn:hover{background:var(--warn-bg)}
+.btn.bad{border-color:var(--bad);color:var(--bad)}
+.btn.bad:hover{background:var(--bad-bg)}
+.btn.ghost{border-color:transparent;background:transparent;color:var(--muted)}
+.btn.ghost:hover{color:var(--ink);background:var(--surface-2)}
+.btn.sm{padding:4px 11px;font-size:13px}
+.btn:disabled{opacity:.55;cursor:default}
+select.inp,input.inp,textarea.inp{background:var(--surface);border:1.5px solid var(--line);border-radius:10px;padding:7px 10px;min-width:0}
+textarea.inp{width:100%;resize:vertical}
+
+.day{display:flex;flex-direction:column;gap:6px}
+.dayhead{display:flex;align-items:baseline;gap:8px;font-weight:600;padding:6px 2px 0}
+.dayhead .wd{color:var(--muted);font-weight:500}
+.dayhead.today{color:var(--accent)}
+.todaybadge{font-size:11px;background:var(--accent);color:var(--accent-ink);border-radius:999px;padding:1px 8px;text-transform:uppercase;letter-spacing:.05em}
+.lesson{background:var(--surface);border:1px solid var(--line);border-left:4px solid var(--line);border-radius:12px;padding:10px 12px;display:grid;grid-template-columns:56px minmax(0,1fr) auto;gap:4px 12px;align-items:start}
+.lesson.st-done{border-left-color:var(--ok)}
+.lesson.st-moved{border-left-color:var(--warn);opacity:.85}
+.lesson.st-cancelled{border-left-color:var(--bad);opacity:.75}
+.lesson.st-cancelled_paid{border-left-color:var(--paid)}
+.lesson.overdue{border-left-color:var(--bad);border-left-style:dashed}
+.l-time{font-weight:700;font-size:16px;padding-top:1px}
+.l-name{font-weight:600;display:flex;align-items:center;gap:7px;overflow-wrap:anywhere;flex-wrap:wrap}
+.dot{width:9px;height:9px;border-radius:50%;flex:none}
+.l-meta{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-top:3px;font-size:13px;color:var(--muted)}
+.l-price{font-weight:600;text-align:right;white-space:nowrap}
+.lesson.st-cancelled .l-price,.lesson.st-moved .l-price{text-decoration:line-through;color:var(--muted)}
+.l-actions{grid-column:2 / -1;display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.inline-form{grid-column:1 / -1;display:flex;flex-wrap:wrap;gap:8px;align-items:center;background:var(--surface-2);border-radius:10px;padding:10px;margin-top:6px}
+.inline-form label{display:flex;flex-direction:column;gap:3px;font-size:12px;color:var(--muted)}
+
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px;display:flex;flex-direction:column;gap:10px}
+.card h3{margin:0;font-size:16px;display:flex;align-items:center;gap:8px;overflow-wrap:anywhere;flex-wrap:wrap}
+.cardhead{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:8px}
+.kv{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+.kv div{display:flex;flex-direction:column;gap:2px;min-width:0}
+.kv span{font-size:12px;color:var(--muted)}
+.kv b{font-size:16px;overflow-wrap:anywhere}
+.bal-pos{color:var(--bad)} .bal-neg{color:var(--ok)}
+.paylist{display:flex;flex-direction:column;gap:4px;font-size:14px}
+.payrow{display:flex;gap:10px;align-items:center;border-top:1px dashed var(--line);padding-top:4px}
+.payrow .grow{flex:1;min-width:0;color:var(--muted);overflow-wrap:anywhere}
+.list{display:flex;flex-direction:column;gap:10px}
+.form{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.form label{display:flex;flex-direction:column;gap:4px;font-size:13px;color:var(--muted)}
+.form .full{grid-column:1 / -1}
+.slots{display:flex;flex-direction:column;gap:6px}
+.slot{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.empty{background:var(--surface);border:1px dashed var(--line);border-radius:14px;padding:28px 18px;text-align:center;color:var(--muted);display:flex;flex-direction:column;gap:10px;align-items:center}
+.empty strong{color:var(--ink);font-size:16px}
+.note{font-size:13px;color:var(--muted)}
+.seg{display:flex;flex-wrap:wrap;gap:4px;background:var(--surface-2);border-radius:12px;padding:4px;align-self:flex-start}
+.seg button{border:0;background:transparent;border-radius:9px;padding:7px 14px;font-weight:600;color:var(--muted)}
+.seg button[aria-pressed="true"]{background:var(--surface);color:var(--ink);box-shadow:0 1px 2px rgba(43,54,48,.14)}
+.sgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:10px}
+.scard{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px;display:flex;flex-direction:column;gap:8px;min-width:0}
+.scard h4{margin:0;font-size:15px;display:flex;align-items:center;gap:7px;overflow-wrap:anywhere}
+.dates{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:2px;font-size:14px}
+.dates li{display:flex;flex-wrap:wrap;gap:6px;align-items:center;border-bottom:1px dashed var(--line);padding:3px 0}
+.dates .wdn{color:var(--muted);font-size:12px}
+.sfoot{display:flex;justify-content:space-between;align-items:baseline;gap:8px;border-top:2px solid var(--ink);padding-top:6px;font-size:13px;color:var(--muted)}
+.sfoot b{font-size:16px;color:var(--ink)}
+h3.sec{margin:8px 0 0;font-size:16px;font-family:var(--f-display)}
+.tablewrap{overflow-x:auto;background:var(--surface);border:1px solid var(--line);border-radius:12px}
+table.halves{width:100%;border-collapse:collapse;font-size:14px}
+.halves th,.halves td{padding:8px 12px;text-align:right;border-bottom:1px solid var(--line);white-space:nowrap}
+.halves th:first-child,.halves td:first-child{text-align:left}
+.halves th{font-size:12px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.04em}
+.halves tfoot td{font-weight:700;border-bottom:0;background:var(--surface-2)}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:16px;background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:999px;font-size:14px;z-index:40;max-width:calc(100% - 32px);text-align:center}
+.errbox{background:var(--bad-bg);color:var(--bad);border:1px solid var(--bad);border-radius:12px;padding:16px}
+
+/* вхід (спільна форма з cabinet-common.js) */
+.login-box{max-width:400px;margin:30px auto;width:100%}
+.login-box h1{margin-bottom:4px}
+.login-box p{color:var(--muted);margin:0 0 10px;font-size:.93rem}
+.field{margin-bottom:12px}
+.field label{display:block;font-size:.85rem;font-weight:600;margin-bottom:5px}
+.field input{width:100%;border:1.5px solid var(--line);border-radius:10px;padding:10px 12px;background:#fff}
+.login-box .btn{width:100%;background:var(--accent);color:#fff;border-color:var(--accent);padding:11px}
+.form-msg{min-height:1.2em;font-size:.88rem;margin-top:8px;color:var(--bad)}
+.small{font-size:.85rem}.muted{color:var(--muted)}
+
+@media (max-width:640px){
+  .tiles{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .kv{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .form{grid-template-columns:minmax(0,1fr)}
+  .lesson{grid-template-columns:48px minmax(0,1fr) auto}
+  .l-actions{grid-column:1 / -1}
+  .monthnav strong{min-width:120px}
+  nav.tabs button{padding:10px 10px}
+}
+@media (prefers-reduced-motion:no-preference){.lesson,.btn{transition:background .15s,border-color .15s}}
+</style>
+</head>
+<body>
+
+<nav class="topnav"><div class="in">
+  <a class="brand" href="teacher.html">Панель викладача<span>.</span></a>
+  <div class="navlinks" id="navLinks"></div>
+</div></nav>
+
+<div class="wrap" id="app"><p class="sub">Завантаження…</p></div>
+<div id="toast" class="toast" hidden></div>
+
+<script src="assets/cabinet-common.js"></script>
+<script>
+(function(){
+const CUR={UAH:'₴',USD:'$',EUR:'€',PLN:'zł',GBP:'£'};
+const WD=['Пн','Вт','Ср','Чт','Пт','Сб','Нд'];
+const WD_FULL=['понеділок','вівторок','середа','четвер','пʼятниця','субота','неділя'];
+const MONTHS=['Січень','Лютий','Березень','Квітень','Травень','Червень','Липень','Серпень','Вересень','Жовтень','Листопад','Грудень'];
+const MGEN=['січня','лютого','березня','квітня','травня','червня','липня','серпня','вересня','жовтня','листопада','грудня'];
+const HUES=['#2F6660','#C2410C','#0F766E','#A21CAF','#B45309','#0369A1','#BE123C','#4D7C0F','#7C3AED','#0E7490'];
+const STATUS={planned:'Заплановано',done:'Проведено',moved:'Перенесено',cancelled:'Скасовано',cancelled_paid:'Скасовано · оплачується'};
+const TBL={students:'crm_students',lessons:'crm_lessons',payments:'crm_payments'};
+
+const pad=n=>String(n).padStart(2,'0');
+const iso=(y,m,d)=>`${y}-${pad(m+1)}-${pad(d)}`;
+const todayISO=()=>{const t=new Date();return iso(t.getFullYear(),t.getMonth(),t.getDate())};
+const isoWd=s=>{const [y,m,d]=s.split('-').map(Number);const w=new Date(y,m-1,d).getDay();return w===0?7:w};
+const fmtD=s=>{const [,m,d]=s.split('-').map(Number);return `${d} ${MGEN[m-1]}`};
+const rid=()=>Math.random().toString(36).slice(2,10)+Date.now().toString(36).slice(-4);
+const regId=(sid,d,t)=>`r_${sid}_${d}_${String(t).replace(':','')}`;
+const money=(n,c)=>`${(Math.round(n*100)/100).toLocaleString('uk-UA')} ${CUR[c]||c||'₴'}`;
+function hue(id){let h=0;for(const ch of id)h=(h*31+ch.charCodeAt(0))>>>0;return HUES[h%HUES.length]}
+function addSum(o,c,n){c=c||'UAH';o[c]=(o[c]||0)+n}
+function fmtSums(o){const e=Object.entries(o).filter(([,v])=>Math.abs(v)>0.001);return e.length?e.map(([c,v])=>money(v,c)).join(' · '):money(0,mainCur())}
+function mainCur(){const s=Object.values(state.students)[0];return s?.currency||'UAH'}
+
+const state={students:{},lessons:{},payments:{}};
+let profiles=[];           // кабінети учнів на сайті (для звʼязку)
+let ready=false;
+const now=new Date();
+const startMonth=(now.getFullYear()<2026||(now.getFullYear()===2026&&now.getMonth()<10))?{y:2026,m:10}:{y:now.getFullYear(),m:now.getMonth()};
+const ui={tab:'lessons',y:startMonth.y,m:startMonth.m,filter:'',open:null,draft:null,scrolled:false,confirm:null,copy:null,
+  half:(now.getFullYear()===startMonth.y&&now.getMonth()===startMonth.m)?(now.getDate()<=15?1:2):1};
+
+/* ---------- сховище: Supabase ---------- */
+async function loadAll(){
+  const [st,le,pa,pr]=await Promise.all([
+    fetchAll(()=>sb.from(TBL.students).select('id,data').order('id')),
+    fetchAll(()=>sb.from(TBL.lessons).select('id,data').order('id')),
+    fetchAll(()=>sb.from(TBL.payments).select('id,data').order('id')),
+    sb.from('profiles').select('id,full_name,email,active').eq('role','student').order('full_name')
+  ]);
+  const toObj=rows=>Object.fromEntries(rows.map(r=>[r.id,r.data]));
+  state.students=toObj(st);state.lessons=toObj(le);state.payments=toObj(pa);
+  profiles=pr.data||[];
+  ready=true;render();
+}
+async function put(col,id,data){
+  state[col][id]=data;render();
+  const {error}=await sb.from(TBL[col]).upsert({id,data,updated_at:new Date().toISOString()});
+  if(error)fail(error);
+}
+async function del(col,id){
+  delete state[col][id];render();
+  const {error}=await sb.from(TBL[col]).delete().eq('id',id);
+  if(error)fail(error);
+}
+function fail(e){console.error(e);toast('Не вдалося зберегти. Перевір інтернет — дані перезавантажено.');loadAll().catch(()=>{})}
+let tt;function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.hidden=false;clearTimeout(tt);tt=setTimeout(()=>t.hidden=true,2600)}
+
+/* Підтягує зміни з інших пристроїв, коли повертаєшся на вкладку */
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'&&ready&&!ui.open)loadAll().catch(()=>{})});
+
+/* ---------- модель ---------- */
+function lessonsForMonth(y,m){
+  const map=new Map(),n=new Date(y,m+1,0).getDate(),from=iso(y,m,1),to=iso(y,m,n);
+  for(const [sid,s] of Object.entries(state.students)){
+    for(const sl of (s.slots||[])){
+      if(!sl.time)continue;
+      for(let d=1;d<=n;d++){
+        const ds=iso(y,m,d);
+        if(isoWd(ds)!==Number(sl.wd))continue;
+        if(s.start&&ds<s.start)continue;
+        if(s.end&&ds>s.end)continue;
+        const id=regId(sid,ds,sl.time);
+        map.set(id,{id,studentId:sid,date:ds,time:sl.time,kind:'regular',status:'planned'});
+      }
+    }
+  }
+  for(const [id,r] of Object.entries(state.lessons)){
+    if(r.date>=from&&r.date<=to)map.set(id,{...(map.get(id)||{}),...r,id});
+  }
+  return [...map.values()].filter(l=>state.students[l.studentId]).sort((a,b)=>(a.date+a.time).localeCompare(b.date+b.time));
+}
+const charged=l=>l.status==='done'||l.status==='cancelled_paid';
+const priceOf=l=>Number(l.price??state.students[l.studentId]?.price??0);
+function base(l){const o={studentId:l.studentId,date:l.date,time:l.time,kind:l.kind||'regular'};if(l.origin)o.origin=l.origin;if(l.originDate)o.originDate=l.originDate;return o}
+function inMonth(d){return d&&d.slice(0,7)===`${ui.y}-${pad(ui.m+1)}`}
+function balanceAll(sid){
+  let due=0,paid=0;
+  for(const l of Object.values(state.lessons))if(l.studentId===sid&&charged(l))due+=priceOf(l);
+  for(const p of Object.values(state.payments))if(p.studentId===sid)paid+=Number(p.amount||0);
+  return due-paid;
+}
+function cabinetLink(s){
+  const p=s.profileId&&profiles.find(x=>x.id===s.profileId);
+  return p?`<a class="cablink" href="teacher.html#${esc(p.id)}" title="Відкрити кабінет учня">кабінет ↗</a>`:'';
+}
+
+/* ---------- дії ---------- */
+let curById={};
+async function setStatus(l,status){
+  const rec={...base(l),status};
+  if(status==='done'||status==='cancelled_paid')rec.price=priceOf(l);
+  if(l.makeupId)await del('lessons',l.makeupId);
+  await put('lessons',l.id,rec);
+}
+async function resetLesson(l){
+  if(l.makeupId)await del('lessons',l.makeupId);
+  if((l.kind||'regular')==='regular')await del('lessons',l.id);
+  else await put('lessons',l.id,{...base(l),status:'planned'});
+}
+async function moveLesson(l,date,time){
+  let mid=l.makeupId;
+  if(mid&&state.lessons[mid])await put('lessons',mid,{...state.lessons[mid],date,time});
+  else{mid='m_'+rid();await put('lessons',mid,{studentId:l.studentId,date,time,kind:'makeup',origin:l.id,originDate:l.date,status:'planned'})}
+  await put('lessons',l.id,{...base(l),status:'moved',movedTo:{date,time},makeupId:mid});
+}
+async function removeLesson(l){
+  if(l.kind==='makeup'&&l.origin){const o=state.lessons[l.origin];if(o){if((o.kind||'regular')==='regular')await del('lessons',l.origin);else await put('lessons',l.origin,{...base(o),status:'planned'})}}
+  if(l.makeupId)await del('lessons',l.makeupId);
+  await del('lessons',l.id);
+}
+async function deleteStudent(sid){
+  for(const [id,l] of Object.entries(state.lessons))if(l.studentId===sid)await del('lessons',id);
+  for(const [id,p] of Object.entries(state.payments))if(p.studentId===sid)await del('payments',id);
+  await del('students',sid);
+}
+
+/* ---------- рендер ---------- */
+function render(){
+  const app=document.getElementById('app');
+  if(!ready){app.innerHTML='<p class="sub">Завантаження…</p>';return}
+  const list=lessonsForMonth(ui.y,ui.m);curById=Object.fromEntries(list.map(l=>[l.id,l]));
+  const today=todayISO();
+  const c={planned:0,done:0,moved:0,cancelled:0,cancelled_paid:0,overdue:0};
+  const earned={},expected={},received={};const debt={};
+  for(const l of list){c[l.status]=(c[l.status]||0)+1;if(l.status==='planned'&&l.date<today)c.overdue++;
+    const cur=state.students[l.studentId].currency;
+    if(charged(l))addSum(earned,cur,priceOf(l));
+    if(l.status==='planned'||charged(l))addSum(expected,cur,priceOf(l));}
+  for(const p of Object.values(state.payments))if(payPeriod(p).startsWith(ymNow()+'-')&&state.students[p.studentId])addSum(received,state.students[p.studentId].currency,Number(p.amount||0));
+  for(const sid of Object.keys(state.students)){const b=balanceAll(sid);if(b>0)addSum(debt,state.students[sid].currency,b)}
+
+  let h=`<header class="top"><div><h1>Розклад і оплати</h1><div class="sub">Облік занять і оплат · бачиш лише ти</div></div>
+  <div class="monthnav"><button data-act="prev" aria-label="Попередній місяць">‹</button><strong>${MONTHS[ui.m]} ${ui.y}</strong><button data-act="next" aria-label="Наступний місяць">›</button></div></header>`;
+  h+=`<section class="tiles">
+    <div class="tile hl"><span class="lbl">Зароблено</span><span class="val num">${fmtSums(earned)}</span></div>
+    <div class="tile"><span class="lbl">Очікується за місяць</span><span class="val num">${fmtSums(expected)}</span></div>
+    <div class="tile"><span class="lbl">Отримано</span><span class="val num">${fmtSums(received)}</span></div>
+    <div class="tile"><span class="lbl">Борги студентів</span><span class="val num">${fmtSums(debt)}</span></div></section>
+  <div class="counts">
+    <span class="chip c-done">Проведено ${c.done}</span><span class="chip c-planned">Заплановано ${c.planned}</span>
+    <span class="chip c-moved">Перенесено ${c.moved}</span><span class="chip c-cancelled">Скасовано ${c.cancelled}</span>
+    ${c.cancelled_paid?`<span class="chip c-cancelled_paid">Скасовано з оплатою ${c.cancelled_paid}</span>`:''}
+    ${c.overdue?`<span class="chip c-overdue">Не відмічено ${c.overdue}</span>`:''}</div>
+  <nav class="tabs" role="tablist">
+    ${[['lessons','Розклад'],['summary','Зведення'],['pay','Оплата'],['students','Студенти']].map(([k,t])=>`<button role="tab" data-act="tab" data-id="${k}" aria-selected="${ui.tab===k}">${t}</button>`).join('')}</nav>`;
+  h+=ui.tab==='lessons'?renderLessons(list,today):ui.tab==='summary'?renderSummary(list):ui.tab==='pay'?renderPay(list):renderStudents();
+  app.innerHTML=h;
+  if(ui.tab==='lessons'&&!ui.scrolled){const t=document.getElementById('today-anchor');if(t){ui.scrolled=true;const y=t.getBoundingClientRect().top+scrollY-70;scrollTo(0,y)}}
+}
+
+function studentOptions(sel,withAll){
+  const ss=Object.entries(state.students).sort((a,b)=>a[1].name.localeCompare(b[1].name,'uk'));
+  return (withAll?`<option value="">Усі студенти</option>`:'')+ss.map(([id,s])=>`<option value="${esc(id)}" ${sel===id?'selected':''}>${esc(s.name)}</option>`).join('');
+}
+
+function renderLessons(list,today){
+  if(!Object.keys(state.students).length)return emptyStudents();
+  let h=`<div class="toolbar"><select class="inp" id="f-student" aria-label="Фільтр за студентом">${studentOptions(ui.filter,true)}</select>
+    <button class="btn primary" data-act="open-add">+ Додатковий урок</button></div>`;
+  if(ui.open==='add'){const d=ui.draft;
+    h+=`<div class="inline-form"><label>Студент<select class="inp" data-bind="studentId">${studentOptions(d.studentId)}</select></label>
+      <label>Дата<input class="inp" type="date" data-bind="date" value="${d.date}"></label>
+      <label>Час<input class="inp" type="time" data-bind="time" value="${d.time}"></label>
+      <button class="btn primary" data-act="save-add">Додати</button><button class="btn ghost" data-act="close">Скасувати</button></div>`}
+  const shown=ui.filter?list.filter(l=>l.studentId===ui.filter):list;
+  if(!shown.length)return h+`<div class="empty"><strong>У цьому місяці уроків немає</strong><span>Перевір розклад студентів або додай урок вручну.</span></div>`;
+  const days={};for(const l of shown)(days[l.date]=days[l.date]||[]).push(l);
+  const dates=Object.keys(days);
+  const anchor=dates.find(d=>d>=today);
+  for(const d of dates){
+    const isT=d===today;
+    h+=`<section class="day" ${d===anchor?'id="today-anchor"':''}><div class="dayhead ${isT?'today':''}"><span>${fmtD(d)}</span><span class="wd">${WD_FULL[isoWd(d)-1]}</span>${isT?'<span class="todaybadge">сьогодні</span>':''}</div>`;
+    for(const l of days[d])h+=renderLesson(l,today);
+    h+=`</section>`;
+  }
+  return h;
+}
+
+function renderLesson(l,today){
+  const s=state.students[l.studentId],over=l.status==='planned'&&l.date<today;
+  let meta=`<span class="chip c-${l.status}">${STATUS[l.status]}</span>`;
+  if(over)meta+=`<span class="chip c-overdue">не відмічено</span>`;
+  if(l.kind==='makeup')meta+=`<span class="tag">відпрацювання${l.originDate?` з ${fmtD(l.originDate)}`:''}</span>`;
+  if(l.kind==='extra')meta+=`<span class="tag">додатковий</span>`;
+  if(l.status==='moved'&&l.movedTo)meta+=`<span>→ ${fmtD(l.movedTo.date)}, ${esc(l.movedTo.time)}</span>`;
+  const lid=esc(l.id);
+  let acts='';
+  if(l.status==='planned'){
+    acts=`<button class="btn sm ok" data-act="done" data-id="${lid}">✓ Проведено</button>
+      <button class="btn sm warn" data-act="open-move" data-id="${lid}">Перенести</button>
+      <button class="btn sm bad" data-act="open-cancel" data-id="${lid}">Скасувати</button>`;
+  }else{
+    acts=`<button class="btn sm ghost" data-act="reset" data-id="${lid}">↺ Повернути в план</button>`;
+    if(l.status==='moved')acts=`<button class="btn sm warn" data-act="open-move" data-id="${lid}">Змінити дату</button>`+acts;
+  }
+  if(l.kind!=='regular')acts+=`<button class="btn sm ghost" data-act="remove" data-id="${lid}">Видалити</button>`;
+  let form='';
+  if(ui.open==='move:'+l.id){const d=ui.draft;
+    form=`<div class="inline-form"><label>Нова дата<input class="inp" type="date" data-bind="date" value="${d.date}"></label>
+      <label>Час<input class="inp" type="time" data-bind="time" value="${d.time}"></label>
+      <button class="btn primary" data-act="save-move" data-id="${lid}">Зберегти перенесення</button><button class="btn ghost" data-act="close">Скасувати</button></div>`}
+  if(ui.open==='cancel:'+l.id){
+    form=`<div class="inline-form"><span>Як скасовано?</span>
+      <button class="btn bad" data-act="cancel" data-id="${lid}">Без оплати</button>
+      <button class="btn" data-act="cancel-paid" data-id="${lid}">Пізнє скасування, оплачується</button>
+      <button class="btn ghost" data-act="close">Назад</button></div>`}
+  return `<div class="lesson st-${l.status} ${over?'overdue':''}"><div class="l-time num">${esc(l.time)}</div>
+    <div class="l-main"><div class="l-name"><span class="dot" style="background:${hue(l.studentId)}"></span>${esc(s.name)} ${cabinetLink(s)}</div><div class="l-meta">${meta}</div></div>
+    <div class="l-price num">${money(priceOf(l),s.currency)}</div><div class="l-actions">${acts}</div>${form}</div>`;
+}
+
+const halfOf=d=>Number(d.slice(8,10))<=15?1:2;
+function ymNow(){return `${ui.y}-${pad(ui.m+1)}`}
+function payPeriod(p){return p.period||(p.date.slice(0,7)+'-'+halfOf(p.date))}
+function periodLabel(per){const [y,m,h]=per.split('-').map(Number);const last=new Date(y,m,0).getDate();return h===1?`1–15 ${MGEN[m-1]}`:`16–${last} ${MGEN[m-1]}`}
+function inPeriod(l){return inMonth(l.date)&&(ui.half===0||halfOf(l.date)===ui.half)}
+function payInPeriod(p){const per=payPeriod(p);return per.startsWith(ymNow()+'-')&&(ui.half===0||per.endsWith('-'+ui.half))}
+function curLabel(){return ui.half===0?`${MONTHS[ui.m].toLowerCase()} ${ui.y}`:periodLabel(`${ymNow()}-${ui.half}`)}
+function lessonsWord(n){const a=n%10,b=n%100;return a===1&&b!==11?'урок':a>=2&&a<=4&&(b<12||b>14)?'уроки':'уроків'}
+const shortDate=d=>d.slice(8,10)+'.'+d.slice(5,7);
+function studentPeriod(sid,list){
+  const ls=list.filter(l=>l.studentId===sid&&inPeriod(l));
+  const ch=ls.filter(charged),left=ls.filter(l=>l.status==='planned');
+  const due=ch.reduce((a,l)=>a+priceOf(l),0),leftSum=left.reduce((a,l)=>a+priceOf(l),0);
+  const pays=Object.entries(state.payments).filter(([,p])=>p.studentId===sid&&payInPeriod(p)).sort((a,b)=>a[1].date.localeCompare(b[1].date));
+  const paid=pays.reduce((a,[,p])=>a+Number(p.amount||0),0);
+  return {ch,due,left,leftSum,pays,paid};
+}
+function billText(sid,m){
+  const s=state.students[sid],dates=m.ch.map(l=>shortDate(l.date)).join(', ');
+  let t=`${s.name}, оплата за ${curLabel()}: ${m.ch.length} ${lessonsWord(m.ch.length)}${dates?` (${dates})`:''} × ${money(Number(s.price),s.currency)} = ${money(m.due,s.currency)}`;
+  if(m.paid>0)t+=`. Вже оплачено ${money(m.paid,s.currency)}, залишок ${money(Math.max(0,m.due-m.paid),s.currency)}`;
+  return t+'.';
+}
+function renderPay(list){
+  if(!Object.keys(state.students).length)return emptyStudents();
+  const ss=Object.keys(state.students).sort((a,b)=>state.students[a].name.localeCompare(state.students[b].name,'uk'));
+  const last=new Date(ui.y,ui.m+1,0).getDate(),g=MGEN[ui.m];
+  let h=`<div class="seg" role="group" aria-label="Період оплати">${[[1,`1–15 ${g}`],[2,`16–${last} ${g}`],[0,'Весь місяць']].map(([k,t])=>`<button data-act="half" data-id="${k}" aria-pressed="${ui.half===k}">${t}</button>`).join('')}</div>`;
+  const rows=ss.map(sid=>[sid,studentPeriod(sid,list)]);
+  const T={due:{},paid:{},rest:{},left:{}};
+  for(const [sid,m] of rows){const c=state.students[sid].currency;addSum(T.due,c,m.due);addSum(T.paid,c,m.paid);addSum(T.rest,c,Math.max(0,m.due-m.paid));addSum(T.left,c,m.leftSum)}
+  h+=`<section class="tiles">
+    <div class="tile hl"><span class="lbl">До оплати за ${curLabel()}</span><span class="val num">${fmtSums(T.due)}</span></div>
+    <div class="tile"><span class="lbl">Отримано</span><span class="val num">${fmtSums(T.paid)}</span></div>
+    <div class="tile"><span class="lbl">Ще не оплачено</span><span class="val num">${fmtSums(T.rest)}</span></div>
+    <div class="tile"><span class="lbl">Ще заплановано в періоді</span><span class="val num">${fmtSums(T.left)}</span></div></section>
+  <p class="note">До оплати рахуються проведені уроки й пізні скасування за обраний період. Записуючи оплату, обери, за який період вона, навіть якщо студент платить пізніше.</p><div class="list">`;
+  for(const [sid,m] of rows){
+    const s=state.students[sid],cur=s.currency,diff=m.due-m.paid,bal=balanceAll(sid);
+    if(!m.ch.length&&!m.left.length&&!m.pays.length)continue;
+    const sidE=esc(sid);
+    const chip=m.due===0&&m.paid===0?'':diff<=0?'<span class="chip c-done">Оплачено</span>':m.paid>0?'<span class="chip c-moved">Частково</span>':'<span class="chip c-cancelled">Не оплачено</span>';
+    h+=`<div class="card"><div class="cardhead"><h3><span class="dot" style="background:${hue(sid)}"></span>${esc(s.name)} ${chip}</h3>
+      <span class="note">${money(Number(s.price),cur)} за урок</span></div>
+      <div class="kv num">
+        <div><span>Уроків за період</span><b>${m.ch.length}</b></div>
+        <div><span>До оплати</span><b>${money(m.due,cur)}</b></div>
+        <div><span>Отримано</span><b>${money(m.paid,cur)}</b></div>
+        <div><span>Залишок</span><b class="${diff>0?'bal-pos':diff<0?'bal-neg':''}">${diff>0?money(diff,cur):diff<0?'Переплата '+money(-diff,cur):'—'}</b></div></div>
+      ${m.ch.length?`<span class="note num">Дати: ${m.ch.map(l=>shortDate(l.date)+(l.status==='cancelled_paid'?' (скас.)':'')).join(', ')}</span>`:''}
+      ${m.left.length?`<span class="note">Ще заплановано: ${m.left.length} (${money(m.leftSum,cur)}), додадуться після відмітки «Проведено»</span>`:''}
+      ${bal!==0?`<span class="note">Загальний баланс за всі місяці: <b class="${bal>0?'bal-pos':'bal-neg'}">${bal>0?'винен '+money(bal,cur):'передоплата '+money(-bal,cur)}</b></span>`:''}
+      ${m.pays.length?`<div class="paylist">${m.pays.map(([pid,p])=>`<div class="payrow num"><span>${fmtD(p.date)}</span><b>${money(Number(p.amount),cur)}</b><span class="grow">за ${periodLabel(payPeriod(p))}${p.note?' · '+esc(p.note):''}</span><button class="btn sm ghost" data-act="del-pay" data-id="${esc(pid)}" aria-label="Видалити оплату">✕</button></div>`).join('')}</div>`:''}
+      ${ui.copy&&ui.copy.sid===sid?`<textarea class="inp" id="copy-ta" rows="3" readonly>${esc(ui.copy.text)}</textarea>`:''}
+      ${ui.open==='pay:'+sid?payForm(sid,cur)
+      :`<div class="l-actions" style="grid-column:auto;margin:0"><button class="btn sm primary" data-act="open-pay" data-id="${sidE}" data-suggest="${diff>0?diff:''}">+ Оплата</button>${m.ch.length?`<button class="btn sm" data-act="copy" data-id="${sidE}">Скопіювати розрахунок</button>`:''}</div>`}
+    </div>`;
+  }
+  return h+'</div>';
+}
+function payForm(sid,cur){
+  const d=ui.draft,prev=new Date(ui.y,ui.m-1,1),pym=`${prev.getFullYear()}-${pad(prev.getMonth()+1)}`;
+  const opts=[`${pym}-2`,`${ymNow()}-1`,`${ymNow()}-2`];
+  return `<div class="inline-form"><label>Сума, ${CUR[cur]||cur}<input class="inp" type="number" min="0" step="any" data-bind="amount" value="${esc(d.amount)}"></label>
+    <label>За період<select class="inp" data-bind="period">${opts.map(o=>`<option value="${o}" ${d.period===o?'selected':''}>${periodLabel(o)}</option>`).join('')}</select></label>
+    <label>Дата оплати<input class="inp" type="date" data-bind="date" value="${d.date}"></label>
+    <label>Коментар<input class="inp" type="text" data-bind="note" value="${esc(d.note)}" placeholder="напр. карта"></label>
+    <button class="btn primary" data-act="save-pay" data-id="${esc(sid)}">Зберегти</button><button class="btn ghost" data-act="close">Скасувати</button></div>`;
+}
+
+function renderSummary(list){
+  if(!Object.keys(state.students).length)return emptyStudents();
+  const ss=Object.keys(state.students).sort((a,b)=>state.students[a].name.localeCompare(state.students[b].name,'uk'));
+  const last=new Date(ui.y,ui.m+1,0).getDate();
+  let h=`<p class="note">Проведені уроки й пізні скасування за ${MONTHS[ui.m].toLowerCase()}. Сума рахується як кількість × ціна.</p><div class="sgrid">`;
+  const rows=[];const tot1={},tot2={};
+  for(const sid of ss){
+    const s=state.students[sid],ls=list.filter(l=>l.studentId===sid);
+    const ch=ls.filter(charged),left=ls.filter(l=>l.status==='planned').length;
+    const sum=ch.reduce((a,l)=>a+priceOf(l),0);
+    let h1=0,h2=0;for(const l of ch){Number(l.date.slice(8))<=15?h1+=priceOf(l):h2+=priceOf(l)}
+    addSum(tot1,s.currency,h1);addSum(tot2,s.currency,h2);
+    rows.push([s,h1,h2]);
+    if(!ls.length&&!ch.length)continue;
+    h+=`<div class="scard"><h4><span class="dot" style="background:${hue(sid)}"></span>${esc(s.name)}</h4>
+      ${ch.length?`<ol class="dates num">${ch.map(l=>`<li><span>${fmtD(l.date)}</span><span class="wdn">${WD[isoWd(l.date)-1]}</span>${l.status==='cancelled_paid'?'<span class="chip c-cancelled_paid">скас. з оплатою</span>':''}${l.kind==='makeup'?'<span class="tag">відпр.</span>':''}${l.kind==='extra'?'<span class="tag">дод.</span>':''}</li>`).join('')}</ol>`
+        :`<p class="note">Ще немає проведених уроків</p>`}
+      <div class="sfoot num"><span>${ch.length} × ${money(Number(s.price),s.currency)}</span><b>${money(sum,s.currency)}</b></div>
+      ${left?`<span class="note">Ще заплановано: ${left}</span>`:''}</div>`;
+  }
+  h+=`</div><h3 class="sec">Оплата по половинах місяця</h3><div class="tablewrap"><table class="halves num"><thead><tr><th>Студент</th><th>1–15</th><th>16–${last}</th><th>Разом</th></tr></thead><tbody>`;
+  for(const [s,a,b] of rows){if(!a&&!b)continue;h+=`<tr><td>${esc(s.name)}</td><td>${a?money(a,s.currency):'—'}</td><td>${b?money(b,s.currency):'—'}</td><td><b>${money(a+b,s.currency)}</b></td></tr>`}
+  const all={};for(const o of [tot1,tot2])for(const [c,v] of Object.entries(o))addSum(all,c,v);
+  h+=`</tbody><tfoot><tr><td>Усього</td><td>${fmtSums(tot1)}</td><td>${fmtSums(tot2)}</td><td>${fmtSums(all)}</td></tr></tfoot></table></div>`;
+  if(!rows.some(([,a,b])=>a||b))h+=`<p class="note">Тут зʼявляться суми, щойно ти відмітиш перші проведені уроки.</p>`;
+  return h;
+}
+
+function emptyStudents(){
+  return `<div class="empty"><strong>Ще немає студентів</strong><span>Додай студента з розкладом і ціною, і уроки на місяць зʼявляться самі.</span><button class="btn primary" data-act="new-student">+ Додати студента</button></div>`;
+}
+
+function slotText(s){return (s.slots||[]).slice().sort((a,b)=>a.wd-b.wd||a.time.localeCompare(b.time)).map(x=>`${WD[x.wd-1]} ${x.time}`).join(' · ')||'без сталого розкладу'}
+
+function renderStudents(){
+  let h=`<div class="toolbar"><span class="note">${Object.keys(state.students).length} студ.</span><button class="btn primary" data-act="new-student">+ Додати студента</button></div>`;
+  if(ui.open==='student:new')h+=studentForm('new');
+  const ss=Object.keys(state.students).sort((a,b)=>state.students[a].name.localeCompare(state.students[b].name,'uk'));
+  if(!ss.length&&ui.open!=='student:new')return h+emptyStudents();
+  h+='<div class="list">';
+  for(const sid of ss){
+    const s=state.students[sid];
+    if(ui.open==='student:'+sid){h+=studentForm(sid);continue}
+    const p=s.profileId&&profiles.find(x=>x.id===s.profileId);
+    h+=`<div class="card"><div class="cardhead"><h3><span class="dot" style="background:${hue(sid)}"></span>${esc(s.name)} ${cabinetLink(s)}</h3>
+      <button class="btn sm" data-act="edit-student" data-id="${esc(sid)}">Редагувати</button></div>
+      <div class="kv num"><div><span>Розклад</span><b>${slotText(s)}</b></div><div><span>Ціна уроку</span><b>${money(Number(s.price),s.currency)}</b></div>
+      <div><span>Початок</span><b>${s.start?fmtD(s.start)+' '+s.start.slice(0,4):'—'}</b></div><div><span>Завершення</span><b>${s.end?fmtD(s.end)+' '+s.end.slice(0,4):'триває'}</b></div></div>
+      ${p?'':`<span class="note">Кабінет на сайті не привʼязано — можна обрати в «Редагувати».</span>`}
+      ${s.note?`<span class="note">${esc(s.note)}</span>`:''}</div>`;
+  }
+  return h+'</div>';
+}
+
+function studentForm(sid){
+  const d=ui.draft;
+  const used=new Set(Object.entries(state.students).filter(([id])=>id!==sid).map(([,s])=>s.profileId).filter(Boolean));
+  const profOpts=`<option value="">— не привʼязано —</option>`+profiles.filter(p=>!used.has(p.id)||p.id===d.profileId)
+    .map(p=>`<option value="${esc(p.id)}" ${d.profileId===p.id?'selected':''}>${esc(p.full_name||p.email)}${p.active===false?' (архів)':''}</option>`).join('');
+  return `<div class="card"><h3>${sid==='new'?'Новий студент':'Редагування'}</h3><div class="form">
+    <label class="full">Імʼя<input class="inp" type="text" data-bind="name" value="${esc(d.name)}" placeholder="Імʼя студента"></label>
+    <label>Ціна за урок<input class="inp" type="number" min="0" step="any" data-bind="price" value="${esc(d.price)}"></label>
+    <label>Валюта<select class="inp" data-bind="currency">${Object.keys(CUR).map(c=>`<option ${d.currency===c?'selected':''}>${c}</option>`).join('')}</select></label>
+    <div class="full"><label style="margin-bottom:4px">Регулярні заняття</label><div class="slots">
+      ${d.slots.map((x,i)=>`<div class="slot"><select class="inp" data-bind="slots.${i}.wd" aria-label="День тижня">${WD_FULL.map((w,k)=>`<option value="${k+1}" ${Number(x.wd)===k+1?'selected':''}>${w}</option>`).join('')}</select>
+        <input class="inp" type="time" data-bind="slots.${i}.time" value="${esc(x.time)}" aria-label="Час">
+        <button class="btn sm ghost" data-act="rm-slot" data-id="${i}" aria-label="Прибрати заняття">✕</button></div>`).join('')}
+      <div><button class="btn sm" data-act="add-slot">+ День заняття</button></div></div></div>
+    <label>Початок занять<input class="inp" type="date" data-bind="start" value="${esc(d.start)}"></label>
+    <label>Завершення (якщо закінчив)<input class="inp" type="date" data-bind="end" value="${esc(d.end)}"></label>
+    <label class="full">Кабінет учня на сайті<select class="inp" data-bind="profileId">${profOpts}</select></label>
+    <label class="full">Нотатка<textarea class="inp" rows="2" data-bind="note" placeholder="рівень, мета, контакти батьків…">${esc(d.note)}</textarea></label>
+    </div><div class="toolbar"><div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn primary" data-act="save-student" data-id="${esc(sid)}">Зберегти</button><button class="btn ghost" data-act="close">Скасувати</button></div>
+    ${sid!=='new'?(ui.confirm===sid?`<div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><span class="note">Видалити разом з усіма уроками й оплатами?</span><button class="btn bad sm" data-act="del-student" data-id="${esc(sid)}">Так, видалити</button><button class="btn ghost sm" data-act="no-del">Ні</button></div>`
+      :`<button class="btn bad sm" data-act="ask-del" data-id="${esc(sid)}">Видалити студента</button>`):''}</div></div>`;
+}
+
+/* ---------- події ---------- */
+function bind(e){
+  const b=e.target.dataset&&e.target.dataset.bind;if(!b||!ui.draft)return;
+  const parts=b.split('.');let o=ui.draft;for(let i=0;i<parts.length-1;i++)o=o[parts[i]];o[parts[parts.length-1]]=e.target.value;
+}
+document.addEventListener('input',bind);
+document.addEventListener('change',e=>{
+  if(e.target.id==='f-student'){ui.filter=e.target.value;render();return}
+  bind(e);
+});
+document.addEventListener('click',async e=>{
+  const el=e.target.closest('[data-act]');if(!el||el.tagName==='SELECT')return;
+  const act=el.dataset.act,id=el.dataset.id,l=curById[id];
+  switch(act){
+    case 'prev':ui.m--;if(ui.m<0){ui.m=11;ui.y--}ui.open=null;render();break;
+    case 'next':ui.m++;if(ui.m>11){ui.m=0;ui.y++}ui.open=null;render();break;
+    case 'tab':ui.tab=id;ui.open=null;render();break;
+    case 'close':ui.open=null;ui.confirm=null;render();break;
+    case 'done':el.disabled=true;await setStatus(l,'done');break;
+    case 'cancel':ui.open=null;await setStatus(l,'cancelled');break;
+    case 'cancel-paid':ui.open=null;await setStatus(l,'cancelled_paid');break;
+    case 'reset':await resetLesson(l);break;
+    case 'remove':await removeLesson(l);break;
+    case 'open-cancel':ui.open='cancel:'+id;render();break;
+    case 'open-move':ui.open='move:'+id;ui.draft={date:l.movedTo?.date||l.date,time:l.movedTo?.time||l.time};render();break;
+    case 'save-move':{const d=ui.draft;if(!d.date||!d.time){toast('Вкажи дату й час');break}ui.open=null;await moveLesson(l,d.date,d.time);toast(`Перенесено на ${fmtD(d.date)}, ${d.time}`);break}
+    case 'open-add':ui.open='add';ui.draft={studentId:ui.filter||Object.keys(state.students)[0],date:inMonth(todayISO())?todayISO():iso(ui.y,ui.m,1),time:'18:00'};render();break;
+    case 'save-add':{const d=ui.draft;if(!d.studentId||!d.date||!d.time){toast('Заповни всі поля');break}ui.open=null;await put('lessons','x_'+rid(),{studentId:d.studentId,date:d.date,time:d.time,kind:'extra',status:'planned'});toast('Урок додано');break}
+    case 'open-pay':ui.open='pay:'+id;ui.copy=null;ui.draft={amount:el.dataset.suggest||'',date:todayISO(),period:`${ymNow()}-${ui.half||1}`,note:''};render();break;
+    case 'half':ui.half=Number(id);ui.open=null;ui.copy=null;render();break;
+    case 'copy':{const t=billText(id,studentPeriod(id,lessonsForMonth(ui.y,ui.m)));
+      try{await navigator.clipboard.writeText(t);ui.copy=null;toast('Розрахунок скопійовано')}
+      catch{ui.copy={sid:id,text:t};render();const ta=document.getElementById('copy-ta');if(ta){ta.focus();ta.select()}toast('Виділи текст і скопіюй')}break}
+    case 'save-pay':{const d=ui.draft,a=Number(d.amount);if(!(a>0)||!d.date){toast('Вкажи суму й дату');break}ui.open=null;await put('payments','p_'+rid(),{studentId:id,amount:a,date:d.date,period:d.period,note:d.note||''});toast('Оплату записано');break}
+    case 'del-pay':if(!confirm('Видалити цю оплату?'))break;await del('payments',id);break;
+    case 'new-student':ui.tab='students';ui.open='student:new';ui.confirm=null;ui.draft={name:'',price:'',currency:mainCur(),slots:[{wd:1,time:'18:00'}],start:todayISO(),end:'',note:'',profileId:''};render();break;
+    case 'edit-student':{const s=state.students[id];ui.open='student:'+id;ui.confirm=null;ui.draft={name:s.name,price:String(s.price),currency:s.currency||'UAH',slots:(s.slots||[]).map(x=>({...x})),start:s.start||'',end:s.end||'',note:s.note||'',profileId:s.profileId||''};render();break}
+    case 'add-slot':ui.draft.slots.push({wd:1,time:'18:00'});render();break;
+    case 'rm-slot':ui.draft.slots.splice(Number(id),1);render();break;
+    case 'save-student':{const d=ui.draft,p=Number(d.price);
+      if(!d.name.trim()){toast('Вкажи імʼя');break}if(!(p>=0)||d.price===''){toast('Вкажи ціну уроку');break}
+      const rec={name:d.name.trim(),price:p,currency:d.currency,slots:d.slots.filter(x=>x.time).map(x=>({wd:Number(x.wd),time:x.time})),start:d.start||'',end:d.end||'',note:d.note||''};
+      if(d.profileId)rec.profileId=d.profileId;
+      const sid=id==='new'?'s'+rid():id;ui.open=null;await put('students',sid,rec);toast('Збережено');break}
+    case 'ask-del':ui.confirm=id;render();break;
+    case 'no-del':ui.confirm=null;render();break;
+    case 'del-student':ui.open=null;ui.confirm=null;await deleteStudent(id);toast('Студента видалено');break;
+  }
+});
+
+/* ---------- старт ---------- */
+async function start(){
+  const nav=document.getElementById('navLinks');
+  const me=await getMyProfile();
+  const app=document.getElementById('app');
+  if(!me){
+    nav.innerHTML='';
+    renderLogin(app,{title:'Панель викладача',subtitle:'Увійдіть у свій акаунт викладача.',onSuccess:start});
+    return;
+  }
+  nav.innerHTML=`<a class="navlink active" href="schedule.html">Розклад і оплати</a><a class="navlink" href="teacher.html">Кабінети учнів</a><button class="navlink" id="logoutBtn">Вийти</button>`;
+  document.getElementById('logoutBtn').onclick=async()=>{await sb.auth.signOut();location.reload()};
+  if(me.role!=='teacher'){app.innerHTML=`<div class="errbox">Ця сторінка доступна лише викладачу.</div>`;return}
+  try{await loadAll()}
+  catch(e){console.error(e);app.innerHTML=`<div class="errbox">Не вдалося завантажити розклад. Перевірте, що скрипт <b>schedule-setup.sql</b> запущено в Supabase, і оновіть сторінку.</div>`}
+}
+start();
+})();
+</script>
+</body>
+</html>

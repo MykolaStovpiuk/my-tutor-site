@@ -44,7 +44,8 @@ nav.top{
 nav.top .wrap{display:flex; align-items:center; justify-content:space-between; gap:12px; padding:14px 16px;}
 .brand{font-family:'Fraunces', serif; font-size:1.08rem; font-weight:600; text-decoration:none; color:var(--ink);}
 .brand span{color:var(--coral);}
-.nav-actions{display:flex; gap:8px; align-items:center;}
+.nav-actions{display:flex; gap:6px; align-items:center; flex-wrap:wrap;}
+nav.top .wrap{flex-wrap:wrap;}
 .pill-btn{
   background:none; border:1px solid var(--line); border-radius:100px;
   padding:6px 14px; font-size:0.85rem; cursor:pointer; text-decoration:none; color:var(--ink);
