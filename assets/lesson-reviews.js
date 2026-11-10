@@ -267,6 +267,166 @@ const LESSON_REVIEWS = [
       ]
     }
   }
+  ,
+  {
+    level: 'B1+',
+    lesson: '1A',
+    title: 'B1+ · 1A The story of me',
+    rules: [
+      {
+        title: 'Narrative tenses: як розповідати історію в минулому',
+        text: 'У розповіді поєднуємо три часи: **past simple** — головні події, **past continuous** — фон і тимчасові ситуації, **past perfect** — те, що сталося ще раніше.',
+        examples: [
+          '*It was a cold day and the wind **was blowing**. Josh **was walking** home when he **heard** a crash.*'
+        ]
+      },
+      {
+        title: 'Past simple — головні події',
+        text: 'Події, що йдуть одна за одною: **V2 / -ed**.',
+        examples: [
+          '*She **woke up** early, **made** coffee and **went** for a walk.*',
+          '*Suddenly, I **realised** I didn\'t have my keys.*'
+        ]
+      },
+      {
+        title: 'Past continuous — фон і тимчасові ситуації',
+        text: '**was / were + -ing**: що відбувалося в той момент, погода, атмосфера, тимчасове життя. Часто з **while** і **when**.',
+        examples: [
+          '*The sun **was shining** and people **were sitting** in the park.*',
+          '*I got this ring when I **was living** in Italy.* (тимчасово)',
+          '*I **was cooking** when the phone **rang**.* (довга дія + коротка)'
+        ]
+      },
+      {
+        title: 'Past perfect — раніше за інші події',
+        text: '**had + V3**: дія сталася ДО іншої дії в минулому. Часто з **already, just, never … before**.',
+        examples: [
+          '*When we got to the station, the train **had already left**.*',
+          '*I bought a new jacket to replace the one I**\'d lost**.*',
+          '*I **had never ridden** a bike that far before.*'
+        ]
+      },
+      {
+        title: 'Оголошення: note form',
+        text: 'В оголошеннях прибираємо **артиклі, займенники, допоміжні дієслова** і зайві слова — лишаємо головне.',
+        examples: [
+          '*It is in very good condition.* → **Very good condition.**',
+          '*This bike was bought this year but it was never used.* → **Bought this year but never used.**',
+          '*The price includes two chairs.* → **Price includes two chairs.**'
+        ]
+      }
+    ],
+    sections: [
+      {
+        title: 'Граматика: обери правильний час',
+        intro: 'Подумай: головна подія, фон чи щось, що сталося раніше?',
+        items: [
+          { type:'choice', q:'It ___ heavily, so we decided to stay at home.', options:['rained','was raining','had rained'], answer:1, explain:'Фон, погода → **past continuous**.' },
+          { type:'choice', q:'When I opened the fridge, I saw that someone ___ all the cheese.', options:['ate','was eating','had eaten'], answer:2, explain:'З\'їли ще до того, як я відкрив → **past perfect**.' },
+          { type:'choice', q:'I ___ my old friend Dan while I was waiting for the bus.', options:['met','was meeting','had met'], answer:0, explain:'Коротка подія на фоні довгої → **past simple**.' },
+          { type:'choice', q:'At that time, my sister ___ in Warsaw for a few months.', options:['lived','was living','had lived'], answer:1, explain:'Тимчасова ситуація → **past continuous**.' },
+          { type:'choice', q:'She was nervous because she ___ on a plane before.', options:['never flew','was never flying','had never flown'], answer:2, explain:'Досвід до моменту в минулому → **had never + V3**.' },
+          { type:'choice', q:'We got to the cinema late. The film ___ .', options:['already started','had already started','was already starting'], answer:1, explain:'Почався раніше, ніж ми прийшли → **past perfect**.' },
+          { type:'choice', q:'He picked up the guitar, ___ down and started to play.', options:['sat','was sitting','had sat'], answer:0, explain:'Послідовність головних подій → **past simple**.' },
+          { type:'choice', q:'I ___ for my phone for ten minutes when I realised it was in my hand!', options:['looked','had looked','was looking'], answer:2, explain:'Довга дія, яку перервало «усвідомив» → **past continuous**.' },
+          { type:'choice', q:'Tim bought these boots while he ___ around New Zealand.', options:['travelled','was travelling','had travelled'], answer:1, explain:'Тимчасова ситуація (подорож) → **past continuous**.' },
+          { type:'choice', q:'I recognised the man immediately. I ___ him on TV the day before.', options:['saw','was seeing','had seen'], answer:2, explain:'Бачив раніше, ніж упізнав → **past perfect**.' }
+        ]
+      },
+      {
+        title: 'Граматика: знайди правильну форму',
+        intro: 'Напиши дієслово в дужках у past simple, past continuous або past perfect.',
+        items: [
+          { type:'gap', q:'While we ___ dinner, the lights suddenly went out.', hint:'have', answer:['were having'], explain:'Фон, перерваний подією → **were having**.' },
+          { type:'gap', q:'When I got home, I realised I ___ my bag on the train.', hint:'leave', answer:['had left','\'d left'], explain:'Залишив раніше, ніж помітив → **had left**.' },
+          { type:'gap', q:'Last summer, I ___ a cheap guitar at a street market.', hint:'buy', answer:['bought'], explain:'Завершена подія → **past simple**.' },
+          { type:'gap', q:'The streets were wet because it ___ all night.', hint:'rain', answer:['had rained','had been raining','\'d rained'], explain:'Дощ ішов раніше → **had rained**.' },
+          { type:'gap', q:'I ___ about my exam when my teacher called with the results.', hint:'think', answer:['was thinking'], explain:'Процес у момент дзвінка → **was thinking**.' },
+          { type:'gap', q:'My grandma gave me a silver ring that ___ to her mother.', hint:'belong', answer:['had belonged','belonged'], explain:'Належав ще до того → **had belonged** (можна й belonged).' },
+          { type:'gap', q:'We ___ snow before our trip to Norway.', hint:'never / see', answer:['had never seen','\'d never seen'], explain:'Досвід до моменту в минулому → **had never seen**.' },
+          { type:'gap', q:'Suddenly, the dog ___ out of the house and ran after a cat.', hint:'jump', answer:['jumped'], explain:'Головна подія → **past simple**.' }
+        ]
+      },
+      {
+        title: 'Історія: доповни розповідь',
+        intro: 'Одна історія — вісім дієслів. Обери правильну форму.',
+        items: [
+          { type:'choice', q:'It was a sunny afternoon and I ___ in the park with my dog.', options:['walked','was walking','had walked'], answer:1, explain:'Фон історії → **past continuous**.' },
+          { type:'choice', q:'Suddenly, I ___ something shiny in the grass.', options:['noticed','was noticing','had noticed'], answer:0, explain:'Головна подія → **past simple**.' },
+          { type:'choice', q:'It was an old gold watch. Somebody ___ it.', options:['lost','was losing','had lost'], answer:2, explain:'Загубили раніше → **past perfect**.' },
+          { type:'choice', q:'On the back, somebody ___ the words "To Anna, 1975".', options:['wrote','had written','was writing'], answer:1, explain:'Написали задовго до того → **had written**.' },
+          { type:'choice', q:'I ___ the watch to the police station near the park.', options:['took','was taking','had taken'], answer:0, explain:'Наступна подія → **past simple**.' },
+          { type:'choice', q:'A week later, an old lady ___ me.', options:['called','was calling','had called'], answer:0, explain:'Подія → **past simple**.' },
+          { type:'choice', q:'She explained that her husband ___ it to her on their wedding day.', options:['gave','had given','was giving'], answer:1, explain:'Подарував значно раніше → **had given**.' },
+          { type:'choice', q:'She ___ when she thanked me — it was very special to her.', options:['cried','was crying','had cried'], answer:1, explain:'Що відбувалось у той момент → **was crying**.' }
+        ]
+      },
+      {
+        title: 'Лексика: описуємо речі',
+        intro: 'Обери слово, яке найкраще підходить.',
+        items: [
+          { type:'choice', q:'This old bag ___ to my grandfather.', options:['belonged','inherited','owned'], answer:0, explain:'**belong to** — належати.' },
+          { type:'choice', q:'When my aunt died, I ___ her piano.', options:['belonged','inherited','reminded'], answer:1, explain:'**inherit** — успадкувати.' },
+          { type:'choice', q:'It\'s just a cheap ring. It isn\'t ___ a lot.', options:['worth','valuable','special'], answer:0, explain:'**not worth a lot** — небагато коштує.' },
+          { type:'choice', q:'This is a ___ Rolex, not a fake one.', options:['cool','genuine','damaged'], answer:1, explain:'**genuine** — справжній.' },
+          { type:'choice', q:'The box fell off the van, so the TV is a bit ___.', options:['damaged','genuine','special'], answer:0, explain:'**damaged** — пошкоджений.' },
+          { type:'choice', q:'It\'s not expensive, but it\'s really ___ to me because my dad made it.', options:['worth','special','leather'], answer:1, explain:'**special to me** — дорогий для мене.' },
+          { type:'choice', q:'Those sunglasses look really ___ on you!', options:['cool','genuine','inherited'], answer:0, explain:'**cool** — класний, стильний.' },
+          { type:'choice', q:'Her shoes are made of real ___ — they\'re soft and brown.', options:['leather','denim','glass'], answer:0, explain:'**leather** — шкіра.' }
+        ]
+      },
+      {
+        title: 'Лексика: з чого це зроблено?',
+        intro: 'Впиши матеріал: stone, rubber, diamond, iron, cotton, silver, denim, wood, steel, plastic, gold, glass.',
+        items: [
+          { type:'gap', q:'My favourite jeans and jacket are made of ___.', hint:'джинсова тканина', answer:['denim'], explain:'**denim**.' },
+          { type:'gap', q:'The window broke because it was made of thin ___.', hint:'скло', answer:['glass'], explain:'**glass**.' },
+          { type:'gap', q:'The ball bounced high — it was made of ___.', hint:'гума', answer:['rubber'], explain:'**rubber**.' },
+          { type:'gap', q:'Second place gets a ___ medal.', hint:'срібло', answer:['silver'], explain:'**silver** — за друге місце.' },
+          { type:'gap', q:'This T-shirt is 100% ___, so it\'s nice in hot weather.', hint:'бавовна', answer:['cotton'], explain:'**cotton**.' },
+          { type:'gap', q:'Knives and saucepans are often made of stainless ___.', hint:'сталь', answer:['steel'], explain:'**stainless steel** — нержавіюча сталь.' },
+          { type:'gap', q:'The old castle walls are made of ___.', hint:'камінь', answer:['stone'], explain:'**stone**.' },
+          { type:'gap', q:'Please don\'t use ___ bags — they\'re bad for the environment.', hint:'пластик', answer:['plastic'], explain:'**plastic bags**.' },
+          { type:'gap', q:'This chair is made of ___ from a local forest.', hint:'дерево', answer:['wood'], explain:'**wood** — дерево як матеріал (не tree).' },
+          { type:'gap', q:'A ___ is the hardest natural stone in the world.', hint:'діамант', answer:['diamond'], explain:'**diamond**.' }
+        ]
+      },
+      {
+        title: 'Оголошення: note form',
+        intro: 'Обери найкращий варіант для онлайн-оголошення.',
+        items: [
+          { type:'choice', q:'It has been slightly damaged.', options:['Slightly damaged.','It slightly damaged.','Has slightly damaged.'], answer:0, explain:'Прибираємо **it has been** → **Slightly damaged.**' },
+          { type:'choice', q:'The price includes a spare set of strings.', options:['Price includes spare set of strings.','The price includes strings.','Includes the price strings.'], answer:0, explain:'Прибираємо артиклі → **Price includes spare set of strings.**' },
+          { type:'choice', q:'This has never been used.', options:['Never used.','Has never used.','This never used.'], answer:0, explain:'**Never used.**' },
+          { type:'choice', q:'They come in the original box.', options:['Come original box.','In original box.','They in original box.'], answer:1, explain:'**In original box.**' },
+          { type:'choice', q:'It is in the same condition as it was when it was new.', options:['Same new.','Condition: as new.','It as new.'], answer:1, explain:'**Condition: as new.**' }
+        ]
+      }
+    ],
+    speaking: {
+      intro: 'Відповідай уголос, 1–2 хвилини на питання. Розповідай історії: past simple, past continuous і past perfect.',
+      questions: [
+        'Choose three objects that say something about you. What are they and what are they made of?',
+        'Where did you get each object? What were you doing at that time of your life?',
+        'Do you have anything that belonged to your parents or grandparents? What\'s its story?',
+        'Do you own something that isn\'t worth a lot but is very special to you? Why is it special?',
+        'Tell me about a time you lost something important. What had happened? Did you find it?',
+        'Is there something you would never throw away? Why not?',
+        'Have you ever bought or sold something online? What happened?',
+        'Describe one thing you could sell online today, as if you were writing the advert.'
+      ],
+      phrases: [
+        'This … belonged to my …',
+        'I inherited it from …',
+        'It\'s not worth a lot, but it\'s really special to me.',
+        'I got it when I was living / studying in …',
+        'I bought it to replace the one I\'d lost.',
+        'It\'s a bit damaged now, but I still love it.',
+        'It reminds me of …',
+        'It\'s made of …'
+      ]
+    }
+  }
 ];
 
 /* Знайти повторення за назвою уроку: «B2 Lesson 1B», «B2 1B», «1B». */
@@ -275,7 +435,7 @@ function findLessonReview(lessonTitle, studentLevel){
   const m = t.match(/(?:^|[^A-Z0-9])(\d{1,2}[A-E])(?![A-Z0-9])/);
   if(!m) return null;
   const same = LESSON_REVIEWS.filter(r => r.lesson.toUpperCase() === m[1]);
-  const lv = (t.match(/(?:^|[^A-Z0-9])([ABC][12])(?![0-9])/) || String(studentLevel || '').toUpperCase().match(/([ABC][12])/) || [])[1];
+  const lv = (t.match(/(?:^|[^A-Z0-9])([ABC][12]\+?)(?![0-9])/) || String(studentLevel || '').toUpperCase().match(/([ABC][12]\+?)/) || [])[1];
   if(lv) return same.find(r => r.level.toUpperCase() === lv) || null;
   return same.length === 1 ? same[0] : null;
 }

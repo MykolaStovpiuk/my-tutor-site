@@ -179,6 +179,62 @@ const WORD_SETS = [
       }
     ]
   }
+  ,
+  {
+    level: 'B1+',
+    lesson: '1A',
+    title: 'B1+ · 1A The story of me',
+    parts: [
+      {
+        title: 'Описуємо речі (describing possessions)',
+        words: [
+          { en: 'belong to', ua: 'належати (комусь)', example: 'This old watch used to belong to my grandfather.' },
+          { en: 'inherit', ua: 'успадкувати', example: 'She will inherit the house from her aunt.' },
+          { en: 'not worth a lot', ua: 'не дуже цінний, коштує небагато', example: 'It\'s not worth a lot, but it\'s very special to me.' },
+          { en: 'valuable', ua: 'цінний, коштовний', example: 'The painting is very valuable — keep it safe.' },
+          { en: 'special', ua: 'особливий, дорогий (для когось)', example: 'This old photo is really special to me.' },
+          { en: 'leather', ua: 'шкіряний; шкіра', example: 'He always wears a black leather jacket.' },
+          { en: 'genuine', ua: 'справжній, оригінальний', example: 'It\'s a genuine 1980s jacket, not a copy.' },
+          { en: 'damaged', ua: 'пошкоджений', example: 'The suitcase is a bit damaged now, but I still use it.' },
+          { en: 'cool', ua: 'класний, стильний', example: 'I always thought that jacket looked really cool.' },
+          { en: 'possessions', ua: 'речі, особисте майно', example: 'Our possessions remind us of people and places.' },
+          { en: 'throw away', ua: 'викинути', example: 'I would never throw away my first guitar.' },
+          { en: 'remind', ua: 'нагадувати', example: 'These boots remind me of my trip to New Zealand.' }
+        ]
+      },
+      {
+        title: 'Матеріали (materials) — It\'s made of …',
+        words: [
+          { en: 'stone', ua: 'камінь', example: 'The statue in the garden is made of stone.' },
+          { en: 'rubber', ua: 'гума', example: 'Car tyres are made of rubber.' },
+          { en: 'diamond', ua: 'діамант', example: 'Her engagement ring has a huge diamond in it.' },
+          { en: 'iron', ua: 'залізо', example: 'The old gates are made of iron.' },
+          { en: 'cotton', ua: 'бавовна', example: 'I love sleeping in clean cotton sheets.' },
+          { en: 'silver', ua: 'срібло, срібний', example: 'I\'ve worn silver rings all my life.' },
+          { en: 'denim', ua: 'джинсова тканина, денім', example: 'She was wearing a light blue denim jacket.' },
+          { en: 'wood', ua: 'дерево (матеріал)', example: 'Our kitchen table is made of wood.' },
+          { en: 'steel', ua: 'сталь', example: 'These steel knives are really sharp.' },
+          { en: 'plastic', ua: 'пластик, пластиковий', example: 'I always recycle my plastic bottles.' },
+          { en: 'gold', ua: 'золото, золотий', example: 'She finished first and won a gold medal.' },
+          { en: 'glass', ua: 'скло, скляний', example: 'I dropped a glass bottle and it smashed.' }
+        ]
+      },
+      {
+        title: 'Оголошення про продаж (an advert to sell an item)',
+        words: [
+          { en: 'brand new', ua: 'абсолютно новий', example: 'Brand new bike, never used.' },
+          { en: 'used', ua: 'вживаний; використаний', example: 'Bought last year but never used.' },
+          { en: 'in perfect condition', ua: 'в ідеальному стані', example: 'Vintage denim jacket in perfect condition.' },
+          { en: 'as new', ua: 'як новий', example: 'Condition: as new.' },
+          { en: 'slightly damaged', ua: 'трохи пошкоджений', example: 'Spanish guitar, back slightly damaged.' },
+          { en: 'includes', ua: 'включає', example: 'Price includes front and back lights.' },
+          { en: 'in good condition', ua: 'в доброму стані', example: 'Leather sofa in good condition.' },
+          { en: 'original box', ua: 'оригінальна коробка', example: 'New walking boots in original box.' },
+          { en: 'collection only', ua: 'лише самовивіз', example: 'Free piano. Collection only.' }
+        ]
+      }
+    ]
+  }
 ];
 
 /* Ключ набору: «A2 6B» */
@@ -193,7 +249,7 @@ function findWordSet(lessonTitle, studentLevel){
   const m = t.match(/(?:^|[^A-Z0-9])(\d{1,2}[A-E])(?![A-Z0-9])/);
   if(!m) return null;
   const sameLesson = WORD_SETS.filter(s => s.lesson.toUpperCase() === m[1]);
-  const lv = (t.match(/(?:^|[^A-Z0-9])([ABC][12])(?![0-9])/) || String(studentLevel || '').toUpperCase().match(/([ABC][12])/) || [])[1];
+  const lv = (t.match(/(?:^|[^A-Z0-9])([ABC][12]\+?)(?![0-9])/) || String(studentLevel || '').toUpperCase().match(/([ABC][12]\+?)/) || [])[1];
   if(lv) return sameLesson.find(s => s.level.toUpperCase() === lv) || null;
   return sameLesson.length === 1 ? sameLesson[0] : null;
 }
