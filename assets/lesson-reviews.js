@@ -427,6 +427,176 @@ const LESSON_REVIEWS = [
       ]
     }
   }
+  ,
+  {
+    level: 'B1+',
+    lesson: '1B',
+    title: 'B1+ · 1B Less is more?',
+    rules: [
+      {
+        title: 'Дієслово + прийменник + -ing',
+        text: 'Якщо після дієслова стоїть прийменник (крім частки **to** інфінітива), наступне дієслово — у формі **-ing**.',
+        examples: [
+          '**succeed in** — *She succeeded in **finding** a cheap flat.*',
+          '**believe in / care about / dream about / think about** — *I dream about **travelling** the world.*',
+          '**concentrate on / apologise for / struggle with** — *He apologised for **being** late.*',
+          '**look forward to** — тут **to** прийменник! *I look forward to **meeting** you.*'
+        ]
+      },
+      {
+        title: 'Фразові дієслова + -ing',
+        text: 'Після більшості фразових дієслів теж **-ing**: **give up, put off, carry on, keep on**.',
+        examples: [
+          '*I gave up **eating** sugar a month ago.*',
+          '*Stop putting off **calling** your grandma!*',
+          '*We carried on **talking** until midnight.*'
+        ]
+      },
+      {
+        title: 'Різне значення: go on, grow up, turn out',
+        text: 'Деякі дієслова міняють значення залежно від форми.',
+        examples: [
+          '**go on doing** — продовжувати: *She went on **singing** after the lights went out.*',
+          '**go on to do** — згодом стати / зробити: *She went on **to become** a pop star.*',
+          '**grow up doing** — робити, поки ріс: *He grew up **playing** football in the street.*',
+          '**grow up to be** — ким став дорослим: *He grew up **to be** a professional player.*',
+          '**turn out to be** — виявитися: *The trip turned out **to be** amazing.*'
+        ]
+      },
+      {
+        title: 'Stop і remember: to do чи doing',
+        text: 'Значення змінюється!',
+        examples: [
+          '**stop doing** — припинити, кинути звичку: *I stopped **buying** magazines.*',
+          '**stop to do** — зупинитися, щоб зробити інше: *We stopped **to buy** some water.*',
+          '**remember to do** — не забути зробити: *Remember **to lock** the door.*',
+          '**remember doing** — пам\'ятати, що робив: *I remember **playing** with this toy.*'
+        ]
+      },
+      {
+        title: 'Як говорити про вподобання',
+        text: 'Корисні фрази з уроку.',
+        examples: [
+          '**It\'s ideal for me.** — Це саме те, що мені треба.',
+          '**I\'m not a big fan of …** / **… is not for me.** — Мені не дуже подобається …',
+          '**I can\'t do without …** — Я не можу обійтися без …',
+          '**It gives me pleasure.** — Це мене радує.',
+          '**We have different tastes.** — У нас різні смаки.'
+        ]
+      }
+    ],
+    sections: [
+      {
+        title: 'Граматика: обери правильну форму',
+        intro: 'Є прийменник? Тоді, швидше за все, -ing.',
+        items: [
+          { type:'choice', q:'My brother finally succeeded in ___ his own business.', options:['start','to start','starting'], answer:2, explain:'**succeed in** + -ing.' },
+          { type:'choice', q:'I\'m really looking forward to ___ my cousins at Christmas.', options:['see','seeing','to see'], answer:1, explain:'**look forward to** + -ing (to — прийменник).' },
+          { type:'choice', q:'Our neighbour apologised for ___ so much noise last night.', options:['making','to make','make'], answer:0, explain:'**apologise for** + -ing.' },
+          { type:'choice', q:'Stop worrying and concentrate on ___ the exam.', options:['pass','passing','to pass'], answer:1, explain:'**concentrate on** + -ing.' },
+          { type:'choice', q:'The party turned out ___ much better than we expected.', options:['being','be','to be'], answer:2, explain:'**turn out to be** — виявитися.' },
+          { type:'choice', q:'I keep putting off ___ the dentist.', options:['to call','calling','call'], answer:1, explain:'**put off** + -ing.' },
+          { type:'choice', q:'She doesn\'t care about ___ expensive clothes.', options:['wearing','to wear','wear'], answer:0, explain:'**care about** + -ing.' },
+          { type:'choice', q:'Lots of people struggle with ___ their homes tidy.', options:['keep','to keep','keeping'], answer:2, explain:'**struggle with** + -ing.' },
+          { type:'choice', q:'We\'re thinking about ___ to a smaller flat.', options:['moving','to move','move'], answer:0, explain:'**think about** + -ing.' },
+          { type:'choice', q:'Tom gave up ___ coffee because he couldn\'t sleep.', options:['to drink','drinking','drink'], answer:1, explain:'**give up** + -ing.' }
+        ]
+      },
+      {
+        title: 'Граматика: різне значення',
+        intro: 'Обери форму, яка відповідає значенню.',
+        items: [
+          { type:'choice', q:'Anna started as a waitress and went on ___ her own restaurant.', options:['opening','to open'], answer:1, explain:'Згодом досягла → **go on to do**.' },
+          { type:'choice', q:'The teacher asked them to be quiet, but they went on ___.', options:['talking','to talk'], answer:0, explain:'Продовжували → **go on doing**.' },
+          { type:'choice', q:'I grew up ___ in a small village near the mountains.', options:['living','to live'], answer:0, explain:'Що робив, поки ріс → **grow up doing**.' },
+          { type:'choice', q:'That shy little boy grew up ___ a famous actor.', options:['being','to be'], answer:1, explain:'Ким став → **grow up to be**.' },
+          { type:'choice', q:'We were tired, so we stopped ___ a coffee.', options:['having','to have'], answer:1, explain:'Зупинились, щоб зробити → **stop to do**.' },
+          { type:'choice', q:'I stopped ___ fast food — I feel much better now.', options:['eating','to eat'], answer:0, explain:'Кинув звичку → **stop doing**.' },
+          { type:'choice', q:'Please remember ___ the plants while I\'m away.', options:['watering','to water'], answer:1, explain:'Не забудь зробити → **remember to do**.' },
+          { type:'choice', q:'I remember ___ this song at my sister\'s wedding.', options:['hearing','to hear'], answer:0, explain:'Спогад → **remember doing**.' }
+        ]
+      },
+      {
+        title: 'Граматика: постав дієслово в правильну форму',
+        intro: 'Історія дизайнерки. Напиши -ing або to-інфінітив.',
+        items: [
+          { type:'gap', q:'Maya grew up ___ pictures of houses on every piece of paper.', hint:'draw', answer:['drawing'], explain:'**grow up doing**.' },
+          { type:'gap', q:'After school, she went on ___ interior design in Milan.', hint:'study', answer:['to study'], explain:'**go on to do** — далі зробила.' },
+          { type:'gap', q:'Her first job turned out ___ really boring.', hint:'be', answer:['to be'], explain:'**turn out to be**.' },
+          { type:'gap', q:'But she carried on ___ hard and learned a lot.', hint:'work', answer:['working'], explain:'**carry on** + -ing.' },
+          { type:'gap', q:'Two years later, she succeeded in ___ her own studio.', hint:'open', answer:['opening'], explain:'**succeed in** + -ing.' },
+          { type:'gap', q:'She believes in ___ homes simple and bright.', hint:'keep', answer:['keeping'], explain:'**believe in** + -ing.' },
+          { type:'gap', q:'Now she dreams about ___ a hotel by the sea.', hint:'design', answer:['designing'], explain:'**dream about** + -ing.' },
+          { type:'gap', q:'"I\'ll never stop ___ new things," she says.', hint:'try', answer:['trying'], explain:'Не припинятиме → **stop doing**.' }
+        ]
+      },
+      {
+        title: 'Лексика: вподобання',
+        intro: 'Обери слово, яке підходить.',
+        items: [
+          { type:'choice', q:'This quiet café is ___ for working on my laptop.', options:['ideal','dream','pleasure'], answer:0, explain:'**ideal** — ідеальний, саме те.' },
+          { type:'choice', q:'Working with animals has always been my ___ job.', options:['ideal','dream','taste'], answer:1, explain:'**dream job** — робота мрії.' },
+          { type:'choice', q:'I live near my office, so I can ___ a car.', options:['appreciate','do without','give up'], answer:1, explain:'**do without** — обходитися без.' },
+          { type:'choice', q:'After a month abroad, you really ___ your family and friends.', options:['appreciate','prefer','dream'], answer:0, explain:'**appreciate** — цінувати.' },
+          { type:'choice', q:'Gardening ___ my grandma a lot of pleasure.', options:['makes','gives','takes'], answer:1, explain:'**give (sb) pleasure**.' },
+          { type:'choice', q:'We never agree on films — we have very different ___.', options:['pleasures','dreams','tastes'], answer:2, explain:'**different tastes**.' },
+          { type:'choice', q:'Extreme sports? No, thanks. They\'re not ___ me.', options:['for','of','to'], answer:0, explain:'**not for me**.' },
+          { type:'choice', q:'I\'m not a big ___ of horror films.', options:['fan','lover','friend'], answer:0, explain:'**not a big fan of**.' }
+        ]
+      },
+      {
+        title: 'Лексика: впиши слово',
+        intro: 'Слова з уроку: ideal, appreciate, do without, pleasure, tastes, fan, stuff, crowded.',
+        items: [
+          { type:'gap', q:'I can\'t ___ my morning coffee — I need it!', hint:'2 слова', answer:['do without'], explain:'**can\'t do without** — не можу без.' },
+          { type:'gap', q:'Our flat is tiny, but it\'s ___ for two people.', hint:'1 слово', answer:['ideal'], explain:'**ideal for**.' },
+          { type:'gap', q:'I\'m not a big ___ of shopping — I order everything online.', hint:'1 слово', answer:['fan'], explain:'**not a big fan of**.' },
+          { type:'gap', q:'Reading in bed gives me real ___.', hint:'1 слово', answer:['pleasure'], explain:'**give pleasure**.' },
+          { type:'gap', q:'I really ___ all your help with the move. Thank you!', hint:'1 слово', answer:['appreciate'], explain:'**appreciate** — бути вдячним.' },
+          { type:'gap', q:'My parents and I have different ___ in furniture.', hint:'1 слово', answer:['tastes'], explain:'**different tastes**.' },
+          { type:'gap', q:'The underground is so ___ in the morning that I can\'t move.', hint:'переповнений', answer:['crowded'], explain:'**crowded**.' },
+          { type:'gap', q:'Our cupboards are full of old ___ we never use.', hint:'речі (розм.)', answer:['stuff'], explain:'**stuff** — незлічуване, без -s.' }
+        ]
+      },
+      {
+        title: 'Повторення статті: Minimalism vs. Maximalism',
+        intro: 'Що сказали Zuleya та Richard у статті?',
+        items: [
+          { type:'choice', q:'Zuleya\'s motto is:', options:['"Less is more"','"Fill the world with colour"'], answer:0, explain:'Для мінімалістів: **"Less is more"**.' },
+          { type:'choice', q:'Zuleya thinks minimalism helps us ___ the things that matter.', options:['buy','appreciate'], answer:1, explain:'**appreciate the things that matter**.' },
+          { type:'choice', q:'For Zuleya, what is really important is:', options:['people and relationships','beautiful objects'], answer:0, explain:'**It\'s people and relationships, not stuff.**' },
+          { type:'choice', q:'Richard\'s love of maximalism started with:', options:['a trip to Mozambique','a Netflix series'], answer:0, explain:'Подорож до **Mozambique** у 20 років.' },
+          { type:'choice', q:'For Richard, maximalism is about:', options:['luxury','joy'], answer:1, explain:'**Maximalism isn\'t about luxury. It\'s about joy.**' },
+          { type:'choice', q:'Richard\'s treasures ___ him and his visitors.', options:['give pleasure to','do without'], answer:0, explain:'**They give pleasure to me and my visitors.**' },
+          { type:'choice', q:'Richard says a minimalist house would be like living in:', options:['a hospital','a museum'], answer:0, explain:'**It would be like living in a hospital!**' }
+        ]
+      }
+    ],
+    speaking: {
+      intro: 'Відповідай уголос, 1–2 хвилини на питання. Вживай дієслова з прийменниками + -ing і емфатичні фрази (I definitely …, I really …, I absolutely can\'t …).',
+      questions: [
+        'Minimalism or maximalism — which is more "you"? Describe your ideal room.',
+        'Social butterfly or stay-at-home: is your ideal evening spent alone or with other people?',
+        'Messy or tidy: does it give you pleasure to keep things tidy?',
+        'How long could you give up checking your phone? What can\'t you do without?',
+        'Do you prefer to concentrate on one thing at a time, or are you a multitasker?',
+        'Do you dream about big things (a dream job, a new country) or do you appreciate what you have now?',
+        'Do you follow your family\'s traditions, or do you have different tastes?',
+        'Are you a planner? What do you usually put off doing?',
+        'What possessions would you never throw away? Which ones could you easily do without?'
+      ],
+      phrases: [
+        'I\'m definitely a … person.',
+        'I really look forward to …ing …',
+        'I\'m not a big fan of … — it\'s not for me.',
+        'I can\'t do without …',
+        '… gives me a lot of pleasure.',
+        'I always put off …ing …',
+        'I believe in …ing …',
+        'We have very different tastes.'
+      ]
+    }
+  }
 ];
 
 /* Знайти повторення за назвою уроку: «B2 Lesson 1B», «B2 1B», «1B». */

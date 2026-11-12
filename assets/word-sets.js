@@ -235,6 +235,64 @@ const WORD_SETS = [
       }
     ]
   }
+  ,
+  {
+    level: 'B1+',
+    lesson: '1B',
+    title: 'B1+ · 1B Less is more?',
+    parts: [
+      {
+        title: 'Особисті вподобання (personal preferences)',
+        words: [
+          { en: 'ideal', ua: 'ідеальний, саме те, що треба', example: 'A small flat is ideal for a student.' },
+          { en: 'dream job', ua: 'робота мрії', example: 'Being a travel writer would be my dream job.' },
+          { en: 'appreciate', ua: 'цінувати, бути вдячним за', example: 'I really appreciate quiet mornings with a cup of coffee.' },
+          { en: 'do without', ua: 'обходитися без', example: 'I could easily do without a TV, but not without my books.' },
+          { en: 'give pleasure', ua: 'приносити задоволення, радувати', example: 'Old photos always give pleasure to my grandparents.' },
+          { en: 'tastes', ua: 'смаки, вподобання', example: 'My sister and I have very different tastes in music.' },
+          { en: 'not for me', ua: 'не для мене, мені не підходить', example: 'Camping in the rain? Sorry, it\'s not for me.' },
+          { en: 'not a big fan of', ua: 'не великий шанувальник, не дуже люблю', example: 'I\'m not a big fan of crowded shopping centres.' }
+        ]
+      },
+      {
+        title: 'Мінімалізм vs. максималізм (зі статті)',
+        words: [
+          { en: 'minimalism', ua: 'мінімалізм', example: 'For Zuleya, minimalism is a way of life.' },
+          { en: 'maximalism', ua: 'максималізм (багато кольорів і речей)', example: 'Richard\'s love of maximalism started on a trip to Mozambique.' },
+          { en: 'possessions', ua: 'речі, майно', example: 'We moved to a smaller flat, so we sold half of our possessions.' },
+          { en: 'stuff', ua: 'речі, мотлох (розм.)', example: 'My garage is full of old stuff I never use.' },
+          { en: 'useless', ua: 'непотрібний, марний', example: 'Stop buying useless things just because they\'re cheap!' },
+          { en: 'treasures', ua: 'скарби, дорогі серцю речі', example: 'Her shelves are full of little treasures from her travels.' },
+          { en: 'elegant', ua: 'елегантний, витончений', example: 'The hotel room was simple but elegant.' },
+          { en: 'crowded', ua: 'переповнений, тісний', example: 'The living room felt crowded with all that furniture.' },
+          { en: 'store', ua: 'зберігати', example: 'Where do you store your winter clothes in summer?' },
+          { en: 'shelves', ua: 'полиці', example: 'We put up shelves to make the room look bigger.' },
+          { en: 'patterns', ua: 'візерунки', example: 'I love bright colours and bold patterns on cushions.' },
+          { en: 'bring back memories', ua: 'навівати спогади', example: 'These shells bring back memories of our holiday in Greece.' }
+        ]
+      },
+      {
+        title: 'Дієслова з прийменниками + -ing (verb patterns)',
+        words: [
+          { en: 'succeed in', ua: 'досягти успіху в, зуміти', example: 'I hope you succeed in finding a good job.' },
+          { en: 'believe in', ua: 'вірити в', example: 'I believe in giving everyone a second chance.' },
+          { en: 'look forward to', ua: 'з нетерпінням чекати', example: 'I look forward to seeing you next week!' },
+          { en: 'concentrate on', ua: 'зосередитися на', example: 'Turn off your phone and concentrate on finishing your homework.' },
+          { en: 'dream about', ua: 'мріяти про', example: 'I often dream about living by the sea.' },
+          { en: 'care about', ua: 'дбати про, перейматися', example: 'Young people really care about protecting the planet.' },
+          { en: 'apologise for', ua: 'вибачатися за', example: 'He didn\'t even apologise for breaking my cup.' },
+          { en: 'think about', ua: 'думати про (щоб зробити)', example: 'I sometimes think about moving abroad.' },
+          { en: 'struggle with', ua: 'мати труднощі з', example: 'Many students struggle with getting up early.' },
+          { en: 'give up', ua: 'кинути (звичку), припинити', example: 'My dad decided to give up smoking last year.' },
+          { en: 'put off', ua: 'відкладати (на потім)', example: 'Don\'t put off cleaning your room until the weekend.' },
+          { en: 'carry on', ua: 'продовжувати', example: 'They decided to carry on walking even though it was raining.' },
+          { en: 'turn out', ua: 'виявитися', example: 'Cheap hotels sometimes turn out to be really nice.' },
+          { en: 'go on to', ua: 'згодом (досягти, стати)', example: 'Many child actors go on to become directors.' },
+          { en: 'grow up', ua: 'вирости, дорослішати', example: 'Kids who grow up reading books usually write well.' }
+        ]
+      }
+    ]
+  }
 ];
 
 /* Ключ набору: «A2 6B» */
