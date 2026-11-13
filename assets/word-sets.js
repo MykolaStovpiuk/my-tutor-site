@@ -292,6 +292,54 @@ const WORD_SETS = [
         ]
       }
     ]
+  },
+  {
+    level: 'B1',
+    lesson: '1C',
+    title: 'B1 · 1C Let\'s talk!',
+    parts: [
+      {
+        title: 'Теми для розмови (conversation topics)',
+        words: [
+          { en: 'small talk', ua: 'світська бесіда, легка розмова', example: 'It isn\'t always easy to make small talk with people you don\'t know.' },
+          { en: 'stranger', ua: 'незнайомець, незнайома людина', example: 'Talking to a stranger can make you feel happier.' },
+          { en: 'the weather', ua: 'погода', example: 'One thing we all have in common is the weather.' },
+          { en: 'the news', ua: 'новини', example: 'You might want to avoid talking about the news because it is often sad.' },
+          { en: 'politics', ua: 'політика', example: 'It\'s best not to discuss politics with someone you\'ve just met.' },
+          { en: 'clothes and fashion', ua: 'одяг і мода', example: 'She loves talking about clothes and fashion.' },
+          { en: 'food and eating out', ua: 'їжа і походи в ресторани', example: 'Food and eating out is a great topic — everyone has an opinion.' },
+          { en: 'free-time activities', ua: 'заняття у вільний час', example: 'What free-time activities do you enjoy?' },
+          { en: 'hobbies', ua: 'хобі, захоплення', example: 'Astrid tells me your hobbies are painting and reading.' },
+          { en: 'holiday experiences', ua: 'враження з відпустки, подорожі', example: 'He told me about his holiday experiences in Corfu.' },
+          { en: 'event', ua: 'подія, захід', example: 'It\'s a big music event — are you going?' },
+          { en: 'work or studies', ua: 'робота або навчання', example: 'Ask people about their work or studies — most of us have a lot to say.' },
+          { en: 'have in common', ua: 'мати спільне', example: 'Strangers often have in common more than they think.' },
+          { en: 'start an argument', ua: 'почати сварку, суперечку', example: 'Talking about politics might start an argument.' },
+          { en: 'bring in', ua: 'додати (тему) в розмову', example: 'You can bring in a new topic if the conversation stops.' }
+        ]
+      },
+      {
+        title: 'Фрази: почати, підтримати, закінчити розмову',
+        words: [
+          { en: 'Is anyone sitting here?', ua: 'Тут хтось сидить?', example: 'Excuse me, is anyone sitting here?' },
+          { en: 'Do you mind if', ua: 'Ви не проти, якщо…', example: 'Do you mind if I charge my phone here?' },
+          { en: 'Is this your first time', ua: 'Ви тут уперше?', example: 'Is this your first time at this festival?' },
+          { en: 'by the way', ua: 'до речі', example: 'I\'m Matt, by the way.' },
+          { en: 'isn\'t it', ua: 'чи не так? (розділове питання)', example: 'It\'s a lovely morning, isn\'t it?' },
+          { en: 'Did you hear about', ua: 'Ти чув(ла) про…?', example: 'Did you hear about the fire in town?' },
+          { en: 'Go ahead', ua: 'Будь ласка, прошу (дозвіл)', example: 'No, go ahead — nobody is sitting here.' },
+          { en: 'Not at all', ua: 'Зовсім ні, анітрохи (не проти)', example: 'Do you mind if I open the window? — Not at all.' },
+          { en: 'Help yourself', ua: 'Пригощайтеся, беріть', example: 'There\'s coffee in the kitchen. Help yourself.' },
+          { en: 'Be my guest', ua: 'Будь ласка, прошу (будь моїм гостем)', example: 'Can I use this chair? — Sure, be my guest.' },
+          { en: 'No problem', ua: 'Без проблем', example: 'Thanks for your help! — No problem.' },
+          { en: 'How about you', ua: 'А ви? А ти?', example: 'I go every year. How about you?' },
+          { en: 'I\'ve got to go', ua: 'Мені треба йти', example: 'Sorry, but I\'ve got to go. My bus is here.' },
+          { en: 'Nice talking to you', ua: 'Приємно було поговорити', example: 'Oh, that\'s my train. Nice talking to you!' },
+          { en: 'Have fun', ua: 'Гарно провести час!', example: 'Are you going to the concert tonight? Have fun!' },
+          { en: 'Safe journey home', ua: 'Щасливої дороги додому', example: 'Bye, and safe journey home!' }
+        ]
+      }
+    ]
   }
 ];
 

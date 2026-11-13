@@ -596,6 +596,165 @@ const LESSON_REVIEWS = [
         'We have very different tastes.'
       ]
     }
+  },
+  {
+    level: 'B1',
+    lesson: '1C',
+    title: 'B1 · 1C Let\'s talk!',
+    rules: [
+      {
+        title: 'Почати розмову з незнайомцем',
+        text: 'Ввічливо звертаємося через **Excuse me** і ставимо просте питання про ситуацію.',
+        examples: [
+          '***Excuse me, is anyone** sitting here / using this?*',
+          '***Is this your first time** here / at this event?*',
+          '***Do you mind if I** / **Is it OK if I** charge my phone here?*',
+          '***How long have you** lived here / worked here?*',
+          '***Excuse me, do you know if there\'s** a café near here?*',
+          '*I\'m Matt, **by the way**.*'
+        ]
+      },
+      {
+        title: 'Почати розмову зі знайомим',
+        text: 'Із друзями та знайомими починаємо з погоди, новин або планів.',
+        examples: [
+          '***It\'s a lovely** morning, **isn\'t it**?*',
+          '***Did you hear about** the accident?*',
+          '***Did you watch** the match?*',
+          '***Are you doing anything nice** at the weekend?*',
+          '***How was your** weekend / holiday?*'
+        ]
+      },
+      {
+        title: 'Відповісти і підтримати розмову',
+        text: 'Коротко дозволяємо: **No problem. Go ahead. Not at all. Help yourself. Be my guest.** Щоб розмова тривала, повертаємо питання: **What about you? How about you? And you?**',
+        examples: [
+          '*Do you mind if I sit here? — **Not at all.***',
+          '*Is anyone using this? — No, **go ahead**.*',
+          '*I go every year. **How about you?***'
+        ]
+      },
+      {
+        title: 'Закінчити розмову',
+        text: 'Пояснюємо, що треба йти, і прощаємося.',
+        examples: [
+          '***I\'ve got to go.** / **That\'s my** bus.*',
+          '*OK, **nice to meet you**. / **Nice talking to you**.*',
+          '***See you later.** / **Have fun!** / **Have a good time!***'
+        ]
+      }
+    ],
+    sections: [
+      {
+        title: 'Граматика: обери правильний варіант',
+        intro: 'Як у Grammar Bank: обери правильне слово у фразі.',
+        items: [
+          { type:'choice', q:'A: ___, is anyone sitting here?', options:['Excuse','Excuse me'], answer:1, explain:'**Excuse me**, is anyone sitting here?' },
+          { type:'choice', q:'B: No, ___.', options:['go on','go ahead'], answer:1, explain:'**Go ahead** = будь ласка, сідайте.' },
+          { type:'choice', q:'A: Do you mind ___ I charge my phone here?', options:['that','if'], answer:1, explain:'**Do you mind if I …?**' },
+          { type:'choice', q:'B: ___ problem.', options:['No','Is no'], answer:0, explain:'**No problem.**' },
+          { type:'choice', q:'A: Is this ___ first time here?', options:['the','your'], answer:1, explain:'**Is this your first time here?**' },
+          { type:'choice', q:'B: Yes, what ___ you?', options:['for','about'], answer:1, explain:'**What about you?** — питання у відповідь.' },
+          { type:'choice', q:'A: How long ___ here?', options:['have you lived','do you live'], answer:0, explain:'Від минулого до тепер → **have you lived** (Present Perfect).' },
+          { type:'choice', q:'A: Are you going ___ Cambridge?', options:['in','to'], answer:1, explain:'**going to** + місце.' },
+          { type:'choice', q:'B: Sorry, ___ go.', options:['I\'ve got to','I don\'t'], answer:0, explain:'**I\'ve got to go** = мені треба йти.' },
+          { type:'choice', q:'A: ___ you mind if I sit here?', options:['Are','Do'], answer:1, explain:'**Do you mind if …?**' },
+          { type:'choice', q:'B: ___ guest.', options:['You are my','Be my'], answer:1, explain:'**Be my guest.**' },
+          { type:'choice', q:'A: I\'m Jess, ___ way.', options:['on the','by the'], answer:1, explain:'**by the way** = до речі.' },
+          { type:'choice', q:'B: OK, ___ you, Jess.', options:['nice that I meet','nice to meet'], answer:1, explain:'**Nice to meet you.**' },
+          { type:'choice', q:'B: OK, ___ your weekend!', options:['enjoy','enjoying'], answer:0, explain:'Побажання — наказовий спосіб: **Enjoy your weekend!**' }
+        ]
+      },
+      {
+        title: 'Граматика: розстав слова в правильному порядку',
+        intro: 'Напиши речення повністю. Розділові знаки можна не ставити.',
+        items: [
+          { type:'gap', q:'you / talking / to / nice .', hint:'(закінчити розмову)', answer:['Nice talking to you.','nice / talking / to / you .'], explain:'**Nice / talking / to / you.**' },
+          { type:'gap', q:'nice / weekend / you / at / anything / the / doing / are ?', hint:'(питання про плани)', answer:['Are you doing anything nice at the weekend?','are / you / doing / anything / nice / at / the / weekend ?'], explain:'**Are / you / doing / anything / nice / at / the / weekend?**' },
+          { type:'gap', q:'anyone / is / this / using ?', hint:'(почати розмову)', answer:['Is anyone using this?','is / anyone / using / this ?'], explain:'**Is / anyone / using / this?**' },
+          { type:'gap', q:'time / a / good / have .', hint:'(побажання)', answer:['Have a good time.','have / a / good / time .'], explain:'**Have / a / good / time.**' },
+          { type:'gap', q:'if / you / charge / mind / I / phone / here / do / my ?', hint:'(дозвіл)', answer:['Do you mind if I charge my phone here?','do / you / mind / if / I / charge / my / phone / here ?'], explain:'**Do / you / mind / if / I / charge / my / phone / here?**' },
+          { type:'gap', q:'to / OK, / you / meet / nice .', hint:'(знайомство)', answer:['OK, nice to meet you.','OK nice to meet you','OK, / nice / to / meet / you .'], explain:'**OK, / nice / to / meet / you.**' },
+          { type:'gap', q:'train / this / my / is .', hint:'(треба йти)', answer:['This is my train.','this / is / my / train .'], explain:'**This / is / my / train.**' },
+          { type:'gap', q:'later / you / see .', hint:'(прощання)', answer:['See you later.','see / you / later .'], explain:'**See / you / later.**' }
+        ]
+      },
+      {
+        title: 'Повторення уроку: фрази з розмов',
+        intro: 'Розмови з уроку: фестиваль, перший день на роботі, вокзал і співбесіда.',
+        items: [
+          { type:'gap', q:'Excuse me, is ___ sitting here?', hint:'1 слово', answer:['anyone','anybody'], explain:'**Is anyone sitting here?**' },
+          { type:'gap', q:'Have you been to the festival before? — Yes, I go every year. How ___ you?', hint:'1 слово', answer:['about'], explain:'**How about you?**' },
+          { type:'gap', q:'I\'m Kate, by the ___.', hint:'1 слово', answer:['way'], explain:'**by the way**.' },
+          { type:'gap', q:'Great. Well, Justine, I\'ve ___ go.', hint:'2 слова', answer:['got to'], explain:'**I\'ve got to go.**' },
+          { type:'gap', q:'Nice to meet you. — Yes, nice to ___ you.', hint:'1 слово', answer:['meet'], explain:'**Nice to meet you.**' },
+          { type:'gap', q:'Excuse me, do you ___ if I charge my phone here?', hint:'1 слово', answer:['mind'], explain:'**Do you mind if …?**' },
+          { type:'gap', q:'Not at all. ___ my guest.', hint:'1 слово', answer:['Be'], explain:'**Be my guest.**' },
+          { type:'gap', q:'Oh, that\'s my train. Nice ___ to you.', hint:'1 слово', answer:['talking'], explain:'**Nice talking to you.**' },
+          { type:'gap', q:'It\'s a lovely morning, ___ it?', hint:'1 слово', answer:['isn\'t','isnt'], explain:'**isn\'t it?** — розділове питання.' },
+          { type:'gap', q:'Ten thirty. I\'m early. What ___ yours?', hint:'1 слово', answer:['about'], explain:'**What about yours?**' }
+        ]
+      },
+      {
+        title: 'Почати, підтримати чи закінчити?',
+        intro: 'Для чого ця фраза?',
+        items: [
+          { type:'choice', q:'Nice talking to you.', options:['starting','keeping it going','ending'], answer:2, explain:'Закінчуємо розмову.' },
+          { type:'choice', q:'Do you mind if I charge my phone here?', options:['starting','keeping it going','ending'], answer:0, explain:'Починаємо розмову.' },
+          { type:'choice', q:'Help yourself.', options:['starting','keeping it going','ending'], answer:1, explain:'Відповідь, розмова триває.' },
+          { type:'choice', q:'I\'ve got to go.', options:['starting','keeping it going','ending'], answer:2, explain:'Закінчуємо розмову.' },
+          { type:'choice', q:'Do you know if there\'s a café near here?', options:['starting','keeping it going','ending'], answer:0, explain:'Починаємо розмову.' },
+          { type:'choice', q:'What about you?', options:['starting','keeping it going','ending'], answer:1, explain:'Повертаємо питання — розмова триває.' }
+        ]
+      },
+      {
+        title: 'Лексика: тема для розмови',
+        intro: 'Про яку тему це питання? Кожне питання — з уроку.',
+        items: [
+          { type:'choice', q:'Did you hear about the fire in town? It\'s terrible.', options:['the news','the weather','politics'], answer:0, explain:'**the news**' },
+          { type:'choice', q:'That\'s a nice jacket. Where did you get it?', options:['hobbies','clothes and fashion','work or studies'], answer:1, explain:'**clothes and fashion**' },
+          { type:'choice', q:'So, who do you think will win the election?', options:['the news','sport or music events','politics'], answer:2, explain:'**politics**' },
+          { type:'choice', q:'Astrid tells me you like painting. What kinds of things do you paint?', options:['hobbies and free-time activities','holiday experiences','work or studies'], answer:0, explain:'**hobbies and free-time activities**' },
+          { type:'choice', q:'It\'s the Big Music Live this weekend. Are you going?', options:['sport or music events','the news','food and eating out'], answer:0, explain:'**sport or music events**' },
+          { type:'choice', q:'I hear you have a job in finance. Do you enjoy it?', options:['politics','work or studies','hobbies'], answer:1, explain:'**work or studies**' },
+          { type:'choice', q:'Have you tried these pastries? They look delicious.', options:['food and eating out','clothes and fashion','the weather'], answer:0, explain:'**food and eating out**' },
+          { type:'choice', q:'We\'ve just got back from Corfu. It was wonderful.', options:['holiday experiences','sport or music events','the news'], answer:0, explain:'**holiday experiences**' }
+        ]
+      },
+      {
+        title: 'Лексика: Making small talk',
+        intro: 'Впиши тему: clothes, eating, event, experiences, hobbies, news, studies, weather.',
+        items: [
+          { type:'gap', q:'One thing that we all have in common is the ___.', hint:'погода', answer:['weather'], explain:'**the weather**' },
+          { type:'gap', q:'It could be a national ___ like a football match or a festival.', hint:'подія', answer:['event'], explain:'**event**' },
+          { type:'gap', q:'You might want to avoid talking about the ___ because the stories are often sad.', hint:'новини', answer:['news'], explain:'**the news**' },
+          { type:'gap', q:'He told me about his university ___ in business.', hint:'навчання', answer:['studies'], explain:'**studies**' },
+          { type:'gap', q:'He told me about his recent holiday ___ abroad.', hint:'враження', answer:['experiences'], explain:'**holiday experiences**' },
+          { type:'gap', q:'Ask about restaurants — this can lead to a discussion about food and ___ out.', hint:'-ing', answer:['eating'], explain:'**food and eating out**' }
+        ]
+      }
+    ],
+    speaking: {
+      intro: 'Відповідай уголос або розіграй мінідіалоги. Почни розмову, підтримай її питанням і красиво закінчи.',
+      questions: [
+        'How often do you talk to people you don\'t know? In what places?',
+        'Would a "Happy to chat bench" be a good idea where you live? Why / why not?',
+        'Which topics are good for small talk with strangers? Which topics are better to avoid? Why?',
+        'Role-play: it\'s your first day at work. Start a conversation with a colleague in the kitchen.',
+        'Role-play: you are on a train and want to charge your phone. Ask the person next to you, chat and end the conversation.',
+        'Role-play: you meet a friend at the bus stop on Monday morning. Ask about the weekend.',
+        'Role-play: you sit on a "Happy to chat bench" in a park. Someone sits next to you. Keep the conversation going for 2 minutes.'
+      ],
+      phrases: [
+        'Excuse me, is anyone sitting here?',
+        'Is this your first time here?',
+        'Do you mind if I …?',
+        'It\'s a lovely day, isn\'t it?',
+        'Not at all. / Go ahead. / Be my guest.',
+        'How about you? / What about you?',
+        'Oh, that\'s my bus. I\'ve got to go. Nice talking to you!'
+      ]
+    }
   }
 ];
 
