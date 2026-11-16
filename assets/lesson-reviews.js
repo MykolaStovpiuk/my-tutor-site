@@ -756,6 +756,154 @@ const LESSON_REVIEWS = [
       ]
     }
   }
+  ,
+  {
+    level: 'B1+',
+    lesson: '1C',
+    title: 'B1+ · 1C Don\'t forget to …',
+    rules: [
+      {
+        title: 'Прямі прохання (direct requests)',
+        text: '**Can / Could you … ?** або **Will / Would you …, please?** Could і would звучать ввічливіше.',
+        examples: [
+          '*Can you call me back?*',
+          '*Could you pick up some milk?*',
+          '*Would you take out the rubbish, please?*'
+        ]
+      },
+      {
+        title: 'Непрямі прохання (indirect requests) — ще ввічливіше',
+        text: 'Після вступної фрази — **прямий порядок слів**, як у звичайному реченні (без інверсії).',
+        examples: [
+          '**Do you think you could** … ? — *Do you think you could have a look at it?*',
+          '**Do you think you\'ll be able to** … ? — *Do you think you\'ll be able to come today?*',
+          '**I wonder if you could / would** … — *I wonder if you could bring my folder.*',
+          '**I wonder if you\'d mind + -ing** — *I wonder if you\'d mind **helping** me.*',
+          '❌ *Do you think could you …* → ✅ ***Do you think you could …***'
+        ]
+      },
+      {
+        title: 'Фразові дієслова із займенником',
+        text: 'Якщо об\'єкт — займенник (**it, them**), він стоїть **посередині**.',
+        examples: [
+          '*Hang up your clothes.* → *Hang **them** up.*',
+          '*Throw out the old food.* → *Throw **it** out.*',
+          '❌ *Hang up them.* → ✅ ***Hang them up.***'
+        ]
+      },
+      {
+        title: 'Як залишити повідомлення',
+        text: 'План: почати → сказати, чому телефонуєш → деталі → що зробити далі.',
+        examples: [
+          '**Почати:** *Hi, it\'s Anna here. / This is Anna Bondar.* (не *I\'m Anna*)',
+          '**Причина:** *I\'m calling about … / I was ringing to see if …*',
+          '**Деталі:** *You\'ll need to … / You\'ll find it on the table next to …*',
+          '**Кінець:** *Can you call me back? / You can reach me on this number.*',
+          '**Автовідповідач:** *You\'ve reached … Please leave a message and I\'ll get back to you.*'
+        ]
+      }
+    ],
+    sections: [
+      {
+        title: 'Граматика: ввічливі прохання',
+        intro: 'Зверни увагу на порядок слів і форму дієслова.',
+        items: [
+          { type:'choice', q:'Do you think ___ water my plants while I\'m away?', options:['could you','you could','can you'], answer:1, explain:'Непряме прохання → прямий порядок: **you could**.' },
+          { type:'choice', q:'I wonder if you\'d mind ___ the kids from school today.', options:['pick up','to pick up','picking up'], answer:2, explain:'**would mind** + -ing.' },
+          { type:'choice', q:'___ you close the door, please? It\'s cold.', options:['Would','Do','Are'], answer:0, explain:'**Would you …, please?**' },
+          { type:'choice', q:'I wonder if you ___ help me move the sofa.', options:['could','can you','could you'], answer:0, explain:'**I wonder if you could** — без інверсії.' },
+          { type:'choice', q:'Do you think you\'ll be able ___ the report by Friday?', options:['finish','to finish','finishing'], answer:1, explain:'**be able to** + інфінітив.' },
+          { type:'choice', q:'Could you ___ for the electrician to come on Monday?', options:['arrange','arranging','to arrange'], answer:0, explain:'**Could you** + інфінітив без to.' },
+          { type:'choice', q:'I wonder if you would mind ___ behind to help me.', options:['stay','staying','to stay'], answer:1, explain:'**mind** + -ing.' },
+          { type:'choice', q:'Which request is the MOST polite?', options:['Take the rubbish out.','Can you take the rubbish out?','I wonder if you\'d mind taking the rubbish out.'], answer:2, explain:'**I wonder if you\'d mind …** — найввічливіше.' }
+        ]
+      },
+      {
+        title: 'Граматика: виправ або доповни',
+        intro: 'Напиши пропущене слово (або слова).',
+        items: [
+          { type:'gap', q:'Do you think you ___ lend me your car for the weekend?', hint:'1 слово', answer:['could'], explain:'**Do you think you could …?**' },
+          { type:'gap', q:'I ___ if you could send me the photos from the party.', hint:'1 слово', answer:['wonder'], explain:'**I wonder if you could …**' },
+          { type:'gap', q:'I wonder if you\'d mind ___ the door for me.', hint:'open', answer:['opening'], explain:'**mind** + -ing.' },
+          { type:'gap', q:'Do you think you\'ll be ___ to come to the meeting?', hint:'1 слово', answer:['able'], explain:'**be able to**.' },
+          { type:'gap', q:'___ you please turn down the TV? I\'m on the phone.', hint:'1 слово', answer:['Could','could','Would','would','Can','can','Will','will'], explain:'**Could / Would you please …?**' }
+        ]
+      },
+      {
+        title: 'Лексика: фразові дієслова',
+        intro: 'Що ти робиш, коли …?',
+        items: [
+          { type:'choice', q:'The yoghurt in the fridge is three weeks old. You ___.', options:['throw it out','hang it up','turn it up'], answer:0, explain:'**throw out** — викинути.' },
+          { type:'choice', q:'Your jackets are lying on the bed. You ___.', options:['take them out','hang them up','lock them up'], answer:1, explain:'**hang up** — повісити.' },
+          { type:'choice', q:'The bin in the kitchen is full. You ___.', options:['take it out','pick it up','go over it'], answer:0, explain:'**take out the rubbish**.' },
+          { type:'choice', q:'It\'s really cold in the flat. You ___ the heating.', options:['turn up','turn down','tidy up'], answer:0, explain:'**turn up** — зробити сильніше.' },
+          { type:'choice', q:'The music is too loud and you can\'t hear. You ___.', options:['turn it up','turn it down','throw it out'], answer:1, explain:'**turn down** — зробити тихіше.' },
+          { type:'choice', q:'You\'re driving home and you remember you need eggs. You ___ some ___.', options:['pick … up','take … out','hang … up'], answer:0, explain:'**pick up** — купити дорогою.' },
+          { type:'choice', q:'Your friend doesn\'t understand the instructions for the washing machine. You ___ them again.', options:['go over','lock up','throw out'], answer:0, explain:'**go over** — пояснити ще раз.' },
+          { type:'choice', q:'You\'re leaving the house for a month. You ___ the house.', options:['tidy up','lock up','turn up'], answer:1, explain:'**lock up** — замкнути все.' },
+          { type:'choice', q:'Books, cups and papers are everywhere on your desk. You ___.', options:['tidy it up','hang it up','go over it'], answer:0, explain:'**tidy up** — навести лад.' }
+        ]
+      },
+      {
+        title: 'Лексика: фразове дієслово + займенник',
+        intro: 'Заміни слова на it або them. Напиши всю фразу (наприклад: hang them up).',
+        items: [
+          { type:'gap', q:'Your shirts are on the floor! ___ , please.', hint:'hang up + them', answer:['hang them up','Hang them up'], explain:'**Hang them up** — займенник посередині.' },
+          { type:'gap', q:'This bread is old. ___ .', hint:'throw out + it', answer:['throw it out','Throw it out'], explain:'**Throw it out**.' },
+          { type:'gap', q:'The rubbish smells. Can you ___ ?', hint:'take out + it', answer:['take it out'], explain:'**take it out**.' },
+          { type:'gap', q:'The kids are at school. Could you ___ at 3 p.m.?', hint:'pick up + them', answer:['pick them up'], explain:'**pick them up** — забрати.' },
+          { type:'gap', q:'I love this song! ___ !', hint:'turn up + it', answer:['turn it up','Turn it up'], explain:'**Turn it up**.' }
+        ]
+      },
+      {
+        title: 'Телефонне повідомлення: доповни фразу',
+        intro: 'Слова: reached, back, calling, here, find, reach, message, take.',
+        items: [
+          { type:'gap', q:'Hello, you\'ve ___ Dr Koval\'s office.', hint:'1 слово', answer:['reached'], explain:'**You\'ve reached …**' },
+          { type:'gap', q:'I\'m sorry I can\'t ___ your call right now.', hint:'1 слово', answer:['take'], explain:'**take your call**.' },
+          { type:'gap', q:'Please leave a ___ and I\'ll get back to you.', hint:'1 слово', answer:['message'], explain:'**leave a message**.' },
+          { type:'gap', q:'Hi, it\'s Taras ___ . I\'m calling about Saturday.', hint:'1 слово', answer:['here'], explain:'**It\'s Taras here.** (не I\'m Taras)' },
+          { type:'gap', q:'This is Iryna. I\'m ___ about my order.', hint:'1 слово', answer:['calling'], explain:'**I\'m calling about …**' },
+          { type:'gap', q:'You\'ll ___ the keys under the mat by the door.', hint:'1 слово', answer:['find'], explain:'**You\'ll find it …**' },
+          { type:'gap', q:'Can you call me ___ when you get this?', hint:'1 слово', answer:['back'], explain:'**call me back**.' },
+          { type:'gap', q:'You can ___ me on 097 555 1234.', hint:'1 слово', answer:['reach'], explain:'**You can reach me on …**' }
+        ]
+      },
+      {
+        title: 'Телефонне повідомлення: обери правильний варіант',
+        intro: 'Що звучить природно англійською?',
+        items: [
+          { type:'choice', q:'Starting a message:', options:['Hi, I\'m Oleh.','Hi, it\'s Oleh here.'], answer:1, explain:'По телефону: **It\'s … here / This is …**' },
+          { type:'choice', q:'I was ringing to ___ if you could come earlier.', options:['see','look'], answer:0, explain:'**I was ringing to see if …**' },
+          { type:'choice', q:'Please leave a message and we\'ll get ___ to you.', options:['back','again'], answer:0, explain:'**get back to you**.' },
+          { type:'choice', q:'The party starts at 8, ___ you have to be there at 7.30.', options:['so','but'], answer:0, explain:'**so** — тож, отже.' },
+          { type:'choice', q:'It\'s the black folder ___ on my desk.', options:['that\'s sitting','who sits'], answer:0, explain:'**It\'s the one that\'s sitting on …**' }
+        ]
+      }
+    ],
+    speaking: {
+      intro: 'Залиш голосові повідомлення вголос (можна записати на телефон). Спочатку сплануй: початок → причина → деталі → кінець.',
+      questions: [
+        'Which household tasks do you do? Which do you hate the most? Are there any you like?',
+        'You\'re going away for the winter. Leave a message for your neighbour: ask them to water the plants and pick up your post.',
+        'You\'re organising a party. Leave a message for a friend: ask them to pick up the cake and some snacks on the way.',
+        'You left your laptop at home. Leave a message for your flatmate: explain where it is and ask them to bring it to your office.',
+        'You can\'t come to your English lesson. Leave a polite message for your teacher and ask to move the lesson.',
+        'Record your own voicemail greeting for your phone.',
+        'Do you prefer leaving voice messages or writing texts? Why?'
+      ],
+      phrases: [
+        'Hi, it\'s … here. / This is …',
+        'I\'m calling about … / I was ringing to see if …',
+        'Do you think you could …?',
+        'I wonder if you\'d mind …ing …',
+        'You\'ll find it on/in/next to …',
+        'You\'ll need to …',
+        'Can you call me back? / You can reach me on …',
+        'Thanks a lot. Speak soon!'
+      ]
+    }
+  }
 ];
 
 /* Знайти повторення за назвою уроку: «B2 Lesson 1B», «B2 1B», «1B». */

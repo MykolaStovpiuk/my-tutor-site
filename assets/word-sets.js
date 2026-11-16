@@ -341,6 +341,58 @@ const WORD_SETS = [
       }
     ]
   }
+  ,
+  {
+    level: 'B1+',
+    lesson: '1C',
+    title: 'B1+ · 1C Don\'t forget to …',
+    parts: [
+      {
+        title: 'Фразові дієслова: хатні справи (housework)',
+        words: [
+          { en: 'throw out', ua: 'викинути', example: 'Can you throw out the old milk? It smells bad.' },
+          { en: 'take out', ua: 'винести (сміття)', example: 'It\'s your turn to take out the rubbish.' },
+          { en: 'tidy up', ua: 'прибрати, навести лад', example: 'Let\'s tidy up the kitchen before Mum gets home.' },
+          { en: 'hang up', ua: 'повісити (одяг); покласти слухавку', example: 'Please hang up your coat in the hall.' },
+          { en: 'pick up', ua: 'забрати; купити дорогою', example: 'Could you pick up some bread on your way home?' },
+          { en: 'turn up', ua: 'зробити гучніше/сильніше (опалення, музику)', example: 'It\'s freezing! Can I turn up the heating?' },
+          { en: 'turn down', ua: 'зробити тихіше/слабше', example: 'Please turn down the music — the baby is sleeping.' },
+          { en: 'go over', ua: 'пояснити ще раз, переглянути', example: 'Let\'s go over the instructions one more time.' },
+          { en: 'lock up', ua: 'замкнути (все, перед виходом)', example: 'Don\'t forget to lock up when you leave.' },
+          { en: 'clear up', ua: 'прибрати (після чогось)', example: 'Can you stay behind and help me clear up after the party?' },
+          { en: 'put away', ua: 'покласти на місце, прибрати', example: 'Put away your toys before dinner, please.' },
+          { en: 'sweep the floor', ua: 'підмітати підлогу', example: 'I need to sweep the floor — there are crumbs everywhere.' },
+          { en: 'set the alarm', ua: 'поставити сигналізацію / будильник', example: 'Remember to set the alarm before you go to bed.' },
+          { en: 'pack', ua: 'пакувати (речі)', example: 'I always pack my suitcase the night before a trip.' },
+          { en: 'rubbish', ua: 'сміття', example: 'The bin is full of rubbish again.' }
+        ]
+      },
+      {
+        title: 'Телефонне повідомлення (phone messages)',
+        words: [
+          { en: 'you\'ve reached', ua: 'ви зателефонували до …', example: 'Hi, you\'ve reached Olena. Please leave a message.' },
+          { en: 'leave a message', ua: 'залишити повідомлення', example: 'She didn\'t answer, so I decided to leave a message.' },
+          { en: 'take your call', ua: 'відповісти на ваш дзвінок', example: 'Sorry, I can\'t take your call right now.' },
+          { en: 'get back to', ua: 'передзвонити, відповісти пізніше', example: 'I\'ll get back to you as soon as I can.' },
+          { en: 'call back', ua: 'передзвонити', example: 'Could you call back after six?' },
+          { en: 'reach', ua: 'зв\'язатися (з кимось)', example: 'You can reach me on this number all day.' },
+          { en: 'calling about', ua: 'телефоную щодо …', example: 'Hi, this is Max. I\'m calling about the flat.' },
+          { en: 'ringing to', ua: 'телефоную, щоб …', example: 'I was ringing to find out if you\'re free on Friday.' },
+          { en: 'do me a favour', ua: 'зробити мені послугу', example: 'Could you do me a favour and feed my cat?' }
+        ]
+      },
+      {
+        title: 'Ввічливі прохання (polite requests)',
+        words: [
+          { en: 'Could you', ua: 'Чи могли б ви …?', example: 'Could you send me the address, please?' },
+          { en: 'Would you', ua: 'Чи не могли б ви …? (прохання)', example: 'Would you close the window, please?' },
+          { en: 'Do you think you could', ua: 'Як думаєш, ти б міг …?', example: 'Do you think you could help me with my bags?' },
+          { en: 'I wonder if you could', ua: 'Цікаво, чи не могли б ви …', example: 'I wonder if you could check my essay.' },
+          { en: 'would mind', ua: 'чи не заперечували б ви … (+ -ing)', example: 'I wonder if you would mind waiting a few minutes.' }
+        ]
+      }
+    ]
+  }
 ];
 
 /* Ключ набору: «A2 6B» */
