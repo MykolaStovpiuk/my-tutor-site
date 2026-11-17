@@ -393,6 +393,59 @@ const WORD_SETS = [
       }
     ]
   }
+  ,
+  {
+    level: 'A2',
+    lesson: '7D',
+    title: 'A2 · 7D Skills',
+    parts: [
+      {
+        title: 'Вміння (skills)',
+        words: [
+          { en: 'cook', ua: 'готувати (їжу)', example: 'Can you cook? Yes, I can, but not very well.' },
+          { en: 'dance salsa', ua: 'танцювати сальсу', example: 'My sister can dance salsa really well.' },
+          { en: 'drive', ua: 'водити машину', example: 'I learnt to drive when I was seventeen.' },
+          { en: 'paint', ua: 'малювати фарбами', example: 'Three people want to learn to draw and paint.' },
+          { en: 'draw', ua: 'малювати (олівцем)', example: 'My son can draw animals very well.' },
+          { en: 'make good videos', ua: 'знімати гарні відео', example: 'Two people said they can make good videos.' },
+          { en: 'play chess', ua: 'грати в шахи', example: 'One person wants to learn to play chess.' },
+          { en: 'speak another language', ua: 'розмовляти іншою мовою', example: 'Can you speak another language?' },
+          { en: 'play the guitar', ua: 'грати на гітарі', example: 'I\'m trying to learn to play the guitar as a hobby.' },
+          { en: 'sing', ua: 'співати', example: 'Two people can sing and they often act in the local theatre.' },
+          { en: 'photography', ua: 'фотографія (вміння фотографувати)', example: 'I would like to learn more about photography.' },
+          { en: 'music production', ua: 'створення музики, музичний продакшн', example: 'I plan to do a course in music production.' }
+        ]
+      },
+      {
+        title: 'Дієслова + to (verbs + to infinitive)',
+        words: [
+          { en: 'want to', ua: 'хотіти (щось зробити)', example: 'Do you want to come shopping with me?' },
+          { en: 'need to', ua: 'треба, потрібно (щось зробити)', example: 'Can you wait a minute? I need to call Sam.' },
+          { en: 'decide to', ua: 'вирішити (щось зробити)', example: 'When did Joe decide to become a pilot?' },
+          { en: 'plan to', ua: 'планувати (щось зробити)', example: 'I plan to use English at work.' },
+          { en: 'learn to', ua: 'навчитися (щось робити)', example: 'I want to learn to cook Thai food.' },
+          { en: 'would like to', ua: 'хотів би, хотіла б', example: 'One person would like to learn to cook Thai food.' },
+          { en: 'would love to', ua: 'дуже хотів би, з радістю', example: 'One person would love to learn to dance the tango!' },
+          { en: 'would hate to', ua: 'дуже не хотів би', example: 'I would hate to be a doctor.' }
+        ]
+      },
+      {
+        title: 'Слова з уроку (study and work)',
+        words: [
+          { en: 'skill', ua: 'вміння, навичка', example: 'What skills would you like to learn?' },
+          { en: 'hobby', ua: 'хобі', example: 'I am trying to learn the guitar as a hobby.' },
+          { en: 'course', ua: 'курс (навчання)', example: 'I plan to do a course in music production.' },
+          { en: 'future', ua: 'майбутнє', example: 'It\'s really important for the future of my business.' },
+          { en: 'designer', ua: 'дизайнер', example: 'I work for a website as a designer.' },
+          { en: 'survey', ua: 'опитування', example: 'We did a survey about skills in our class.' },
+          { en: 'summary', ua: 'короткий підсумок', example: 'Write a summary of the answers.' },
+          { en: 'surprising', ua: 'дивовижний, несподіваний', example: 'Their answers were surprising.' },
+          { en: 'foreign language', ua: 'іноземна мова', example: 'I\'d like to learn a foreign language.' },
+          { en: 'give presentations', ua: 'робити презентації', example: 'I often give presentations in English at work.' }
+        ]
+      }
+    ]
+  }
 ];
 
 /* Ключ набору: «A2 6B» */

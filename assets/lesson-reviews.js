@@ -904,6 +904,147 @@ const LESSON_REVIEWS = [
       ]
     }
   }
+  ,
+  {
+    level: 'A2',
+    lesson: '7D',
+    title: 'A2 · 7D Skills',
+    rules: [
+      {
+        title: 'Дієслова + to + дієслово (to infinitive)',
+        text: 'Після **want, need, decide, plan, learn** ставимо **to** + дієслово.',
+        examples: [
+          '*Do you **want to come** shopping with me?*',
+          '*Can you wait a minute? I **need to call** Sam.*',
+          '*When did Joe **decide to become** a pilot?*',
+          '*I\'m **planning to see** Marta this weekend.*',
+          '*I **learnt to drive** when I was seventeen.*'
+        ]
+      },
+      {
+        title: 'would like / would love / would hate + to',
+        text: '**\'d like to** = хотів би, **\'d love to** = дуже хотів би, **\'d hate to** = дуже не хотів би.',
+        examples: [
+          '*What **would you like to** eat?*',
+          '*I\'**d love to** see your new apartment.*',
+          '*I\'**d hate to** be a doctor.*',
+          'Коротка відповідь: *Would you like to come for dinner?* — ***I\'d love to!***'
+        ]
+      },
+      {
+        title: 'I\'d like to чи I like …ing?',
+        text: '**I\'d like to** — хочу зараз чи в майбутньому. **I like …ing** — подобається взагалі.',
+        examples: [
+          '*I\'**d like to play** tennis.* = I want to play tennis (now).',
+          '*I **like playing** tennis.* = I enjoy it in general.',
+          '❌ *Would you like come?* → ✅ *Would you like **to come**?*',
+          '❌ *I\'m learning driving.* → ✅ *I\'m learning **to drive**.*'
+        ]
+      }
+    ],
+    sections: [
+      {
+        title: 'Граматика: обери правильний варіант',
+        intro: 'Після want, need, decide, plan, learn, would like / love / hate — to + дієслово.',
+        items: [
+          { type:'choice', q:'Would you like ___ for dinner this weekend?', options:['come','to come','coming'], answer:1, explain:'**would like to** + дієслово.' },
+          { type:'choice', q:'I\'m learning ___ at the moment.', options:['driving','to drive','drive'], answer:1, explain:'**learn to drive**.' },
+          { type:'choice', q:'I\'d love ___ that film tonight.', options:['to see','see','seeing'], answer:0, explain:'**\'d love to** + дієслово.' },
+          { type:'choice', q:'What do you plan ___ after you finish university?', options:['doing','do','to do'], answer:2, explain:'**plan to do**.' },
+          { type:'choice', q:'When did you decide ___ a teacher?', options:['to become','become','becoming'], answer:0, explain:'**decide to** + дієслово.' },
+          { type:'choice', q:'I need ___ my mum tonight.', options:['call','to call','calling'], answer:1, explain:'**need to call**.' },
+          { type:'choice', q:'I\'d hate ___ somewhere very cold.', options:['live','to live','living'], answer:1, explain:'**\'d hate to live**.' },
+          { type:'choice', q:'Do you ___ to go out for dinner?', options:['want','like','would'], answer:0, explain:'**Do you want to …?**' },
+          { type:'choice', q:'___ you like to meet for a coffee this afternoon?', options:['Do','Would','Are'], answer:1, explain:'**Would you like to …?** — пропозиція.' },
+          { type:'choice', q:'I\'m planning ___ on holiday twice this year.', options:['go','going','to go'], answer:2, explain:'**planning to go**.' }
+        ]
+      },
+      {
+        title: 'Граматика: I\'d like to чи I like …ing?',
+        intro: 'Хочу (зараз, у майбутньому) чи подобається взагалі?',
+        items: [
+          { type:'choice', q:'I\'m hungry. I\'d ___ a sandwich.', options:['like to have','like having'], answer:0, explain:'Хочу зараз → **I\'d like to have**.' },
+          { type:'choice', q:'I ___ in the sea. I go every summer.', options:['\'d like to swim','like swimming'], answer:1, explain:'Подобається взагалі → **like swimming**.' },
+          { type:'choice', q:'One day I\'d ___ Japan.', options:['love to visit','love visiting'], answer:0, explain:'Мрія на майбутнє → **\'d love to visit**.' },
+          { type:'choice', q:'Do you ___ films? — Yes, I watch a lot.', options:['like watching','\'d like to watch'], answer:0, explain:'Питаємо про звичку → **Do you like watching**.' },
+          { type:'choice', q:'Would you like to come for dinner? — I\'d love ___!', options:['to','it','—'], answer:0, explain:'Коротка відповідь: **I\'d love to!**' }
+        ]
+      },
+      {
+        title: 'Граматика: email Алексі',
+        intro: 'Слова: decided, \'d hate, \'d love, \'m learning, like, need, planned, want. Напиши одне в кожен пропуск.',
+        items: [
+          { type:'gap', q:'Five years ago I got a job at a bank. I ___ to stay in that job all my life, but I wasn\'t happy.', hint:'plan', answer:['planned'], explain:'Минуле → **planned**.' },
+          { type:'gap', q:'…so I ___ to change jobs two weeks ago.', hint:'decide', answer:['decided'], explain:'**decided to change**.' },
+          { type:'gap', q:'I\'d ___ to work with people.', hint:'like', answer:['like'], explain:'**I\'d like to work**.' },
+          { type:'gap', q:'I ___ to work alone.', hint:'\'d hate', answer:['\'d hate','’d hate','would hate'], explain:'**I\'d hate to work alone.**' },
+          { type:'gap', q:'I don\'t like being in an office all day, so I ___ to work outside.', hint:'want', answer:['want'], explain:'**want to work**.' },
+          { type:'gap', q:'At the moment I ___ to speak Spanish at a language school.', hint:'learn', answer:['\'m learning','’m learning','am learning'], explain:'At the moment → **I\'m learning**.' },
+          { type:'gap', q:'I really ___ to practise more.', hint:'need', answer:['need'], explain:'**need to practise**.' },
+          { type:'gap', q:'I ___ to know your opinion! Please write and tell me.', hint:'\'d love', answer:['\'d love','’d love','would love'], explain:'**I\'d love to know**.' }
+        ]
+      },
+      {
+        title: 'Граматика: скажи інакше',
+        intro: 'Напиши пропущені слова так, щоб зміст не змінився.',
+        items: [
+          { type:'gap', q:'I want to finish work at three today. → I\'m ___ finish work at three today.', hint:'plan', answer:['planning to'], explain:'**I\'m planning to finish**.' },
+          { type:'gap', q:'We should take an umbrella. → We ___ take an umbrella.', hint:'need', answer:['need to'], explain:'**We need to take**.' },
+          { type:'gap', q:'Let\'s watch a film. → Would you ___ watch a film?', hint:'like', answer:['like to'], explain:'**Would you like to watch …?**' },
+          { type:'gap', q:'Last year I had swimming lessons. → Last year I ___ swim.', hint:'learn', answer:['learnt to','learned to'], explain:'**learnt / learned to swim**.' },
+          { type:'gap', q:'I wouldn\'t like to be a politician. → I\'d ___ be a politician.', hint:'hate', answer:['hate to'], explain:'**I\'d hate to be**.' },
+          { type:'gap', q:'We really want to visit you. → We\'d ___ visit you.', hint:'love', answer:['love to'], explain:'**We\'d love to visit you.**' },
+          { type:'gap', q:'When did you think, "Let\'s get married"? → When did you ___ get married?', hint:'decide', answer:['decide to'], explain:'**decide to get married**.' }
+        ]
+      },
+      {
+        title: 'Лексика: вміння',
+        intro: 'Обери слово, яке підходить.',
+        items: [
+          { type:'choice', q:'I\'d love to learn to ___ the guitar.', options:['play','make','do'], answer:0, explain:'**play the guitar**.' },
+          { type:'choice', q:'Two people love making videos and they can ___ good videos.', options:['do','make','take'], answer:1, explain:'**make good videos**.' },
+          { type:'choice', q:'Can you ___ another language?', options:['talk','say','speak'], answer:2, explain:'**speak a language**.' },
+          { type:'choice', q:'One person wants to learn to ___ chess.', options:['play','do','make'], answer:0, explain:'**play chess**.' },
+          { type:'choice', q:'I plan to do a ___ in music production.', options:['hobby','course','skill'], answer:1, explain:'**do a course** — пройти курс.' },
+          { type:'choice', q:'I\'m trying to learn the piano as a ___.', options:['hobby','future','question'], answer:0, explain:'**as a hobby** — як хобі.' },
+          { type:'choice', q:'I would like to learn more ___ photography.', options:['for','about','of'], answer:1, explain:'**learn about** something.' },
+          { type:'choice', q:'Three people want to learn to draw and ___.', options:['paint','sing','drive'], answer:0, explain:'**draw and paint** — малювати.' }
+        ]
+      },
+      {
+        title: 'Читання: підсумок опитування',
+        intro: 'Прочитай: «I asked six people, \'What skills do you have and what skills would you like to learn?\' Two people can sing. One person can speak three languages. Two people love making videos. One person would like to learn to cook Thai food, one person wants to learn to play chess and one person would love to learn to dance the tango! The other three people want to learn to draw and paint.»',
+        items: [
+          { type:'choice', q:'How many people answered the question?', options:['three','six','nine'], answer:1, explain:'**I asked six people.**' },
+          { type:'choice', q:'How many people can sing?', options:['one','two','three'], answer:1, explain:'**Two people can sing.**' },
+          { type:'choice', q:'What would one person love to learn?', options:['to dance the tango','to play the guitar','to speak Chinese'], answer:0, explain:'**…would love to learn to dance the tango!**' },
+          { type:'choice', q:'How many people want to learn to draw and paint?', options:['two','three','six'], answer:1, explain:'**The other three people…**' }
+        ]
+      }
+    ],
+    speaking: {
+      intro: 'Відповідай уголос (можна записати на телефон). Використовуй want to, need to, plan to, \'d like to, \'d love to.',
+      questions: [
+        'What do you do? Do you work or study?',
+        'In your work or studies, what do you need to do well?',
+        'In the future, where do you plan to use English?',
+        'What can you do well? What can you do, but not very well?',
+        'What skills would you like to learn? Why?',
+        'What would you hate to do as a job?',
+        'Ask a friend or family member: "What skills do you have and what would you like to learn?" Then say a short summary of their answers.'
+      ],
+      phrases: [
+        'I need to … because …',
+        'I plan to use English for …',
+        'I\'d love / like to learn to …',
+        'I can …, but I want to do it better.',
+        'It\'s important for me to …',
+        'I can …, but not very well.',
+        'I\'d hate to be a …',
+        'I\'m planning to do a course in …'
+      ]
+    }
+  }
 ];
 
 /* Знайти повторення за назвою уроку: «B2 Lesson 1B», «B2 1B», «1B». */
