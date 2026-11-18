@@ -1045,6 +1045,143 @@ const LESSON_REVIEWS = [
       ]
     }
   }
+  ,
+  {
+    level: 'B1+',
+    lesson: '1D',
+    title: 'B1+ · 1D Your gadgets',
+    rules: [
+      {
+        title: 'except for / apart from — крім, за винятком',
+        text: 'Кажемо, що щось **не входить** у загальне твердження. Після них — **іменник** (або -ing).',
+        examples: [
+          '*I like all fruit **except for** bananas.* (банани — єдиний виняток)',
+          '*We\'re open every day **apart from** Monday.*',
+          '***Apart from** calling my mum, I don\'t use my phone.*',
+          'Після іменника **for** можна опустити: *everything **except (for)** fish*.',
+          'Але на початку речення — тільки **Except for** або **Apart from**: ❌ *Apart for James* ❌ *Except from*.'
+        ]
+      },
+      {
+        title: 'except + речення',
+        text: 'Якщо далі йде ціле речення (з підметом і дієсловом), вживаємо **except** без **for**.',
+        examples: [
+          '*The twins look the same **except** Ola has longer hair.*',
+          '*A picnic sounds great, **except** it\'s going to rain.*',
+          '❌ *except for it\'s going to rain*'
+        ]
+      },
+      {
+        title: 'even — навіть',
+        text: 'Підкреслює, що щось **дивне чи несподіване**. Стоїть перед основним дієсловом (після be / допоміжного).',
+        examples: [
+          '*I love my phone. I **even** use it in bed.*',
+          '*Tom hates cooking, but **even** he liked the class.*',
+          '*She\'s **even** been to Antarctica!*'
+        ]
+      },
+      {
+        title: 'not even — навіть не',
+        text: 'Підкреслює **несподіване заперечення**.',
+        examples: [
+          '***Not even** Ahmed liked the film — and he loves action films!*',
+          '*I was so tired I **didn\'t even** finish my dinner.*',
+          '❌ *The food was awful, I even finished it.* → ✅ *I **didn\'t even** finish it.*'
+        ]
+      }
+    ],
+    sections: [
+      {
+        title: 'Граматика: обери правильний варіант',
+        intro: 'except for, apart from, even чи not even?',
+        items: [
+          { type:'choice', q:'I like all kinds of music ___ jazz.', options:['except for','even','not even'], answer:0, explain:'Виняток → **except for**.' },
+          { type:'choice', q:'Apart ___ my laptop, I don\'t have many gadgets.', options:['for','from','of'], answer:1, explain:'**apart from**.' },
+          { type:'choice', q:'Everyone came to the party, ___ my grandma!', options:['even','except','apart'], answer:0, explain:'Несподівано → **even**.' },
+          { type:'choice', q:'___ my best friend knows my password.', options:['Not even','Even','Except'], answer:0, explain:'Несподіване заперечення → **Not even**.' },
+          { type:'choice', q:'The two phones are the same, ___ one is a bit heavier.', options:['except for','except','apart from'], answer:1, explain:'Далі ціле речення → **except** (без for).' },
+          { type:'choice', q:'I haven\'t told anyone except ___ my sister.', options:['from','for','that'], answer:1, explain:'**except for**.' },
+          { type:'choice', q:'My dad hates technology. He doesn\'t ___ have a mobile phone!', options:['even','except','apart'], answer:0, explain:'**doesn\'t even** — навіть не має.' },
+          { type:'choice', q:'I check my phone all the time. I ___ check it at the cinema.', options:['even','not even','except'], answer:0, explain:'Дивна звичка → **even**.' },
+          { type:'choice', q:'The hotel was completely empty, ___ two tourists.', options:['apart','apart from','even'], answer:1, explain:'**apart from** + іменник.' },
+          { type:'choice', q:'We go to the gym every day ___ Sunday.', options:['except','even','not even'], answer:0, explain:'**except (for) Sunday**.' }
+        ]
+      },
+      {
+        title: 'Граматика: виправ помилку',
+        intro: 'Обери правильний варіант замість помилки.',
+        items: [
+          { type:'choice', q:'The film was so boring, I even watched the end. ❌', options:['I didn\'t even watch the end.','I even didn\'t watch the end.','I watched even the end.'], answer:0, explain:'Несподіване заперечення → **didn\'t even**.' },
+          { type:'choice', q:'I don\'t use any apps, apart Instagram. ❌', options:['apart for Instagram','apart from Instagram','except from Instagram'], answer:1, explain:'**apart from**.' },
+          { type:'choice', q:'Apart for Max, everyone passed the test. ❌', options:['Except from Max','Except for Max','Apart Max'], answer:1, explain:'**Except for** / **Apart from**.' },
+          { type:'choice', q:'The trip was great, except for the hotel was dirty. ❌', options:['except the hotel was dirty','apart the hotel was dirty','even the hotel was dirty'], answer:0, explain:'Ціле речення → **except** без for.' },
+          { type:'choice', q:'Even Anna didn\'t understand — and she\'s a teacher! (Скажи по-іншому)', options:['Not even Anna understood.','Even not Anna understood.','Except Anna understood.'], answer:0, explain:'**Not even Anna** + стверджувальне дієслово.' }
+        ]
+      },
+      {
+        title: 'Граматика: одне слово в пропуск',
+        intro: 'Форум: «Apart from your phone, what gadget couldn\'t you live without?»',
+        items: [
+          { type:'gap', q:'Apart ___ your phone, what gadget couldn\'t you live without?', hint:'1 слово', answer:['from'], explain:'**apart from**.' },
+          { type:'gap', q:'Olya: I take my headphones everywhere — to work, to the shop and ___ to the shower!', hint:'1 слово', answer:['even'], explain:'Несподівано → **even**.' },
+          { type:'gap', q:'Ivan: I could live without all my gadgets except ___ my smartwatch.', hint:'1 слово', answer:['for'], explain:'**except for**.' },
+          { type:'gap', q:'Dana: I don\'t need any gadgets, ___ even a phone.', hint:'1 слово', answer:['not'], explain:'**not even** a phone.' },
+          { type:'gap', q:'Petro: I hardly use my laptop. I don\'t ___ turn it on at the weekend.', hint:'1 слово', answer:['even'], explain:'**don\'t even**.' },
+          { type:'gap', q:'Mila: I use my phone for everything ___ calling people — I prefer texting!', hint:'1 слово', answer:['except'], explain:'**except** (+ -ing) — можна і **apart from**.' }
+        ]
+      },
+      {
+        title: 'Лексика: гаджети й технології',
+        intro: 'Обери правильне слово.',
+        items: [
+          { type:'choice', q:'Someone who loves new technology is a ___.', options:['technophile','technophobe'], answer:0, explain:'**technophile** — любитель технологій.' },
+          { type:'choice', q:'My aunt is a ___. She thinks smartphones are scary.', options:['technophile','technophobe'], answer:1, explain:'**technophobe**.' },
+          { type:'choice', q:'Paying €500 for a phone case? What a ___ of money!', options:['waste','loss','spend'], answer:0, explain:'**a waste of money**.' },
+          { type:'choice', q:'I put on my ___ and suddenly I was walking on the Moon!', options:['VR headset','smart speaker','coffee maker'], answer:0, explain:'**VR headset**.' },
+          { type:'choice', q:'Too much ___ time is bad for your eyes.', options:['screen','phone','gadget'], answer:0, explain:'**screen time**.' },
+          { type:'choice', q:'Video calls are nice, but I prefer meeting ___.', options:['face-to-face','eye-to-eye','hand-to-hand'], answer:0, explain:'**face-to-face** — наживо.' },
+          { type:'choice', q:'Many people are ___ to their phones — they can\'t put them down.', options:['addicted','relied','distracted'], answer:0, explain:'**addicted to**.' },
+          { type:'choice', q:'I can\'t study with my phone near me — I get ___ easily.', options:['distracted','anxious','invented'], answer:0, explain:'**get distracted**.' },
+          { type:'choice', q:'Imagine a car that can fly at the ___ of a button!', options:['push','touch','press'], answer:0, explain:'**at the push of a button**.' }
+        ]
+      },
+      {
+        title: 'Лексика: впиши слово',
+        intro: 'Слова: detox, rely, up-to-date, live, invented, opinion.',
+        items: [
+          { type:'gap', q:'I switched off all my screens for a week — a real digital ___.', hint:'1 слово', answer:['detox'], explain:'**digital detox**.' },
+          { type:'gap', q:'We ___ on our phones for maps, banking and even shopping lists.', hint:'1 слово', answer:['rely'], explain:'**rely on**.' },
+          { type:'gap', q:'I don\'t need the newest gadgets, but I like my phone to be ___.', hint:'сучасний', answer:['up-to-date','up to date'], explain:'**up-to-date**.' },
+          { type:'gap', q:'I could easily ___ without a smartwatch.', hint:'1 слово', answer:['live'], explain:'**live without**.' },
+          { type:'gap', q:'What gadget would you like to have that hasn\'t been ___ yet?', hint:'винайдений', answer:['invented'], explain:'**invented**.' },
+          { type:'gap', q:'In my honest ___, people spend too much time on screens.', hint:'1 слово', answer:['opinion'], explain:'**In my honest opinion**.' }
+        ]
+      }
+    ],
+    speaking: {
+      intro: 'Відповідай уголос, 1–2 хвилини на питання. Вживай except for, apart from, even і ключові фрази.',
+      questions: [
+        'Are you a technophile or a technophobe? Why?',
+        'List all the gadgets you use on an average day, in the order you use them.',
+        'How old were you when you got your first phone? What do you remember about it?',
+        'Apart from your phone, what gadgets do you love, and which could you live without?',
+        'Is there a gadget you think is a waste of money? Why?',
+        'What gadget would you like to have that hasn\'t been invented yet? What problem would it solve?',
+        'Do you think people spend too much time looking at screens? What about you?',
+        'Could you do a digital detox for a weekend? What would be the hardest part?'
+      ],
+      phrases: [
+        'Apart from my phone/laptop, I\'d say that …',
+        'I could easily live without …',
+        'One thing I\'d love to have / I could do without is …',
+        'In my honest opinion, …',
+        'I would say I definitely …',
+        'I even use it …',
+        'Absolutely! Me too.',
+        'Really? Are you sure …? / Do you honestly think that …?'
+      ]
+    }
+  }
 ];
 
 /* Знайти повторення за назвою уроку: «B2 Lesson 1B», «B2 1B», «1B». */

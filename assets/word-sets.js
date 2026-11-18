@@ -446,6 +446,58 @@ const WORD_SETS = [
       }
     ]
   }
+  ,
+  {
+    level: 'B1+',
+    lesson: '1D',
+    title: 'B1+ · 1D Your gadgets',
+    parts: [
+      {
+        title: 'Гаджети (gadgets)',
+        words: [
+          { en: 'gadget', ua: 'гаджет, пристрій', example: 'My favourite gadget is my e-book reader.' },
+          { en: 'coffee maker', ua: 'кавоварка', example: 'The first thing I use in the morning is my coffee maker.' },
+          { en: 'gaming console', ua: 'ігрова приставка', example: 'My brother spends every evening on his gaming console.' },
+          { en: 'smart speaker', ua: 'розумна колонка', example: 'I ask my smart speaker about the weather every morning.' },
+          { en: 'smartwatch', ua: 'смарт-годинник', example: 'My smartwatch counts my steps.' },
+          { en: 'VR headset', ua: 'VR-окуляри, шолом віртуальної реальності', example: 'I tried a VR headset and felt a bit sick.' },
+          { en: 'headphones', ua: 'навушники', example: 'I can\'t go to the gym without my headphones.' },
+          { en: 'laptop', ua: 'ноутбук', example: 'I do all my work on my laptop.' },
+          { en: 'invented', ua: 'винайдений; винайшли', example: 'The first smartphone was invented in the 1990s.' },
+          { en: 'at the push of a button', ua: 'одним натисканням кнопки', example: 'You can order food at the push of a button.' }
+        ]
+      },
+      {
+        title: 'Технології та екранний час',
+        words: [
+          { en: 'technophile', ua: 'технофіл, любитель технологій', example: 'He\'s a real technophile — he buys every new phone.' },
+          { en: 'technophobe', ua: 'технофоб, той, хто не любить технології', example: 'My grandad is a technophobe and still uses an old radio.' },
+          { en: 'up-to-date', ua: 'сучасний, в курсі новинок', example: 'I try to keep my apps up-to-date.' },
+          { en: 'a waste of money', ua: 'марна трата грошей', example: 'I think a smartwatch is a waste of money.' },
+          { en: 'screen time', ua: 'час перед екраном', example: 'Children\'s screen time should be limited.' },
+          { en: 'face-to-face', ua: 'наживо, віч-на-віч', example: 'I prefer talking face-to-face, not by text.' },
+          { en: 'addicted to', ua: 'залежний від', example: 'Some teenagers are addicted to social media.' },
+          { en: 'rely on', ua: 'покладатися на, залежати від', example: 'We rely on technology far too much these days.' },
+          { en: 'live without', ua: 'жити без', example: 'I couldn\'t live without my phone.' },
+          { en: 'digital detox', ua: 'цифровий детокс (перерва від гаджетів)', example: 'I did a digital detox for a whole weekend.' },
+          { en: 'distracted', ua: 'відволікається, неуважний', example: 'I get distracted by notifications when I study.' },
+          { en: 'anxious', ua: 'тривожний, неспокійний', example: 'I feel anxious when my phone battery is low.' }
+        ]
+      },
+      {
+        title: 'Граматика й ключові фрази',
+        words: [
+          { en: 'except for', ua: 'крім, за винятком', example: 'I could live without all my gadgets except for my laptop.' },
+          { en: 'apart from', ua: 'окрім, крім', example: 'Apart from my phone, I don\'t really need any gadgets.' },
+          { en: 'even', ua: 'навіть', example: 'I use my phone all the time — I even use it in the shower!' },
+          { en: 'not even', ua: 'навіть не', example: 'Not even my dad knows how to fix it.' },
+          { en: 'I could easily live without', ua: 'я легко прожив би без', example: 'I could easily live without a TV.' },
+          { en: 'In my honest opinion', ua: 'чесно кажучи, на мою думку', example: 'In my honest opinion, VR headsets are a bit boring.' },
+          { en: 'Are you sure', ua: 'Ти впевнений?', example: 'Really? Are you sure that\'s a good idea?' }
+        ]
+      }
+    ]
+  }
 ];
 
 /* Ключ набору: «A2 6B» */
